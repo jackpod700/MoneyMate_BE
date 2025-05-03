@@ -28,7 +28,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation('org.springframework.boot:spring-boot-starter-oauth2-client')
-	implementation 'com.h2database:h2'
+
+	implementation 'com.h2database:h2' // 임시용입니다. MySQL 연결하면 나중에 삭제
+
+	// https://mvnrepository.com/artifact/io.codef.api/easycodef-java-v2
+	implementation("io.codef.api:easycodef-java-v2:2.0.0-beta-005")
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
