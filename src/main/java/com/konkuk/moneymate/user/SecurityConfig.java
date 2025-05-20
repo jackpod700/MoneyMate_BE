@@ -35,14 +35,6 @@ public class SecurityConfig {
         auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
-    /*
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails user = User.builder().username("user").password(passwordEncoder().encode("password")).roles("USER").build();
-        return new InMemoryUserDetailsManager(user);
-    }
-
-     */
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -69,3 +61,16 @@ public class SecurityConfig {
         return http.build();
     }
 }
+
+
+
+
+    /*
+
+    @Bean
+    public InMemoryUserDetailsManager userDetailsService() {
+        UserDetails user = User.builder().username("user").password(passwordEncoder().encode("password")).roles("USER").build();
+        return new InMemoryUserDetailsManager(user);
+    }
+
+     */

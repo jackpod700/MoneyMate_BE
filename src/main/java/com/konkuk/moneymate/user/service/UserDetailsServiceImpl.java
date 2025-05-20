@@ -19,7 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    // user id를 찾도록 수정
+    // user name 대신 id를 찾도록 수정
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUserId(userId);
@@ -30,7 +30,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             User currentUser = user.get();
             userBuilder = org.springframework.security.core.userdetails.User.withUsername(userId);
             userBuilder.password(currentUser.getPassword());
-            // userBuilder.roles(currentUser.getRole());
         } else {
             throw new UsernameNotFoundException("404");
         }
