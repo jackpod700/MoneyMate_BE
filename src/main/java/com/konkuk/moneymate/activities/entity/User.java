@@ -1,14 +1,13 @@
 package com.konkuk.moneymate.activities.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -19,8 +18,21 @@ public class User {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "uid", columnDefinition = "BINARY(16)")
+    @Column(name = "user_uid", columnDefinition = "BINARY(16)")
     private UUID uid;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
+    private Set<BankAccount> bankAccounts;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
+    private Set<MonthlyAssetHistory> monthlyAssetHistorys;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
+    private Set<Asset> assets;
+
 
     @Column(name = "id", unique = true, nullable = false)
     private String userId;
@@ -42,6 +54,10 @@ public class User {
         this.userName = userName;
         this.password = password;
     }
+
+
+
+
 
 }
 

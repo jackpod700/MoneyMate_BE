@@ -44,7 +44,7 @@ public class LoginController {
     @GetMapping("/jwt")
     public ResponseEntity<?> printTokenInfo(HttpServletRequest request) {
         try {
-            Map<String, Object> payload = jwtService.payLoadPrint(request);
+            Map<String, Object> payload = jwtService.payloadPrint(request);
             return ResponseEntity.ok().body(payload);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));

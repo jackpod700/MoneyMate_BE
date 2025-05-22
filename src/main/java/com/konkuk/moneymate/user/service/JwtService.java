@@ -67,7 +67,7 @@ public class JwtService {
     }
 
 
-    public Map<String, Object> payLoadPrint(HttpServletRequest request) {
+    public Map<String, Object> payloadPrint(HttpServletRequest request) {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (token != null && token.startsWith(PREFIX)) {
             Claims claims = Jwts.parserBuilder()
