@@ -1,4 +1,6 @@
 package com.konkuk.moneymate.user.auth;
 
-public record UserCredentials(String userid, String password) {
+import java.util.UUID;
+
+public record UserCredentials(String userid, String password, UUID uid) {
 }
