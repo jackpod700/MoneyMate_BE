@@ -35,6 +35,26 @@ Application 클래스에 테스트 데이터를 삽입했습니다<br>
 
 
 
+<br><br><br><br><br><br>
+- Application.properties 
+
+spring.application.name=moneymate-BE
+
+spring.datasource.url=jdbc:mysql://moneymate-db.c7we2em0qc98.ap-northeast-2.rds.amazonaws.com:3306/moneymate3
+spring.datasource.username=admin
+spring.datasource.password=moneymate
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+jdbc.url=jdbc:jdbc:mysql://moneymate-db.c7we2em0qc98.ap-northeast-2.rds.amazonaws.com:3306/moneymate3
+
+spring.jpa.hibernate.ddl-auto= create-drop
+spring.jpa.show-sql=true
+
+spring.data.rest.base-path=/api
+springdoc.swagger-ui.path=/swagger-ui.html
+springdoc.swagger-ui.enabled=true
+
+
 
 
 
