@@ -14,5 +14,4 @@ public class TransactionDto {
     private int trIn;
     private int trAfterBalance;
     private String trDest;
-
 }

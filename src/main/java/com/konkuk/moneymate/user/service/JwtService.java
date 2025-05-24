@@ -32,6 +32,11 @@ public class JwtService {
         this.userRepository = userRepository;
     }
 
+    public String getUserUid(HttpServletRequest request){
+        Map<String, Object> payload = payloadPrint(request);
+        return (String) payload.get("uid");
+    }
+
     // uid도 받게 수정했습니다
     public String getToken(String userId) {
         UUID uid = userRepository.findByUserId(userId)

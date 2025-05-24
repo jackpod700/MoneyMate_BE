@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import com.konkuk.moneymate.user.service.JwtService;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,20 +25,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class BankAccountController {
 
     private final BankAccountService bankAccountService;
+    private final JwtService jwtService;
 
-    public BankAccountController(BankAccountService bankAccountService) {
+    public BankAccountController(BankAccountService bankAccountService, JwtService JwtService) {
         this.bankAccountService = bankAccountService;
+        this.jwtService = JwtService;
     }
 
     @PostMapping("/account/register")
-    public ResponseEntity<?> registerAccount(@RequestBody Map<String,Object> body){
+    public ResponseEntity<?> registerAccount(@RequestBody Map<String,Object> body, HttpServletRequest request){
         String accountNumber = body.get("accountNumber").toString();
         String accountName = body.get("accountName").toString();
         String accountType = body.get("accountType").toString();
         String accountBank = body.get("accountBank").toString();
 
         BankAccountDto accountDto = new BankAccountDto(accountName, accountNumber, accountBank, accountType);
-        String userUid = body.get("userUid").toString();
+        // jwt에서 userUid 가져오기
+        String userUid = jwtService.getUserUid(request);
+
         try{
             bankAccountService.registerAccount(accountDto, userUid);
         } catch (IllegalArgumentException e) {
@@ -46,8 +54,9 @@ public class BankAccountController {
     }
 
     @GetMapping("/account/get-list")
-    public ResponseEntity<?> getAccountList(){
-        UUID userUid= UUID.randomUUID(); //jwt user uid 들어가면 수정
+    public ResponseEntity<?> getAccountList(HttpServletRequest request){
+        String userUid = jwtService.getUserUid(request);
+
         List<BankAccountDto> bankAccountList = bankAccountService.getAccountList(userUid);
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("account", bankAccountList);
@@ -57,7 +66,7 @@ public class BankAccountController {
     }
 
     @PostMapping("/account/get-transaction")
-    public ResponseEntity<?> getTransaction(@RequestBody Map<String,Object> body){
+    public ResponseEntity<?> getTransaction(@RequestBody Map<String,Object> body, HttpServletRequest request){
         String accountUid = body.get("accountUid").toString();
         LocalDate startDate, endDate;
         try{
@@ -69,8 +78,20 @@ public class BankAccountController {
                             ApiResponseMessage.WRONG_FORMAT.getMessage()));
         }
 
-        UUID userUid= UUID.randomUUID();
-        List<TransactionDto> transactionList = bankAccountService.getTransactionList(accountUid, userUid.toString(), startDate, endDate);
+        String userUid= jwtService.getUserUid(request);
+        List<TransactionDto> transactionList;
+        try{
+            transactionList = bankAccountService.getTransactionList(accountUid, userUid, startDate, endDate);
+        }
+        catch (IllegalAccessException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ApiResponse<>(HttpStatus.FORBIDDEN.getReasonPhrase(),
+                            ApiResponseMessage.NO_ACCESS_AUTHORITY.getMessage()));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(HttpStatus.NOT_FOUND.getReasonPhrase(),
+                            ApiResponseMessage.ACCOUNT_NOT_FOUND.getMessage()));
+        }
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("transaction", transactionList);
 
@@ -79,9 +100,21 @@ public class BankAccountController {
     }
 
     @PostMapping("/account/delete")
-    public ResponseEntity<?> deleteAccount(@RequestBody Map<String,Object> body){
+    public ResponseEntity<?> deleteAccount(@RequestBody Map<String,Object> body, HttpServletRequest request){
         String accountUid = body.get("accountUid").toString();
-        
-        return ResponseEntity.ok().build();
+        String userUid = jwtService.getUserUid(request);
+        try {
+            bankAccountService.delete(userUid, accountUid);
+        }catch(IllegalAccessException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ApiResponse<>(HttpStatus.FORBIDDEN.getReasonPhrase(),
+                            ApiResponseMessage.NO_ACCESS_AUTHORITY.getMessage()));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(HttpStatus.NOT_FOUND.getReasonPhrase(),
+                            ApiResponseMessage.ACCOUNT_NOT_FOUND.getMessage()));
+        }
+        return ResponseEntity.ok().body(new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
+                ApiResponseMessage.ACCOUNT_DELETE_SUCCESS.getMessage()));
     }
 }

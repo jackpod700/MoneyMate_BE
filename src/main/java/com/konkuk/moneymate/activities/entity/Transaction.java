@@ -1,5 +1,6 @@
 package com.konkuk.moneymate.activities.entity;
 
+import com.konkuk.moneymate.activities.dto.TransactionDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +36,6 @@ public class Transaction {
     @JoinColumn(name="bank_account_uid", nullable=false)
     private BankAccount bankAccount;
 
-
     @Column(name="counter_account", nullable = false)
     private String counterAccount;
 
@@ -64,4 +64,14 @@ public class Transaction {
         this.afterBalance = afterBalance;
     }
 
+    public TransactionDto toDto() {
+        return new TransactionDto(
+                this.time.toLocalDate(),
+                this.time.toLocalTime(),
+                this.outcome != null ? this.outcome : 0,
+                this.income != null ? this.income : 0,
+                this.afterBalance,
+                this.counterAccount
+        );
+    }
 }

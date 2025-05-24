@@ -2,6 +2,7 @@ package com.konkuk.moneymate.activities.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.konkuk.moneymate.activities.dto.BankAccountDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,11 +39,9 @@ public class BankAccount {
     @JoinColumn(name="user_uid", nullable=false)
     private User user;
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "bankAccount")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "bankAccount", orphanRemoval = true)
     @JsonIgnore
     private List<Transaction> transactions;
-
-
 
     @Column(name="account_number", nullable = false)
     private String accountNumber;
@@ -68,5 +67,15 @@ public class BankAccount {
         this.depositType = depositType;
     }
 
+    public BankAccountDto toDto(){
+        return new BankAccountDto(
+                this.uid,
+                this.bank,
+                this.name,
+                this.depositType,
+                this.accountNumber,
+                this.currentBalance
+        );
+    }
 
 }
