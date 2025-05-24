@@ -40,6 +40,7 @@ public class LoginController {
 
     }
 
+
     // jwt 테스트 핸들러
     @GetMapping("/jwt")
     public ResponseEntity<?> printTokenInfo(HttpServletRequest request) {
