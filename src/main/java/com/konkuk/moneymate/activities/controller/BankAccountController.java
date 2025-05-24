@@ -48,7 +48,12 @@ public class BankAccountController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
                     .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.getReasonPhrase(),e.getMessage()));
+        }catch(EntityNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(HttpStatus.NOT_FOUND.getReasonPhrase(),
+                            ApiResponseMessage.USER_NOT_FOUND.getMessage()));
         }
+        
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
                 ApiResponseMessage.ACCOUNT_REGISTER_SUCCESS.getMessage(), accountDto));
     }
