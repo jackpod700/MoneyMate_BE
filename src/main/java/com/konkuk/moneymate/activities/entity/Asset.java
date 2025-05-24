@@ -1,5 +1,6 @@
 package com.konkuk.moneymate.activities.entity;
 
+import com.konkuk.moneymate.activities.dto.AssetDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,8 +50,12 @@ public class Asset {
         this.type = type;
     }
 
-
-
-
-
+    public AssetDto toDto(){
+        return new AssetDto(
+                this.uid,
+                this.name,
+                this.type,
+                this.price
+        );
+    }
 }
