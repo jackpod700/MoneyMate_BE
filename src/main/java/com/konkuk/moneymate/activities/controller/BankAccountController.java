@@ -47,13 +47,14 @@ public class BankAccountController {
             bankAccountService.registerAccount(accountDto, userUid);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
-                    .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.getReasonPhrase(),e.getMessage()));
+                    .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                            e.getMessage()));
         }catch(EntityNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse<>(HttpStatus.NOT_FOUND.getReasonPhrase(),
-                            ApiResponseMessage.USER_NOT_FOUND.getMessage()));
+                            e.getMessage()));
         }
-        
+
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
                 ApiResponseMessage.ACCOUNT_REGISTER_SUCCESS.getMessage(), accountDto));
     }
@@ -91,11 +92,11 @@ public class BankAccountController {
         catch (IllegalAccessException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(new ApiResponse<>(HttpStatus.FORBIDDEN.getReasonPhrase(),
-                            ApiResponseMessage.NO_ACCESS_AUTHORITY.getMessage()));
+                            e.getMessage()));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse<>(HttpStatus.NOT_FOUND.getReasonPhrase(),
-                            ApiResponseMessage.ACCOUNT_NOT_FOUND.getMessage()));
+                            e.getMessage()));
         }
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("transaction", transactionList);
@@ -113,11 +114,11 @@ public class BankAccountController {
         }catch(IllegalAccessException e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(new ApiResponse<>(HttpStatus.FORBIDDEN.getReasonPhrase(),
-                            ApiResponseMessage.NO_ACCESS_AUTHORITY.getMessage()));
+                            e.getMessage()));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse<>(HttpStatus.NOT_FOUND.getReasonPhrase(),
-                            ApiResponseMessage.ACCOUNT_NOT_FOUND.getMessage()));
+                            e.getMessage()));
         }
         return ResponseEntity.ok().body(new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
                 ApiResponseMessage.ACCOUNT_DELETE_SUCCESS.getMessage()));

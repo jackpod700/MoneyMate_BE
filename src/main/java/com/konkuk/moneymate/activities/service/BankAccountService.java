@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.konkuk.moneymate.common.ApiResponseMessage;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class BankAccountService {
     public void registerAccount(BankAccountDto accountDto, String userUid) {
         bankAccountValidator.checkAccount(accountDto);
         User user = userRepository.findByUid(UUID.fromString(userUid))
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ApiResponseMessage.USER_NOT_FOUND.getMessage()));
 
         //entity 생성후 repository로 전달
         BankAccount bankAccount = accountDto.toEntity(user);
@@ -62,9 +63,9 @@ public class BankAccountService {
         List<TransactionDto> transactionList = new ArrayList<>();
         //해당 유저가 가지고 있는 계좌인지 확인
         BankAccount bankAccount = bankAccountRepository.findById(UUID.fromString(accountUid))
-                .orElseThrow(() -> new EntityNotFoundException(""));
+                .orElseThrow(() -> new EntityNotFoundException(ApiResponseMessage.ACCOUNT_NOT_FOUND.getMessage()));
         if (!bankAccount.getUser().getUid().toString().equals(userUid)) {
-            throw new IllegalAccessException("");
+            throw new IllegalAccessException(ApiResponseMessage.NO_ACCESS_AUTHORITY.getMessage());
         }
         //해당 계좌의 거래내역을 가져오는 로직
         transactionRepository.findByBankAccountUidAndTimeBetween(UUID.fromString(accountUid), startDate.atStartOfDay(), endDate.atStartOfDay())
@@ -77,9 +78,9 @@ public class BankAccountService {
 
     public void delete(String userUid, String accountUid) throws IllegalAccessException {
         BankAccount bankAccount = bankAccountRepository.findById(UUID.fromString(accountUid))
-                .orElseThrow(() -> new EntityNotFoundException(""));
+                .orElseThrow(() -> new EntityNotFoundException(ApiResponseMessage.ACCOUNT_NOT_FOUND.getMessage()));
         if (!bankAccount.getUser().getUid().toString().equals(userUid)) {
-            throw new IllegalAccessException("");
+            throw new IllegalAccessException(ApiResponseMessage.NO_ACCESS_AUTHORITY.getMessage());
         }
 
         bankAccountRepository.deleteById(UUID.fromString(accountUid));
