@@ -20,9 +20,11 @@ public class BankAccountService {
     private final BankAccountValidator bankAccountValidator;
     private final UserRepository userRepository;
 
-    public BankAccountService(BankAccountValidator bankAccountValidator) {
+    public BankAccountService(BankAccountValidator bankAccountValidator, UserRepository userRepository) {
         this.bankAccountValidator = bankAccountValidator;
+        this.userRepository = userRepository;
     }
+
 
 
     public void registerAccount(BankAccountDto accountDto, String userUid) {
@@ -31,13 +33,15 @@ public class BankAccountService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
         //entity 생성후 repository로 전달
-        BankAccount bankAccount = new BankAccount(,
+        BankAccount bankAccount = new BankAccount(user,
                 accountDto.getAccountBank(),
                 accountDto.getAccountNumber(),
                 accountDto.getAccountName(),
                 accountDto.getAccountBalance(),
                 accountDto.getAccountType());
     }
+
+
 
     public List<BankAccountDto> getAccountList(UUID userUid) {
         List<BankAccountDto> bankAccountList = new ArrayList<>();
