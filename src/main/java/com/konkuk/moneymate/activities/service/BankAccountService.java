@@ -2,6 +2,9 @@ package com.konkuk.moneymate.activities.service;
 
 import com.konkuk.moneymate.activities.dto.BankAccountDto;
 import com.konkuk.moneymate.activities.dto.TransactionDto;
+import com.konkuk.moneymate.activities.entity.BankAccount;
+import com.konkuk.moneymate.activities.entity.User;
+import com.konkuk.moneymate.activities.repository.UserRepository;
 import com.konkuk.moneymate.activities.validator.BankAccountValidator;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,16 +18,25 @@ import org.springframework.stereotype.Service;
 public class BankAccountService {
 
     private final BankAccountValidator bankAccountValidator;
+    private final UserRepository userRepository;
 
     public BankAccountService(BankAccountValidator bankAccountValidator) {
         this.bankAccountValidator = bankAccountValidator;
     }
 
 
-    public void registerAccount(BankAccountDto accountDto) {
+    public void registerAccount(BankAccountDto accountDto, String userUid) {
         bankAccountValidator.checkAccount(accountDto);
-        //entity 생성후 repository로 전달
+        User user = userRepository.findByUid(UUID.fromString(userUid))
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
+        //entity 생성후 repository로 전달
+        BankAccount bankAccount = new BankAccount(,
+                accountDto.getAccountBank(),
+                accountDto.getAccountNumber(),
+                accountDto.getAccountName(),
+                accountDto.getAccountBalance(),
+                accountDto.getAccountType());
     }
 
     public List<BankAccountDto> getAccountList(UUID userUid) {

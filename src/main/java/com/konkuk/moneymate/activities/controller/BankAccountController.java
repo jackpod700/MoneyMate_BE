@@ -34,8 +34,9 @@ public class BankAccountController {
         String accountBank = body.get("accountBank").toString();
 
         BankAccountDto accountDto = new BankAccountDto(accountName, accountNumber, accountBank, accountType);
+        String userUid = body.get("userUid").toString();
         try{
-            bankAccountService.registerAccount(accountDto);
+            bankAccountService.registerAccount(accountDto, userUid);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
                     .body(new ApiResponse<>(HttpStatus.BAD_REQUEST.getReasonPhrase(),e.getMessage()));
