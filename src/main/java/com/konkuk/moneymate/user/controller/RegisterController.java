@@ -70,7 +70,7 @@ public class RegisterController {
             if(user.isPresent()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복 id 입니다.");
             } else {
-                return ResponseEntity.ok("사용 가능한 id 입니다.");
+                return ResponseEntity.ok(userId);
             }
 
         } catch(Exception e) {

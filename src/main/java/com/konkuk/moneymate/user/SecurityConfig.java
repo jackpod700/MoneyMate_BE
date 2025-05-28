@@ -49,7 +49,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf((csrf) -> csrf.disable())
+        http
+                .csrf((csrf) -> csrf.disable())
                 .sessionManagement((sessionManagement) -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorizeHttpRequests) ->
@@ -68,7 +69,9 @@ public class SecurityConfig {
                                 .anyRequest().authenticated())
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling((exceptionHandling) -> exceptionHandling
-                        .authenticationEntryPoint(exceptionHandler));
+                        .authenticationEntryPoint(exceptionHandler))
+                .logout(logout -> logout.logoutUrl("/spring-security-logout"));
+
 
         return http.build();
     }

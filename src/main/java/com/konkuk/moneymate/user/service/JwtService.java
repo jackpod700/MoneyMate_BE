@@ -27,7 +27,7 @@ public class JwtService {
     static final String PREFIX = "Bearer";
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
-    private final ConcurrentHashMap<String, Long> blacklist = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Long> blacklist = new ConcurrentHashMap<>();
     static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
 
@@ -38,7 +38,7 @@ public class JwtService {
     }
 
     public void blacklistToken(String token) {
-        System.out.println(">>> blacklistToken() 호출됨");
+        logger.info(">>> blacklistToken() invoked");
 
         try {
             Claims claims = Jwts.parserBuilder()
@@ -54,10 +54,10 @@ public class JwtService {
                 blacklist.put(token, expiration.getTime());
             }
 
-            System.out.println("=== blacklist size ===" + blacklist.size());
-            System.out.println("================== 블랙리스트 목록 ==================");
-            blacklist.forEach((key, exp) -> System.out.println("토큰: " + key + ", 만료시간: " + exp));
-            System.out.println("====================================================");
+            logger.info("=== blacklist size ===" + blacklist.size());
+            logger.info("================== blacklist token list ==================");
+            blacklist.forEach((key, exp) -> System.out.println("key: " + key + ", exp: " + exp));
+            logger.info("====================================================");
 
         } catch (Exception e) {
             System.out.println(">>> Exception ");

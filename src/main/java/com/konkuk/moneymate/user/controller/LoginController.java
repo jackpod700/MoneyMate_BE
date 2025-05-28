@@ -55,15 +55,16 @@ public class LoginController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
+        System.out.println("/logout");
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-
+        logger.info("== authHeader : {}", authHeader);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("토큰이 없습니다.");
         }
 
         String token = authHeader.substring(7);
-
+        logger.info("==token : {}", token);
         logger.info("==token before blacklistToken");
         jwtService.blacklistToken(token);
         logger.info("==token after blacklistToken");
@@ -71,7 +72,12 @@ public class LoginController {
         return ResponseEntity.ok("로그아웃 처리 완료");
     }
 
-    //
+
+    /**
+     * <b>Get /login : redirect </b>
+     * 사용하지 않으므로 호출되지 않습니다
+     * @return
+     */
     @GetMapping("/login")
     public String loginPage() {
 

@@ -31,9 +31,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         String jws = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if(jws != null) {
-            if (jwtService.isBlacklisted(jws)) {
+
+            /**
+             * Prefix 때문에 substring(7)로 변경했습니다
+             */
+            if (jwtService.isBlacklisted(jws.substring(7))) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("블랙리스트된 토큰입니다.");
+                response.getWriter().write("ERROR : this token is expired.");
                 return;
             }
 
