@@ -5,6 +5,10 @@ import com.konkuk.moneymate.user.auth.UserCredentials;
 import com.konkuk.moneymate.user.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +34,10 @@ import java.util.Map;
 @AllArgsConstructor
 @RestController
 public class LoginController {
+
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     private final JwtService jwtService;
+
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
@@ -48,7 +55,6 @@ public class LoginController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
-        // 1. 헤더에서 토큰 추출
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -58,10 +64,18 @@ public class LoginController {
 
         String token = authHeader.substring(7);
 
-        // 2. (선택) 블랙리스트에 저장 - 추후 구현 필요
-        // jwtService.blacklistToken(token);
+        logger.info("==token before blacklistToken");
+        jwtService.blacklistToken(token);
+        logger.info("==token after blacklistToken");
 
-        return ResponseEntity.ok("로그아웃 처리 완료, ");
+        return ResponseEntity.ok("로그아웃 처리 완료");
+    }
+
+    //
+    @GetMapping("/login")
+    public String loginPage() {
+
+        return "logout success?"; // 또는 redirect 혹은 View 반환
     }
 
 

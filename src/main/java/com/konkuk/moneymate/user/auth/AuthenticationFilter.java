@@ -31,6 +31,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         String jws = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if(jws != null) {
+            if (jwtService.isBlacklisted(jws)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("블랙리스트된 토큰입니다.");
+                return;
+            }
+
             // token 검증 및 사용자 가져오기
             String user = jwtService.getAuthUser(request);
             // 인증하기

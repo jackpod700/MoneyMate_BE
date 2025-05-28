@@ -35,7 +35,7 @@ public class MoneymateBeApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		User user1 = new User("user_id", "user", "user", "010-0000-0000", LocalDate.of(2000, 1, 1));
+		User user1 = new User("user_id", "user", "$2a$12$ZNsd2Al0w2hjPeq9icxl.Oydgv3.hbQ3UlsWCqkJfmXeD8t6Wq9sm", "010-0000-0000", LocalDate.of(2000, 1, 1));
 		User user2 = new User("admin_id", "admin", "$2a$12$T05/pakINgU7nUagCdInRe8rC6xPK1sHuhxlUuSIQPENfAogqeGpG", "010-1111-2222", LocalDate.of(2001, 12, 31));
 
 		BankAccount bankAccount1 = new BankAccount(user1, "국민은행", "123-4567890-1-234", user1.getUserName(), 100000, "예적금");

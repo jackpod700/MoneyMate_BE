@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class JwtServiceTest {
-    `
+
     @Test
     public void testJwtContainsCorrectUid() {
         String userId = "testuser";
@@ -39,8 +39,8 @@ public class JwtServiceTest {
         String payloadUid = claims.get("uid", String.class);
         String dbUid = expectedUid.toString();
 
-        System.out.println("✅ DB UID:      " + dbUid);
-        System.out.println("✅ JWT Payload UID: " + payloadUid);
+        System.out.println("DB UID:      " + dbUid);
+        System.out.println("JWT Payload UID: " + payloadUid);
 
         assertEquals(dbUid, payloadUid);
         assertEquals(userId, claims.getSubject());
