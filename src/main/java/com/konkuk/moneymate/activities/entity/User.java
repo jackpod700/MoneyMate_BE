@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -25,6 +27,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "user")
 public class User {
+
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -70,6 +73,10 @@ public class User {
         this.birthday = birthday;
     }
 
+    public void encodeBCryptPassword() {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.password = passwordEncoder.encode(this.password);
+    }
 
 
 }
