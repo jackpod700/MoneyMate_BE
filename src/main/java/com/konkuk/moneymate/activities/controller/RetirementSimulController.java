@@ -10,36 +10,39 @@ import java.util.*;
 
 /**
  * <h3> class : RetirementSimulController </h3>
- * <p> 로직 수정중으로 임시로 비웠습니다 </p>
+ * <p> 로직 수정중으로 아직 테스트하지 말아주세요 </p>
+ *
+ *
+ *
  */
 
 @RestController
 public class RetirementSimulController {
 
     @PostMapping("/asset/retirement/simulate")
-    public List<RetirementSimulateResult> retirementSimul(@RequestBody RetirementSimulateInput dto) {
+    public List<RetirementSimulateResult> retirementSimul(@RequestBody RetirementSimulateInput input) {
 
         List<RetirementSimulateResult> resultList = new ArrayList<>();
 
-        // init
-        int currentAge = dto.getAge();
-        int retireAge = dto.getRetireAge();
-        int endAge = dto.getEndAge();
+        // 필수 입력값
+        int currentAge = input.getAge(); // 현재 나이 (만 나이)
+        int retireAge = input.getRetireAge();
+        long asset = input.getCurrentAssets();
+        long income = input.getAnnualIncome();
+        long expense = input.getAnnualExpense();
+        long pension = input.getPensionPerYear();
 
-        long asset = dto.getCurrentAssets();
-        long income = dto.getAnnualIncome();
-        long expense = dto.getAnnualExpense();
-        long pension = dto.getPensionPerYear();
+        int endAge = input.getEndAge();
 
-        double assetReturnRate = dto.getAssetReturnRate();
-        double incomeGrowthRate = dto.getIncomeGrowthRate();
-        double inflationRate = dto.getInflationRate();
-        double consumptionDropRate = dto.getConsumptionDropRate();
-        int consumptionDropAge = dto.getConsumptionDropAge();
-        int pensionStartAge = dto.getPensionStartAge();
+        double assetReturnRate = input.getAssetReturnRate();
+        double incomeGrowthRate = input.getIncomeGrowthRate();
+        double inflationRate = input.getInflationRate();
+        double consumptionDropRate = input.getConsumptionDropRate();
+        int consumptionDropAge = input.getConsumptionDropAge();
+        int pensionStartAge = input.getPensionStartAge();
 
-        int crashCycle = dto.getCrashCycle();
-        double crashImpactRate = dto.getCrashImpactRate();
+        int crashCycle = input.getCrashCycle();
+        double crashImpactRate = input.getCrashImpactRate();
 
         for (int age = currentAge; age <= endAge; age++) {
             boolean isRecessionYear = ((age - currentAge) % crashCycle == 0 && age != currentAge);
