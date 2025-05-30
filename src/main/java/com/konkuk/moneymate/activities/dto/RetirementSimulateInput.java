@@ -25,17 +25,17 @@ public class RetirementSimulateInput {
     private Long pensionPerYear;            // 연금 수령액
 
 
-    private Integer endAge = 90;                 // 시뮬레이션 종료 시점 (예: 90)
+    private Integer endAge = 90;                 // 시뮬레이션 종료 시점
 
     private Double assetReturnRate = 0.07;         // 연간 자산 수익률 (복리 기준)
     private Double incomeGrowthRate = 0.04;        // 연 소득 증가율
     private Double inflationRate = 0.02;           // 연간 인플레이션율
 
-    private Integer pensionStartAge = 60;        // 연금 수령 시작 나이 (예: 60)
+    private Integer pensionStartAge = 60;        // 연금 수령 시작 나이
 
-    private Integer consumptionDropAge = 70;     // 소비 감소 시작 나이 (예: 70)
-    private Double consumptionDropRate = -(0.2);     // 소비 감소율 (예: -0.2)
+    private Integer consumptionDropAge = 70;     // 소비 감소 시작 나이
+    private Double consumptionDropRate = -(0.2);     // 소비 감소율
 
-    private Integer crashCycle = 6;             // 경기침체 주기 (연 단위, 예: 6)
-    private Double crashImpactRate = -(0.1);         // 경기침체 시 자산 손실률 (예: -0.1)
+    private Integer crashCycle = 6;             // 경기침체 주기 (연 단위)
+    private Double crashImpactRate = -(0.1);         // 경기침체 시 자산 손실률
 }
