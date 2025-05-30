@@ -13,7 +13,7 @@ import com.konkuk.moneymate.activities.dto.RetirementSimulateDto;
 @RestController
 public class RetirementSimulController {
 
-    @PostMapping
+    @PostMapping("/asset/retirement/simulate")
     public void retirementSimul() {
 
 
