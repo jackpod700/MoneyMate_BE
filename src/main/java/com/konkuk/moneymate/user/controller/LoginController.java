@@ -40,6 +40,11 @@ public class LoginController {
 
     private final AuthenticationManager authenticationManager;
 
+    /**
+     * <h3> Post : /login </h3>
+     * @param credentials
+     * @return ResponseEntity.OK
+     */
     @PostMapping("/login")
     public ResponseEntity<?> getToken(@RequestBody UserCredentials credentials) {
         UsernamePasswordAuthenticationToken creds = new UsernamePasswordAuthenticationToken(credentials.userid(),credentials.password());
@@ -53,6 +58,11 @@ public class LoginController {
 
     }
 
+    /**
+     * <h3>Post : /logout</h3>
+     * @param request
+     * @return ResponseEntity.status(HttpStatus. )
+     */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         System.out.println("/logout");
@@ -60,21 +70,21 @@ public class LoginController {
         logger.info("== authHeader : {}", authHeader);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("토큰이 없습니다.");
+                    .body("jwt: not found");
         }
 
         String token = authHeader.substring(7);
-        logger.info("==token : {}", token);
-        logger.info("==token before blacklistToken");
+        logger.info("== token : {}", token);
+        logger.info("== token before blacklistToken");
         jwtService.blacklistToken(token);
-        logger.info("==token after blacklistToken");
+        logger.info("== token after blacklistToken");
 
         return ResponseEntity.ok("로그아웃 처리 완료");
     }
 
 
     /**
-     * <b>Get /login : redirect </b>
+     * <h3>Get /login : redirect </h3>
      * 사용하지 않으므로 호출되지 않습니다
      * @return
      */
@@ -84,7 +94,12 @@ public class LoginController {
         return "logout success?"; // 또는 redirect 혹은 View 반환
     }
 
-
+    /**
+     * <h3>Get : /jwt </h3>
+     * jwt payload에 있는 uuid를 출력합니다
+     * @param request
+     * @return
+     */
     // jwt 테스트 핸들러
     @GetMapping("/jwt")
     public ResponseEntity<?> printTokenInfo(HttpServletRequest request) {
