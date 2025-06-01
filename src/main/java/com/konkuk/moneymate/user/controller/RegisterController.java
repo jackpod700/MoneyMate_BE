@@ -68,7 +68,7 @@ public class RegisterController {
 
             Optional<User> user = userRepository.findByUserId(userId);
             if(user.isPresent()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복 id 입니다.");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("중복 id 입니다.");
             } else {
                 return ResponseEntity.ok(userId);
             }

@@ -7,4 +7,5 @@ package com.konkuk.moneymate.user.controller;
  */
 
 public class UserController {
+
 }
