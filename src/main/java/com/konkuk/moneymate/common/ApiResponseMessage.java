@@ -9,6 +9,7 @@ public enum ApiResponseMessage {
     ASSET_REGISTER_SUCCESS("자산등록 성공"),
     ASSET_QUERY_SUCCESS("자산조회 성공"),
     ASSET_DELETE_SUCCESS("자산삭제 성공"),
+    ASSET_TOTAL_SUCCESS("전체자산조회 성공"),
     //실패시
     USER_NOT_FOUND("사용자를 찾을 수 없습니다"),
     ACCOUNT_NOT_FOUND("계좌를 찾을 수 없습니다"),

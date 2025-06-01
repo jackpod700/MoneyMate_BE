@@ -99,4 +99,12 @@ public class AssetController {
                         ApiResponseMessage.ASSET_DELETE_SUCCESS.getMessage()));
 
     }
+
+    @GetMapping("/asset/total-price")
+    public ResponseEntity<?> getTotalPrice(HttpServletRequest request) {
+        String userUid = jwtService.getUserUid(request);
+        Long totalPrice = assetService.getTotalPrice(userUid);
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
+                ApiResponseMessage.ASSET_TOTAL_SUCCESS.getMessage(), totalPrice));
+    }
 }

@@ -10,7 +10,7 @@ public class AssetValidator {
         checkAssetType(assetDto.getAssetType());
     }
 
-    public void checkAssetType(String assetType) {
+    private void checkAssetType(String assetType) {
         try{
             AssetType.valueOf(assetType);
         }catch (IllegalArgumentException | NullPointerException e) {
