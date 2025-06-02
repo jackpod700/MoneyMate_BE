@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.konkuk.moneymate.user.controller.UserController.*;
@@ -54,6 +55,29 @@ public class UserController {
     }
 
     /**
+     * <h3>POST /user/verify/pw </h3>
+     * @param request Tomcat에 보내는 servlet request
+     * @param userDto <b>userDto에서 password만 입력합니다</b>
+     * @return ResponseEntity.status
+     */
+    @PostMapping("/user/verify/pw")
+    public ResponseEntity<String> verifyPw(HttpServletRequest request, @RequestBody UserDto userDto) {
+        String userId = jwtService.getAuthUser(request);
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("cannot find user"));
+
+        String password = userDto.getPassword();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String pw = user.getPassword();
+
+        if(!encoder.matches(password, pw)){
+            return ResponseEntity.status(401).body("401: Password mismatch");
+        }
+        return ResponseEntity.ok("200: Password verified");
+    }
+
+
+    /**
      * <h3>GET /user/info </h3>
      * @param request
      * @return
@@ -84,9 +108,9 @@ public class UserController {
 
     /**
      * <h3>PATCH /user/update </h3>
-     * @param request
-     * @param userDto
-     * @return
+     * @param request tomcat에 보내는 servlet request
+     * @param userDto 업데이트 하고자 하는 정보만 보내도 됩니다
+     * @return ResponseEntity.status
      */
     @PatchMapping("/user/update")
     public ResponseEntity<String> updateUser(HttpServletRequest request, @RequestBody UserDto userDto) {
