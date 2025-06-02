@@ -32,7 +32,7 @@ public class User {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "user_uid", columnDefinition = "BINARY(16)")
+    @Column(name = "user_uid", columnDefinition = "BINARY(255)")
     private UUID uid;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")

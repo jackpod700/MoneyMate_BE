@@ -27,7 +27,7 @@ public class Asset {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "asset_uid", columnDefinition = "BINARY(16)", nullable = false)
+    @Column(name = "asset_uid", columnDefinition = "BINARY(255)", nullable = false)
     private UUID uid;
 
     @ManyToOne(fetch=FetchType.LAZY)
