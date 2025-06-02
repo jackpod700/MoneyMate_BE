@@ -20,10 +20,13 @@ import java.io.*;
 import java.sql.*;
 import java.util.Properties;
 
+@Component
 @Slf4j
-public class DataInsert {
+@RequiredArgsConstructor
+public class DataInsert implements CommandLineRunner {
 
-    public static void main(String[] args) {
+    @Override
+    public void run(String ... args) throws Exception {
         Properties props = new Properties();
         try (InputStream input = new FileInputStream("src/main/resources/application.properties")) {
             props.load(input);
