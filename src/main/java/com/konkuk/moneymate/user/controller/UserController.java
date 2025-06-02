@@ -20,7 +20,10 @@ import java.util.Optional;
 /**
  * <h3>User Controller</h3>
  *
- * <li><b>/user/check-id :</b> 중복 유저 확인 절차 거쳐야 함</li>
+ * <li><b>DELETE /user/delete</b></li>
+ * <li><b>POST /user/verify/pw </b></li>
+ * <li><b>GET /user/info </b></li>
+ * <li><b>PATCH /user/update </b></li>
  */
 
 @RequiredArgsConstructor
@@ -33,8 +36,8 @@ public class UserController {
 
     /**
      * <h3>DELETE /user/delete</h3>
-     * @param request
-     * @return
+     * @param request Tomcat에 보내는 servlet request
+     * @return ResponseEntity.status <br> 및 계정 삭제 처리
      */
     @DeleteMapping("/user/delete")
     public ResponseEntity<String> deleteUser(HttpServletRequest request) {
@@ -54,6 +57,9 @@ public class UserController {
         }
     }
 
+
+
+
     /**
      * <h3>POST /user/verify/pw </h3>
      * @param request Tomcat에 보내는 servlet request
@@ -70,17 +76,21 @@ public class UserController {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String pw = user.getPassword();
 
-        if(!encoder.matches(password, pw)){
-            return ResponseEntity.status(401).body("401: Password mismatch");
+        if(encoder.matches(password, pw)){
+            return ResponseEntity.ok("200: Password verified");
         }
-        return ResponseEntity.ok("200: Password verified");
+
+        return ResponseEntity.status(401).body("401: Password mismatch");
     }
+
+
+
 
 
     /**
      * <h3>GET /user/info </h3>
-     * @param request
-     * @return
+     * @param request Tomcat에 보내는 servlet request
+     * @return ResponseEntity.status
      */
     @GetMapping("/user/info")
     public ResponseEntity<UserDto> getUserInfo(HttpServletRequest request) {
