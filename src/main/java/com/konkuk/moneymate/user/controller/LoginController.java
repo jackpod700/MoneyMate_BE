@@ -3,8 +3,10 @@ package com.konkuk.moneymate.user.controller;
 
 import com.konkuk.moneymate.user.auth.UserCredentials;
 import com.konkuk.moneymate.user.service.JwtService;
+import com.konkuk.moneymate.user.service.LogoutService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +33,13 @@ import java.util.Map;
  * <li><b> /jwt :</b> jwt payload 정보 출력 요청 api (실제 서비스에서 사용하지 않음) </li>
  */
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 public class LoginController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     private final JwtService jwtService;
-
+    private final LogoutService logoutService;
     private final AuthenticationManager authenticationManager;
 
     /**
@@ -54,8 +56,7 @@ public class LoginController {
 
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
                 .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
-                .build();
-
+                .body("200: User " + credentials.userid() +" login successful");
     }
 
     /**
@@ -65,20 +66,7 @@ public class LoginController {
      */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
-        System.out.println("/logout");
-        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        logger.info("== authHeader : {}", authHeader);
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("jwt: not found");
-        }
-
-        String token = authHeader.substring(7);
-        logger.info("== token : {}", token);
-        logger.info("== token before blacklistToken");
-        jwtService.blacklistToken(token);
-        logger.info("== token after blacklistToken");
-
+        logoutService.logout(request);
         return ResponseEntity.ok("로그아웃 처리 완료");
     }
 

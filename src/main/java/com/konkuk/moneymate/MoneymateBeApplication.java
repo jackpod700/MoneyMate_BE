@@ -2,6 +2,7 @@ package com.konkuk.moneymate;
 
 import com.konkuk.moneymate.activities.entity.*;
 import com.konkuk.moneymate.activities.repository.*;
+import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,6 +11,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
 @SpringBootApplication
 public class MoneymateBeApplication implements CommandLineRunner {
 
@@ -18,16 +20,6 @@ public class MoneymateBeApplication implements CommandLineRunner {
 	private final BankAccountRepository bankAccountRepository;
 	private final TransactionRepository transactionRepository;
 	private final MonthlyAssetHistoryRepository monthlyAssetHistoryRepository;
-
-	public MoneymateBeApplication(UserRepository userRepository, AssetRepository assetRepository
-			, BankAccountRepository bankAccountRepository, TransactionRepository transactionRepository
-			, MonthlyAssetHistoryRepository monthlyAssetHistoryRepository) {
-		this.userRepository = userRepository;
-		this.assetRepository = assetRepository;
-		this.bankAccountRepository = bankAccountRepository;
-		this.transactionRepository = transactionRepository;
-		this.monthlyAssetHistoryRepository = monthlyAssetHistoryRepository;
-	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(MoneymateBeApplication.class, args);
