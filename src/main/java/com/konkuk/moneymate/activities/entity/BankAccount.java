@@ -30,7 +30,7 @@ public class BankAccount {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "uid", columnDefinition = "BINARY(255)", nullable = false)
+    @Column(name = "uid", columnDefinition = "BINARY(16)", nullable = false)
     private UUID uid;
 
     // FK user_uid

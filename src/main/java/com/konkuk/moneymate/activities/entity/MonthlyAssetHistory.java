@@ -29,7 +29,7 @@ public class MonthlyAssetHistory {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "asset_history", columnDefinition = "BINARY(255)")
+    @Column(name = "asset_history", columnDefinition = "BINARY(16)")
     private UUID uid;
 
     @ManyToOne(fetch = FetchType.LAZY)
