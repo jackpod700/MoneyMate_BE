@@ -24,7 +24,6 @@ public class RetirementSimulController {
 
         List<RetirementSimulateResult> resultList = new ArrayList<>();
 
-        // 6개는 필수 입력값
         int currentAge = input.getAge(); // 현재 나이 (만 나이)
         int retireAge = input.getRetireAge();
         long asset = input.getCurrentAssets();
@@ -32,18 +31,7 @@ public class RetirementSimulController {
         long expense = input.getAnnualExpense();
         long pension = input.getPensionPerYear();
 
-        input.setEndAge(90);
-        input.setAssetReturnRate(0.07);
-        input.setIncomeGrowthRate(0.04);
-        input.setInflationRate(0.02);
-        input.setPensionStartAge(60);
-        input.setConsumptionDropAge(70);
-        input.setConsumptionDropRate(-0.2);
-        input.setCrashCycle(6);
-        input.setCrashImpactRate(-0.1);
-
         int endAge = input.getEndAge();
-
         double assetReturnRate = input.getAssetReturnRate();
         double incomeGrowthRate = input.getIncomeGrowthRate();
         double inflationRate = input.getInflationRate();
