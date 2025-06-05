@@ -42,20 +42,20 @@ public class MonthlyAssetHistory {
     private LocalDate month;  // "2025-05-24"
 
     @Column(name="price", nullable = false)
-    private int price;
+    private Long price;
 
     @Column(name="monthly_income", nullable = false)
-    private int mIncome;
+    private Long mIncome;
 
     @Column(name="monthly_outcome", nullable = false)
-    private int mOutcome;
+    private Long mOutcome;
 
     // getter getMonthYear()에서 yyyy-mm에 사용할 yyyy-mm 반환
     public YearMonth getMonthYear() {
         return YearMonth.from(month);
     }
 
-    public MonthlyAssetHistory(User user, LocalDate month, int price, int mIncome, int mOutcome) {
+    public MonthlyAssetHistory(User user, LocalDate month, Long price, Long mIncome, Long mOutcome) {
         this.user = user;
         this.month = month;
         this.price = price;

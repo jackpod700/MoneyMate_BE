@@ -12,6 +12,6 @@ public class TransactionDto {
     private LocalTime trTime;
     private int trOut;
     private int trIn;
-    private int trAfterBalance;
+    private Long trAfterBalance;
     private String trDest;
 }

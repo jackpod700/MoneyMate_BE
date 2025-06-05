@@ -53,12 +53,12 @@ public class BankAccount {
     private String bank;
 
     @Column(name="current_balance", nullable = false)
-    private Integer currentBalance;
+    private Long currentBalance;
 
     @Column(name="deposit_type", nullable = false)
     private String depositType;
 
-    public BankAccount(User user,  String bank, String accountNumber, String name, Integer currentBalance, String depositType) {
+    public BankAccount(User user,  String bank, String accountNumber, String name, Long currentBalance, String depositType) {
         this.user = user;
         this.accountNumber = accountNumber;
         this.name = name;

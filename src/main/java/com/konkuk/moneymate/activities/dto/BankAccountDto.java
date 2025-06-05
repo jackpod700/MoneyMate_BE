@@ -17,7 +17,7 @@ public class BankAccountDto {
     private String accountName;
     private String accountType;
     private String accountNumber;
-    private int accountBalance;
+    private Long accountBalance;
 
     public BankAccountDto(String accountName, String accountNumber, String accountBank, String accountType){
         this.accountName = accountName;

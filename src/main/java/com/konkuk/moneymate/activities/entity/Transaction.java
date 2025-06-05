@@ -52,9 +52,9 @@ public class Transaction {
     private LocalDateTime time;
 
     @Column(name="after_balance", nullable = false)
-    private int afterBalance;
+    private Long afterBalance;
 
-    public Transaction(BankAccount bankAccount, String counterAccount, Integer outcome, Integer income, String category, LocalDateTime time, int afterBalance) {
+    public Transaction(BankAccount bankAccount, String counterAccount, Integer outcome, Integer income, String category, LocalDateTime time, Long afterBalance) {
         this.bankAccount = bankAccount;
         this.counterAccount = counterAccount;
         this.outcome = outcome;
