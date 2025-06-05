@@ -45,46 +45,68 @@ public class RetirementSimulController {
 
 
         for (int age = currentAge; age <= endAge; age++) {
-            boolean isRecessionYear = ((age - currentAge) % crashCycle == 0 && age != currentAge);
-            double effectiveReturnRate = isRecessionYear ? crashImpactRate : assetReturnRate;
-
-            asset = (long) (asset * (1 + effectiveReturnRate));
-
+            /**
+             * income before retirement
+             */
             if (age < retireAge) {
                 income = (long) (income * (1 + incomeGrowthRate));
             } else {
-
-                if (age >= pensionStartAge) {
-                    income = pension;
-                } else {
-                    income = 0L;
-                }
+                income = 0L;
             }
 
-            //  소비
-            long adjustedExpense = (long) (expense * (1 + inflationRate));
-            if (age >= consumptionDropAge) {
-                adjustedExpense = (long) (adjustedExpense * (1 - consumptionDropRate));
+            if (age >= pensionStartAge) {
+                income += pension;
             }
-            
-            asset = asset + income - adjustedExpense;
 
-            // result
+            /**
+             *
+             */
+            if (age == consumptionDropAge) {
+                expense = (long) (expense * (1 - consumptionDropRate));
+            }
+            expense = (long) (expense * (1 + inflationRate));
+
+            asset = asset + income - expense;
+
+            /**
+             * ressession year
+             */
+            boolean isRecessionYear = ((age - currentAge) % crashCycle == 0 && age != currentAge);
+            if (isRecessionYear) {
+                asset = (long) (asset * (1 - crashImpactRate));
+            }
+
+            /**
+             *
+             */
+            asset = (long) (asset * (1 + assetReturnRate));
+
+            /**
+             *  asset < 0 ?
+             */
+            if (asset <= 0) {
+                resultList.add(RetirementSimulateResult.builder()
+                        .age(age)
+                        .asset(0L)
+                        .income(income)
+                        .expense(expense)
+                        .build());
+                break; // 자산 고갈 시 종료
+            }
+
+            /**
+             * result set
+             */
             resultList.add(RetirementSimulateResult.builder()
                     .age(age)
                     .asset(asset)
                     .income(income)
-                    .expense(adjustedExpense)
+                    .expense(expense)
                     .build());
-
-            // 소비 갱신
-            expense = adjustedExpense;
-
-            // 예외 케이스
-            if (asset <= 0) {
-                break;
-            }
         }
+
+
+
 
         return resultList;
     }

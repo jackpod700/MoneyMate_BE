@@ -53,6 +53,7 @@ public class SecurityConfig {
                         authorizeHttpRequests
                                 .requestMatchers(HttpMethod.POST, "/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/register").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/asset/retirement/simulate").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/user/check-id").permitAll()
                                 .requestMatchers(
                                         "/swagger-ui.html",
