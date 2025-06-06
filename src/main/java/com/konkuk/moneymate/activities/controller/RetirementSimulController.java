@@ -24,7 +24,6 @@ public class RetirementSimulController {
 
         List<RetirementSimulateResult> resultList = new ArrayList<>();
 
-        // 6개는 필수 입력값
         int currentAge = input.getAge(); // 현재 나이 (만 나이)
         int retireAge = input.getRetireAge();
         long asset = input.getCurrentAssets();
@@ -32,18 +31,7 @@ public class RetirementSimulController {
         long expense = input.getAnnualExpense();
         long pension = input.getPensionPerYear();
 
-        input.setEndAge(90);
-        input.setAssetReturnRate(0.07);
-        input.setIncomeGrowthRate(0.04);
-        input.setInflationRate(0.02);
-        input.setPensionStartAge(60);
-        input.setConsumptionDropAge(70);
-        input.setConsumptionDropRate(-0.2);
-        input.setCrashCycle(6);
-        input.setCrashImpactRate(-0.1);
-
         int endAge = input.getEndAge();
-
         double assetReturnRate = input.getAssetReturnRate();
         double incomeGrowthRate = input.getIncomeGrowthRate();
         double inflationRate = input.getInflationRate();
@@ -57,46 +45,68 @@ public class RetirementSimulController {
 
 
         for (int age = currentAge; age <= endAge; age++) {
-            boolean isRecessionYear = ((age - currentAge) % crashCycle == 0 && age != currentAge);
-            double effectiveReturnRate = isRecessionYear ? crashImpactRate : assetReturnRate;
-
-            asset = (long) (asset * (1 + effectiveReturnRate));
-
+            /**
+             * income before retirement
+             */
             if (age < retireAge) {
                 income = (long) (income * (1 + incomeGrowthRate));
             } else {
-
-                if (age >= pensionStartAge) {
-                    income = pension;
-                } else {
-                    income = 0L;
-                }
+                income = 0L;
             }
 
-            //  소비
-            long adjustedExpense = (long) (expense * (1 + inflationRate));
-            if (age >= consumptionDropAge) {
-                adjustedExpense = (long) (adjustedExpense * (1 - consumptionDropRate));
+            if (age >= pensionStartAge) {
+                income += pension;
             }
-            
-            asset = asset + income - adjustedExpense;
 
-            // result
+            /**
+             *
+             */
+            if (age == consumptionDropAge) {
+                expense = (long) (expense * (1 - consumptionDropRate));
+            }
+            expense = (long) (expense * (1 + inflationRate));
+
+            asset = asset + income - expense;
+
+            /**
+             * ressession year
+             */
+            boolean isRecessionYear = ((age - currentAge) % crashCycle == 0 && age != currentAge);
+            if (isRecessionYear) {
+                asset = (long) (asset * (1 - crashImpactRate));
+            }
+
+            /**
+             *
+             */
+            asset = (long) (asset * (1 + assetReturnRate));
+
+            /**
+             *  asset < 0 ?
+             */
+            if (asset <= 0) {
+                resultList.add(RetirementSimulateResult.builder()
+                        .age(age)
+                        .asset(0L)
+                        .income(income)
+                        .expense(expense)
+                        .build());
+                break; // 자산 고갈 시 종료
+            }
+
+            /**
+             * result set
+             */
             resultList.add(RetirementSimulateResult.builder()
                     .age(age)
                     .asset(asset)
                     .income(income)
-                    .expense(adjustedExpense)
+                    .expense(expense)
                     .build());
-
-            // 소비 갱신
-            expense = adjustedExpense;
-
-            // 예외 케이스
-            if (asset <= 0) {
-                break;
-            }
         }
+
+
+
 
         return resultList;
     }

@@ -36,7 +36,7 @@ public class UserController {
 
     /**
      * <h3>DELETE /user/delete</h3>
-     * @param request Tomcat에 보내는 servlet request
+     * @param request Tomcat 으로부터 전달받은 servlet request
      * @return ResponseEntity.status <br> 및 계정 삭제 처리
      */
     @DeleteMapping("/user/delete")
@@ -62,8 +62,8 @@ public class UserController {
 
     /**
      * <h3>POST /user/verify/pw </h3>
-     * @param request Tomcat에 보내는 servlet request
-     * @param userDto <b>userDto에서 password만 입력합니다</b>
+     * @param request Tomcat 으로부터 전달받은 servlet request
+     * @param userDto <b>userDto 에서 password만 입력합니다</b>
      * @return ResponseEntity.status
      */
     @PostMapping("/user/verify/pw")
@@ -89,7 +89,7 @@ public class UserController {
 
     /**
      * <h3>GET /user/info </h3>
-     * @param request Tomcat에 보내는 servlet request
+     * @param request Tomcat 으로부터 전달받은 servlet request
      * @return ResponseEntity.status
      */
     @GetMapping("/user/info")
@@ -114,6 +114,7 @@ public class UserController {
             return ResponseEntity.status(500).build();
         }
     }
+
 
 
     /**
@@ -151,6 +152,46 @@ public class UserController {
             return ResponseEntity.status(500).body("500: Error updating user");
         }
     }
+
+
+
+    /**
+     * <h3>PATCH /user/reset-pw</h3>
+     * @param request tomcat을 통해 전달받은 servlet request
+     * @param userDto password를 입력받을 object
+     * @return ResponseEntity.status
+     */
+    @PatchMapping("/user/reset-pw")
+    public ResponseEntity<String> resetPassword(HttpServletRequest request, @RequestBody UserDto userDto) {
+        try {
+            String userId = jwtService.getAuthUser(request);
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+            User user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new RuntimeException("Exception: cannot find user"));
+
+            String newPassword = userDto.getPassword();
+
+            if (newPassword == null || newPassword.isEmpty()) {
+                return ResponseEntity.status(400).body("400: Password cannot be empty");
+            }
+
+            if (encoder.matches(newPassword, user.getPassword())) {
+                return ResponseEntity.status(400).body("400: new password is same as old password");
+            }
+
+            /// ##### jpa Entity 에는 setter를 사용하지 않는 것이 원칙이긴 합니다
+            String pw = encoder.encode(newPassword);
+            user.setPassword(pw);
+            userRepository.save(user);
+
+            return ResponseEntity.ok("200: Password changed successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("500: Internal Server Error");
+        }
+    }
+
 
 
 }
