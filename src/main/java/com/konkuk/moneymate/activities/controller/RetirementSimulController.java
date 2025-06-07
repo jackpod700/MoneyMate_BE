@@ -2,6 +2,7 @@ package com.konkuk.moneymate.activities.controller;
 
 import com.konkuk.moneymate.activities.dto.RetirementSimulateInput;
 import com.konkuk.moneymate.activities.dto.RetirementSimulateResult;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,13 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 
 /**
- * <h3> class : RetirementSimulController </h3>
- * <p> 로직 수정중으로 아직 테스트하지 말아주세요 </p>
- *
- *
+ * <h3>RetirementSimulController : 은퇴 시뮬레이터 포함</h3>
+ * <li><b> POST /asset/retirement/simulate : 은퇴 시뮬레이터 </b></li>
  *
  */
 
+@RequiredArgsConstructor
 @RestController
 public class RetirementSimulController {
 

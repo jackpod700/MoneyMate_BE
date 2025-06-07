@@ -14,6 +14,7 @@ import java.util.UUID;
 import com.konkuk.moneymate.user.service.JwtService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,16 +22,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * <h3>BankAccountController : 계좌 api 관리 클래스</h3>
+ * <li><b> POST /account/register : 계좌 등록 </b></li>
+ * <li><b> GET /asset/get : 본인의 계좌 조회 </b></li>
+ * <li><b> POST /account/get-transaction : 본인의 거래내역 조회</b></li>
+ * <li><b> POST /account/delete : 계좌 삭제</b></li>
+ */
+@RequiredArgsConstructor
 @RestController
 public class BankAccountController {
 
     private final BankAccountService bankAccountService;
     private final JwtService jwtService;
-
-    public BankAccountController(BankAccountService bankAccountService, JwtService JwtService) {
-        this.bankAccountService = bankAccountService;
-        this.jwtService = JwtService;
-    }
 
     @PostMapping("/account/register")
     public ResponseEntity<?> registerAccount(@RequestBody Map<String,Object> body, HttpServletRequest request){
