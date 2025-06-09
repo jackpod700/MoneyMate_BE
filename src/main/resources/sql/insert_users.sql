@@ -10,7 +10,10 @@ VALUES (UNHEX(REPLACE('a2cb3298-937e-463b-8476-7f0e5fd7e2f1', '-', '')), 'minji'
 INSERT INTO user (user_uid, id, pw, name, phone_number, birthday)
 VALUES (UNHEX(REPLACE('e4d1a9fa-6e60-48db-865a-5cf0b1b07e7e', '-', '')), 'jinho', '$2a$12$YdLlaHKrIh9mdfSInNtytuYNmIHlI5D5k2NFia7a1woP.5tRTqYzO', '박진호', '010-4444-5555', '1998-12-09');
 
---
+-- abcd 1234
+-- jinho 4321
+-- aaaa 1234
+-- minji 5678
 -- f47ac10b-58cc-4372-a567-0e02b2c3d479
 -- c9bf9e57-1685-4c89-bafb-ff5af830be8a
 -- a2cb3298-937e-463b-8476-7f0e5fd7e2f1
