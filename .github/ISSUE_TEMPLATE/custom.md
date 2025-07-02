@@ -7,30 +7,53 @@ assignees: ''
 
 ---
 
-## Issue 
+# 🚨 Issue Template
 
-## Description
+---
 
-## 구현 목록
+## 📝 Issue  
+(이슈 제목을 간단히 작성해주세요)
+
+---
+
+## 📄 Description  
+CORS (Cross-origin resource sharing) 설정을 미리 적용했습니다
+
+---
+
+## ✅ 구현 목록
 - [ ] ✨ Add new (initial addition of a feature, file, or module)
 - [ ] ✨ Add new (initial addition of a feature, file, or module)
 - [ ] ✨ Add new (initial addition of a feature, file, or module)
 
-## Test 
+---
 
-## 적용 예제
+## 🧪 Test  
+(테스트 방식 또는 테스트 결과를 작성해주세요)
 
-## 관련 스크린샷, 동영상
+---
 
-## Type of Changes
-- [ ] ✨ Add new (initial addition of a feature, file, or module)
-- [ ] ♻️ Refactoring (code change that neither fixes a bug nor adds a feature)
-- [ ] 🐞 Bug fix (non-breaking change that fixes an issue)
-- [ ] 🌟 New feature (non-breaking change that adds functionality)
-- [ ] 💥 Breaking change (change that causes existing functionality to break)
-- [ ] 📝 Documentation update (change that affects documentation only)
-- [ ] ✅ Test improvement (adding or improving tests)
-- [ ] ⚙️ CI/CD change (modifying build, deployment, or workflow pipelines)
+## 💡 적용 예제  
+(예: API 사용 예시, 호출 방식 등)
+
+---
+
+## 📸 관련 스크린샷 / 🎞 동영상  
+(있다면 첨부해주세요)
+
+---
+
+## 🧩 Type of Changes  
+- [ ] ✨ Add new (initial addition of a feature, file, or module)  
+- [ ] ♻️ Refactoring (code change that neither fixes a bug nor adds a feature)  
+- [ ] 🐞 Bug fix (non-breaking change that fixes an issue)  
+- [ ] 🌟 New feature (non-breaking change that adds functionality)  
+- [ ] 💥 Breaking change (change that causes existing functionality to break)  
+- [ ] 📝 Documentation update (change that affects documentation only)  
+- [ ] ✅ Test improvement (adding or improving tests)  
+- [ ] ⚙️ CI/CD change (modifying build, deployment, or workflow pipelines)  
+
+---
 
 <!--
 ## Issue
