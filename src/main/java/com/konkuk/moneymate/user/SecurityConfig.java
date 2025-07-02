@@ -37,7 +37,6 @@ public class SecurityConfig {
         auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -108,7 +107,6 @@ public class SecurityConfig {
         return source;
     }
 }
-
 
 
 
