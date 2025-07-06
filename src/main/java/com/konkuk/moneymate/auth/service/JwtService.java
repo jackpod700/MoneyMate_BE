@@ -1,9 +1,7 @@
 package com.konkuk.moneymate.auth.service;
 import com.konkuk.moneymate.activities.entity.User;
 import com.konkuk.moneymate.activities.repository.UserRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
@@ -25,7 +23,9 @@ public class JwtService {
     static final long ACCESS_TOKEN_EXPIRE_TIME = 3600000L; // 1 hr
     static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 3600000L; // 7 days
 
+    static final String AUTHORIZATION_HEADER = "Authorization";
     static final String BEARER_TYPE = "Bearer";
+    static final String REFRESH = "Refresh";
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
     private static final ConcurrentHashMap<String, Long> blacklist = new ConcurrentHashMap<>();
@@ -145,6 +145,21 @@ public class JwtService {
         return null;
     }
 
+
+    public String getUserIdFromRefreshToken(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();       // userId
+        } catch (ExpiredJwtException e) {
+            throw new RuntimeException("Refresh token expired", e);
+        } catch (JwtException e) {
+            throw new RuntimeException("Invalid refresh token", e);
+        }
+    }
 
     public Map<String, Object> payloadPrint(HttpServletRequest request) {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
