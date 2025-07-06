@@ -84,7 +84,11 @@ public class JwtService {
         return (String) payload.get("uid");
     }
 
-    // uid도 받게 수정했습니다
+    /**
+     * <h3>getAccessToken</h3>
+     * @param userId
+     * @return Jwts
+     */
     public String getAccessToken(String userId) {
         UUID uid = userRepository.findByUserId(userId)
                 .map(User::getUid)
@@ -100,6 +104,11 @@ public class JwtService {
                 .compact();
     }
 
+    /**
+     * <h3>getRefreshToken</h3>
+     * @param userId
+     * @return Jwts
+     */
     public String getRefreshToken(String userId) {
         if (!userRepository.existsByUserId(userId)) {
             throw new RuntimeException("User not found");
@@ -112,6 +121,12 @@ public class JwtService {
                 .compact();
     }
 
+
+    /**
+     * <h3>getAuthUser</h3>
+     * @param request
+     * @return String user (user name)
+     */
     public String getAuthUser(HttpServletRequest request){
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
 

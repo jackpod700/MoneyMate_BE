@@ -1,8 +1,8 @@
 package com.konkuk.moneymate.auth;
 
 
-import com.konkuk.moneymate.auth.auth.AuthEntryPoint;
-import com.konkuk.moneymate.auth.auth.AuthenticationFilter;
+import com.konkuk.moneymate.auth.application.AuthEntryPoint;
+import com.konkuk.moneymate.auth.application.AuthenticationFilter;
 import com.konkuk.moneymate.auth.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
