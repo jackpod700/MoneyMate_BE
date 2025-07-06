@@ -18,13 +18,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 @Data
 @Component
 public class JwtService {
-    static final long EXPIRATION_TIME = 3600000L;
-    static final String PREFIX = "Bearer";
+    static final long ACCESS_TOKEN_EXPIRE_TIME = 3600000L; // 1 hr
+    static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 3600000L; // 7 days
+
+    static final String BEARER_TYPE = "Bearer";
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
     private static final ConcurrentHashMap<String, Long> blacklist = new ConcurrentHashMap<>();
@@ -94,7 +95,7 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject(userId)
                 .claim("uid", uid.toString())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_TIME))
                 .signWith(key)
                 .compact();
     }
@@ -106,7 +107,7 @@ public class JwtService {
             String user = Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(token.replace(PREFIX, ""))
+                    .parseClaimsJws(token.replace(BEARER_TYPE, ""))
                     .getBody()
                     .getSubject();
 
@@ -120,11 +121,11 @@ public class JwtService {
 
     public Map<String, Object> payloadPrint(HttpServletRequest request) {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (token != null && token.startsWith(PREFIX)) {
+        if (token != null && token.startsWith(BEARER_TYPE)) {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(token.replace(PREFIX, "").trim())
+                    .parseClaimsJws(token.replace(BEARER_TYPE, "").trim())
                     .getBody();
 
             Map<String, Object> payload = new HashMap<>();
