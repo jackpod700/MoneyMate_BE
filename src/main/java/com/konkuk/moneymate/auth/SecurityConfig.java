@@ -47,6 +47,23 @@ public class SecurityConfig {
     }
 
     /**
+     * <h3>PERMIT_ALL_PATTERNS</h3>
+     * <p>권한 확인을 하지 않는 URI </p>
+     */
+    private static final String[] PERMIT_ALL_PATTERNS = new String[] {
+            "/h2-console/**", "/test",
+            "/v1/api/member/**",
+            "/v1/api/message/**",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/v2/api-docs",
+            "/swagger-resources/**",
+            "/webjars/**",
+            "/favicon.ico"
+    };
+
+    /**
      *
      * @param http
      * @return
@@ -64,14 +81,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/register").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/asset/retirement/simulate").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/user/check-id").permitAll()
-                                .requestMatchers(
-                                        "/swagger-ui.html",
-                                        "/swagger-ui/**",
-                                        "/v3/api-docs/**",
-                                        "/v2/api-docs",
-                                        "/swagger-resources/**",
-                                        "/webjars/**",
-                                        "/favicon.ico" ).permitAll()
+                                .requestMatchers(PERMIT_ALL_PATTERNS).permitAll() // 수정
 
                                 .anyRequest().authenticated())
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
