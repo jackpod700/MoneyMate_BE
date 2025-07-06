@@ -60,7 +60,8 @@ public class SecurityConfig {
             "/v2/api-docs",
             "/swagger-resources/**",
             "/webjars/**",
-            "/favicon.ico"
+            "/favicon.ico",
+            "/user/reissue-token"
     };
 
     /**
