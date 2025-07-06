@@ -2,13 +2,12 @@ package com.konkuk.moneymate.auth.api.controller;
 
 
 import com.konkuk.moneymate.auth.api.response.AuthTokensResponse;
-import com.konkuk.moneymate.auth.auth.UserCredentials;
+import com.konkuk.moneymate.auth.application.UserCredentials;
 import com.konkuk.moneymate.auth.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

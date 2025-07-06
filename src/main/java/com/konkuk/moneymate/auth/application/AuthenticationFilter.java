@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.auth.auth;
+package com.konkuk.moneymate.auth.application;
 
 
 import com.konkuk.moneymate.auth.service.JwtService;
@@ -28,14 +28,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         // token 검증 및 사용자 가져오기
-        String jws = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if(jws != null) {
+        if(accessToken != null) {
 
             /**
              * Prefix 때문에 substring(7)로 변경했습니다
              */
-            if (jwtService.isBlacklisted(jws.substring(7))) {
+            if (jwtService.isBlacklisted(accessToken.substring(7))) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("ERROR : this token is expired.");
                 return;
@@ -49,6 +49,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
+
+        // try-catch 안에 넣고 AccessTokenExpiredException 대응하는 메서드 만들기
         filterChain.doFilter(request, response);
+
+
+
     }
 }
