@@ -55,7 +55,7 @@ public class LoginController {
         String jwts = jwtService.getToken(auth.getName());
 
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
-                .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
+                 .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
                 .body("200: User " + credentials.userid() +" login successful");
     }
 
@@ -99,3 +99,22 @@ public class LoginController {
         }
     }
 }
+
+
+
+/*
+
+ @PostMapping("/login")
+    public ResponseEntity<?> getToken(@RequestBody UserCredentials credentials) {
+        UsernamePasswordAuthenticationToken creds = new UsernamePasswordAuthenticationToken(credentials.userid(),credentials.password());
+
+        Authentication auth = authenticationManager.authenticate(creds);
+        String jwts = jwtService.getToken(auth.getName());
+
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
+                 .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
+                .body("200: User " + credentials.userid() +" login successful");
+    }
+
+
+ */
