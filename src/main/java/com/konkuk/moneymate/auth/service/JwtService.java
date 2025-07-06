@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.user.service;
+package com.konkuk.moneymate.auth.service;
 import com.konkuk.moneymate.activities.entity.User;
 import com.konkuk.moneymate.activities.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -85,7 +85,7 @@ public class JwtService {
     }
 
     // uid도 받게 수정했습니다
-    public String getToken(String userId) {
+    public String getAccessToken(String userId) {
         UUID uid = userRepository.findByUserId(userId)
                 .map(User::getUid)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -96,6 +96,18 @@ public class JwtService {
                 .setSubject(userId)
                 .claim("uid", uid.toString())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_TIME))
+                .signWith(key)
+                .compact();
+    }
+
+    public String getRefreshToken(String userId) {
+        if (!userRepository.existsByUserId(userId)) {
+            throw new RuntimeException("User not found");
+        }
+
+        return Jwts.builder()
+                .setSubject(userId)
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key)
                 .compact();
     }

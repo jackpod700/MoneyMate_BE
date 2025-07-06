@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.user.service;
+package com.konkuk.moneymate.auth.service;
 
 import com.konkuk.moneymate.activities.entity.User;
 import com.konkuk.moneymate.activities.repository.UserRepository;
@@ -28,7 +28,7 @@ public class JwtServiceTest {
         when(mockRepo.findByUserId(userId)).thenReturn(Optional.of(mockUser));
 
         JwtService jwtService = new JwtService(mockRepo);
-        String token = jwtService.getToken(userId);
+        String token = jwtService.getAccessToken(userId);
 
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(JwtService.key)

@@ -1,21 +1,15 @@
-package com.konkuk.moneymate.user.controller;
+package com.konkuk.moneymate.auth.api.controller;
 
 import com.konkuk.moneymate.activities.dto.UserDto;
 import com.konkuk.moneymate.activities.entity.User;
 import com.konkuk.moneymate.activities.repository.UserRepository;
-import com.konkuk.moneymate.user.service.JwtService;
-import com.konkuk.moneymate.user.service.LogoutService;
-import jakarta.servlet.http.HttpServlet;
+import com.konkuk.moneymate.auth.service.JwtService;
+import com.konkuk.moneymate.auth.service.LogoutService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import com.konkuk.moneymate.user.controller.UserController.*;
-
-import java.time.LocalDate;
-import java.util.Optional;
 
 /**
  * <h3>User Controller</h3>

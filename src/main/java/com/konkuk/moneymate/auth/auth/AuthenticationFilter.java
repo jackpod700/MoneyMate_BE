@@ -1,7 +1,7 @@
-package com.konkuk.moneymate.user.auth;
+package com.konkuk.moneymate.auth.auth;
 
 
-import com.konkuk.moneymate.user.service.JwtService;
+import com.konkuk.moneymate.auth.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
