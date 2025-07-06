@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.user;
+package com.konkuk.moneymate.auth;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

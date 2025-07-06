@@ -4,7 +4,7 @@ import com.konkuk.moneymate.activities.dto.AssetDto;
 import com.konkuk.moneymate.activities.service.AssetService;
 import com.konkuk.moneymate.common.ApiResponse;
 import com.konkuk.moneymate.common.ApiResponseMessage;
-import com.konkuk.moneymate.user.service.JwtService;
+import com.konkuk.moneymate.auth.service.JwtService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

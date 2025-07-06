@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.user.auth;
+package com.konkuk.moneymate.auth.auth;
 
 import java.util.UUID;
 

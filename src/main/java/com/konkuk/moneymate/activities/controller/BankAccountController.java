@@ -9,9 +9,8 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-import com.konkuk.moneymate.user.service.JwtService;
+import com.konkuk.moneymate.auth.service.JwtService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
