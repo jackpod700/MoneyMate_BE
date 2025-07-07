@@ -1,9 +1,7 @@
-package com.konkuk.moneymate.user.service;
+package com.konkuk.moneymate.auth.service;
 import com.konkuk.moneymate.activities.entity.User;
 import com.konkuk.moneymate.activities.repository.UserRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
@@ -18,13 +16,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 @Data
 @Component
 public class JwtService {
-    static final long EXPIRATION_TIME = 3600000L;
-    static final String PREFIX = "Bearer";
+    static final long ACCESS_TOKEN_EXPIRE_TIME = 3600000L; // 1 hr
+    static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 3600000L; // 7 days
+
+    static final String AUTHORIZATION_HEADER = "Authorization";
+    static final String BEARER_TYPE = "Bearer";
+    static final String REFRESH = "Refresh";
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
     private static final ConcurrentHashMap<String, Long> blacklist = new ConcurrentHashMap<>();
@@ -83,8 +84,12 @@ public class JwtService {
         return (String) payload.get("uid");
     }
 
-    // uid도 받게 수정했습니다
-    public String getToken(String userId) {
+    /**
+     * <h3>getAccessToken</h3>
+     * @param userId
+     * @return Jwts
+     */
+    public String getAccessToken(String userId) {
         UUID uid = userRepository.findByUserId(userId)
                 .map(User::getUid)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -94,11 +99,34 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject(userId)
                 .claim("uid", uid.toString())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_TIME))
                 .signWith(key)
                 .compact();
     }
 
+    /**
+     * <h3>getRefreshToken</h3>
+     * @param userId
+     * @return Jwts
+     */
+    public String getRefreshToken(String userId) {
+        if (!userRepository.existsByUserId(userId)) {
+            throw new RuntimeException("User not found");
+        }
+
+        return Jwts.builder()
+                .setSubject(userId)
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE_TIME))
+                .signWith(key)
+                .compact();
+    }
+
+
+    /**
+     * <h3>getAuthUser</h3>
+     * @param request
+     * @return String user (user name)
+     */
     public String getAuthUser(HttpServletRequest request){
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
 
@@ -106,7 +134,7 @@ public class JwtService {
             String user = Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(token.replace(PREFIX, ""))
+                    .parseClaimsJws(token.replace(BEARER_TYPE, ""))
                     .getBody()
                     .getSubject();
 
@@ -118,13 +146,28 @@ public class JwtService {
     }
 
 
+    public String getUserIdFromRefreshToken(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();       // userId
+        } catch (ExpiredJwtException e) {
+            throw new RuntimeException("Refresh token expired", e);
+        } catch (JwtException e) {
+            throw new RuntimeException("Invalid refresh token", e);
+        }
+    }
+
     public Map<String, Object> payloadPrint(HttpServletRequest request) {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (token != null && token.startsWith(PREFIX)) {
+        if (token != null && token.startsWith(BEARER_TYPE)) {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(token.replace(PREFIX, "").trim())
+                    .parseClaimsJws(token.replace(BEARER_TYPE, "").trim())
                     .getBody();
 
             Map<String, Object> payload = new HashMap<>();

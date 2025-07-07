@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.user.auth;
+package com.konkuk.moneymate.auth.application;
 
 
 import jakarta.servlet.ServletException;

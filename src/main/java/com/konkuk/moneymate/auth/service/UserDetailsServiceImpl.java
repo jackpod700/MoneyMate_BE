@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.user.service;
+package com.konkuk.moneymate.auth.service;
 
 import com.konkuk.moneymate.activities.entity.User;
 import com.konkuk.moneymate.activities.repository.UserRepository;

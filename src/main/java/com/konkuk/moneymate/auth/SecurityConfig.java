@@ -1,9 +1,9 @@
-package com.konkuk.moneymate.user;
+package com.konkuk.moneymate.auth;
 
 
-import com.konkuk.moneymate.user.auth.AuthEntryPoint;
-import com.konkuk.moneymate.user.auth.AuthenticationFilter;
-import com.konkuk.moneymate.user.service.UserDetailsServiceImpl;
+import com.konkuk.moneymate.auth.application.AuthEntryPoint;
+import com.konkuk.moneymate.auth.application.AuthenticationFilter;
+import com.konkuk.moneymate.auth.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -48,6 +47,24 @@ public class SecurityConfig {
     }
 
     /**
+     * <h3>PERMIT_ALL_PATTERNS</h3>
+     * <p>권한 확인을 하지 않는 URI </p>
+     */
+    private static final String[] PERMIT_ALL_PATTERNS = new String[] {
+            "/h2-console/**", "/test",
+            "/v1/api/member/**",
+            "/v1/api/message/**",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/v2/api-docs",
+            "/swagger-resources/**",
+            "/webjars/**",
+            "/favicon.ico",
+            "/user/reissue-token"
+    };
+
+    /**
      *
      * @param http
      * @return
@@ -65,14 +82,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/register").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/asset/retirement/simulate").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/user/check-id").permitAll()
-                                .requestMatchers(
-                                        "/swagger-ui.html",
-                                        "/swagger-ui/**",
-                                        "/v3/api-docs/**",
-                                        "/v2/api-docs",
-                                        "/swagger-resources/**",
-                                        "/webjars/**",
-                                        "/favicon.ico" ).permitAll()
+                                .requestMatchers(PERMIT_ALL_PATTERNS).permitAll() // 수정
 
                                 .anyRequest().authenticated())
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)

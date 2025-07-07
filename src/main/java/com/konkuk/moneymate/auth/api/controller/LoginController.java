@@ -1,18 +1,13 @@
-package com.konkuk.moneymate.user.controller;
+package com.konkuk.moneymate.auth.api.controller;
 
 
-import com.konkuk.moneymate.user.auth.UserCredentials;
-import com.konkuk.moneymate.user.service.JwtService;
-import com.konkuk.moneymate.user.service.LogoutService;
+import com.konkuk.moneymate.auth.api.response.AuthTokensResponse;
+import com.konkuk.moneymate.auth.application.UserCredentials;
+import com.konkuk.moneymate.auth.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,7 +34,7 @@ public class LoginController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     private final JwtService jwtService;
-    private final LogoutService logoutService;
+
     private final AuthenticationManager authenticationManager;
 
     /**
@@ -52,22 +47,12 @@ public class LoginController {
         UsernamePasswordAuthenticationToken creds = new UsernamePasswordAuthenticationToken(credentials.userid(),credentials.password());
 
         Authentication auth = authenticationManager.authenticate(creds);
-        String jwts = jwtService.getToken(auth.getName());
+        String accessToken = jwtService.getAccessToken(auth.getName());
+        String refreshToken = jwtService.getRefreshToken(auth.getName());
 
-        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
-                .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
-                .body("200: User " + credentials.userid() +" login successful");
-    }
+        AuthTokensResponse tokenResponse = AuthTokensResponse.of(accessToken, refreshToken, "Bearer");
 
-    /**
-     * <h3>Post : /logout</h3>
-     * @param request
-     * @return ResponseEntity.status(HttpStatus. )
-     */
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request) {
-        logoutService.logout(request);
-        return ResponseEntity.ok("로그아웃 처리 완료");
+        return ResponseEntity.ok(tokenResponse);
     }
 
 
@@ -99,3 +84,22 @@ public class LoginController {
         }
     }
 }
+
+
+
+/*
+
+ @PostMapping("/login")
+    public ResponseEntity<?> getToken(@RequestBody UserCredentials credentials) {
+        UsernamePasswordAuthenticationToken creds = new UsernamePasswordAuthenticationToken(credentials.userid(),credentials.password());
+
+        Authentication auth = authenticationManager.authenticate(creds);
+        String jwts = jwtService.getToken(auth.getName());
+
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
+                 .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
+                .body("200: User " + credentials.userid() +" login successful");
+    }
+
+
+ */
