@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+/**
+ * <h3>LogoutService</h3>
+ */
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -16,18 +19,22 @@ public class LogoutService {
 
     public ResponseEntity<?> logout(HttpServletRequest request) {
         System.out.println("/logout");
-        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        log.info("== authHeader : {}", authHeader);
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        String accessTokenHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String refreshToken = request.getHeader("Refresh");
+
+        log.info("== accessTokenHeader : {}", accessTokenHeader);
+        if (refreshToken == null || accessTokenHeader == null || !accessTokenHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("jwt: not found");
+                    .body("accessToken : not found");
         }
 
-        String token = authHeader.substring(7);
-        log.info("== token : {}", token);
+        String accessToken = accessTokenHeader.substring(7);
+        log.info("== accessToken : {}", accessToken);
         log.info("== token before blacklistToken");
-        jwtService.blacklistToken(token);
+        jwtService.blacklistToken(accessToken);
+        jwtService.blacklistToken(refreshToken);
         log.info("== token after blacklistToken");
+
 
         return ResponseEntity.ok("로그아웃 처리 완료");
     }
