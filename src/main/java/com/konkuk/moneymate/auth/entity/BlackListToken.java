@@ -11,16 +11,21 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @Getter
 @Entity
-public class BlackList {
+@Table(name="token_blacklist")
+public class BlackListToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 일반적으로 refreshToken만 저장합니다
+    @Column(name = "invalid_access_token")
+    private String invalidAccessToken;
+
     @Column(name = "invalid_refresh_token")
     private String invalidRefreshToken;
 
-    public BlackList(String invalidRefreshToken) {
+    public BlackListToken(String invalidRefreshToken) {
         this.invalidRefreshToken = invalidRefreshToken;
     }
 }
