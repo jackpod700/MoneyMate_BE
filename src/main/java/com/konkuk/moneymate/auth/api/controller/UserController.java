@@ -6,6 +6,7 @@ import com.konkuk.moneymate.activities.repository.UserRepository;
 import com.konkuk.moneymate.auth.service.JwtService;
 import com.konkuk.moneymate.auth.service.LogoutService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

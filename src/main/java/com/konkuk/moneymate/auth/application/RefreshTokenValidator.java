@@ -1,5 +1,7 @@
 package com.konkuk.moneymate.auth.application;
 
+import com.konkuk.moneymate.auth.exception.InvalidTokenException;
+import com.konkuk.moneymate.auth.exception.RefreshTokenExpiredException;
 import com.konkuk.moneymate.auth.repository.BlackListTokenRepository;
 import com.konkuk.moneymate.auth.service.JwtService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -23,9 +25,9 @@ public class RefreshTokenValidator {
         try {
             jwtService.getUserIdFromRefreshToken(token);
         } catch (ExpiredJwtException e) {
-            throw new RuntimeException("[ERROR] Refresh Token is expired!", e);
+            throw new RefreshTokenExpiredException("[ERROR] Refresh Token is expired!");
         } catch (JwtException e) {
-            throw new RuntimeException("[ERROR] Refresh Token is invalid!", e);
+            throw new RefreshTokenExpiredException("[ERROR] Refresh Token is invalid!");
         }
     }
 

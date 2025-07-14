@@ -25,7 +25,11 @@ public class BlackListToken {
     @Column(name = "invalid_refresh_token")
     private String invalidRefreshToken;
 
-    public BlackListToken(String invalidRefreshToken) {
-        this.invalidRefreshToken = invalidRefreshToken;
+    public static BlackListToken ofAccessToken(String accessToken) {
+        return new BlackListToken(null, accessToken, null);
+    }
+
+    public static BlackListToken ofRefreshToken(String refreshToken) {
+        return new BlackListToken(null, null, refreshToken);
     }
 }

@@ -1,6 +1,7 @@
 package com.konkuk.moneymate.auth.service;
 
 import com.konkuk.moneymate.auth.entity.BlackListToken;
+import com.konkuk.moneymate.auth.exception.InvalidTokenException;
 import com.konkuk.moneymate.auth.exception.UnAuthorizationException;
 import com.konkuk.moneymate.auth.repository.BlackListTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,26 +13,33 @@ public class JwtBlackListService {
 
     private final BlackListTokenRepository blackListTokenRepository;
 
-    /**
-     * 블랙리스트 토큰 여부 확인
-     */
-    public boolean isBlacklisted(String token) {
-        return blackListTokenRepository.existsByInvalidRefreshToken(token);
+    public void blacklistAccessToken(String accessToken) {
+        String token = accessToken.startsWith("Bearer ") ? accessToken.substring(7) : accessToken;
+        blackListTokenRepository.save(BlackListToken.ofAccessToken(token));
     }
 
-    /**
-     * save
-     */
-    public void blacklist(String refreshToken) {
-        BlackListToken blackListToken = new BlackListToken(refreshToken);
-        blackListTokenRepository.save(blackListToken);
+    public void blacklistRefreshToken(String refreshToken) {
+        blackListTokenRepository.save(BlackListToken.ofRefreshToken(refreshToken));
+    }
+
+    public boolean isAccessTokenBlacklisted(String accessToken) {
+        String token = accessToken.startsWith("Bearer ") ? accessToken.substring(7) : accessToken;
+        return blackListTokenRepository.existsByInvalidAccessToken(token);
+    }
+
+    public boolean isRefreshTokenBlacklisted(String refreshToken) {
+        return blackListTokenRepository.existsByInvalidRefreshToken(refreshToken);
     }
 
     public void validateAccessTokenNotBlacklisted(String accessToken) {
-        String token = accessToken.startsWith("Bearer ") ? accessToken.substring(7) : accessToken;
+        if (isAccessTokenBlacklisted(accessToken)) {
+            throw new InvalidTokenException("[ERROR] This access token is blacklisted.");
+        }
+    }
 
-        if (isBlacklisted(token)) {
-            throw new UnAuthorizationException("ERROR: This token is expired or blacklisted.");
+    public void validateRefreshTokenNotBlacklisted(String refreshToken) {
+        if (isRefreshTokenBlacklisted(refreshToken)) {
+            throw new InvalidTokenException("[ERROR] This refresh token is blacklisted.");
         }
     }
 }
