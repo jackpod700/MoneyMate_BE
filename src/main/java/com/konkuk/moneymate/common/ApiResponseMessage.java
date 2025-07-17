@@ -16,7 +16,18 @@ public enum ApiResponseMessage {
     ASSET_NOT_FOUND("자산을 찾을 수 없습니다"),
     WRONG_FORMAT("잘못된 형식"),
     NO_ACCESS_AUTHORITY("접근권한 없음"),
-    INTERNAL_SERVER_ERROR("서버 내부 오류");
+    INTERNAL_SERVER_ERROR("서버 내부 오류"),
+
+    USER_LOGIN_SUCCESS("로그인 성공"),
+    USER_LOGOUT_SUCCESS("로그아웃 성공"),
+    USER_REGISTER_SUCCESS("회원가입 성공"),
+    
+    SMS_SEND_SUCCESS("인증 요청을 성공적으로 보냈습니다"),
+    SMS_VERIFY_SUCCESS("sms 인증이 완료되었습니다"),
+
+    INVALID_REFRESH_TOKEN("유효하지 않은 Refresh Token 입니다"),
+    INVALID_ACCESS_TOKEN("유효하지 않은 access Token 입니다");
+
     private String message;
 
     ApiResponseMessage(String s) {

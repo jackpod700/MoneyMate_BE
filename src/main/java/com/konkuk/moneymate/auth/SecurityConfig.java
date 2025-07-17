@@ -62,7 +62,9 @@ public class SecurityConfig {
             "/webjars/**",
             "/favicon.ico",
             "/user/reissue-token",
-            "/health"
+            "/health",
+            "/user/verify/sms-send",
+            "/user/verify/sms-request"
     };
 
     /**

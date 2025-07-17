@@ -4,10 +4,13 @@ package com.konkuk.moneymate.auth.api.controller;
 import com.konkuk.moneymate.auth.api.response.AuthTokensResponse;
 import com.konkuk.moneymate.auth.application.UserCredentials;
 import com.konkuk.moneymate.auth.service.JwtService;
+import com.konkuk.moneymate.common.ApiResponse;
+import com.konkuk.moneymate.common.ApiResponseMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,7 +55,8 @@ public class LoginController {
 
         AuthTokensResponse tokenResponse = AuthTokensResponse.of(accessToken, refreshToken, "Bearer");
 
-        return ResponseEntity.ok(tokenResponse);
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
+                ApiResponseMessage.USER_LOGIN_SUCCESS.getMessage(), tokenResponse));
     }
 
 
