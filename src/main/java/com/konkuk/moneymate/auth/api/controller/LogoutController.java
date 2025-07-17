@@ -37,8 +37,8 @@ public class LogoutController {
      * @return ResponseEntity.status(HttpStatus. )
      */
     @PostMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        logoutService.logout(request);
+    public ResponseEntity<?> logout(HttpServletRequest request) throws IOException {
+        return logoutService.logout(request);
     }
 
 

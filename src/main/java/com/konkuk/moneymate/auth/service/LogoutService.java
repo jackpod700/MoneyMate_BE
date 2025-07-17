@@ -2,6 +2,8 @@ package com.konkuk.moneymate.auth.service;
 
 import com.konkuk.moneymate.auth.application.RefreshTokenValidator;
 import com.konkuk.moneymate.auth.exception.InvalidTokenException;
+import com.konkuk.moneymate.common.ApiResponse;
+import com.konkuk.moneymate.common.ApiResponseMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +28,7 @@ public class LogoutService {
     private final RefreshTokenValidator refreshTokenValidator;
     private final JwtBlackListService jwtBlackListService;
 
-    public ResponseEntity<Map<String, String>> logout(HttpServletRequest request) {
+    public ResponseEntity<?> logout(HttpServletRequest request) {
         Map<String, String> response = new HashMap<>();
         System.out.println("/logout");
 
@@ -49,25 +51,34 @@ public class LogoutService {
             refreshTokenValidator.validateBlacklistedToken(refreshToken);
 
             log.info("== accessToken : {}", accessToken);
-            log.info("== token before blacklistToken");
 
             jwtBlackListService.blacklistAccessToken(accessToken);
             jwtBlackListService.blacklistRefreshToken(refreshToken);
 
-            log.info("== token after blacklistToken");
-
-            response.put("message", "logout 처리 완료");
-            return ResponseEntity.ok(response);
+            response.put("message", "[200] 로그아웃 처리 완료");
+            return ResponseEntity.ok(new ApiResponse<>(
+                    HttpStatus.OK.getReasonPhrase(),
+                    ApiResponseMessage.USER_LOGOUT_SUCCESS.getMessage(),
+                    response
+            ));
 
         } catch (InvalidTokenException e) {
-            response.put("error", "invalid_token");
+            response.put("error", "[401] invalid_token");
             response.put("message", e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse<>(
+                    HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                    ApiResponseMessage.INVALID_TOKEN.getMessage(),
+                    response
+            ));
 
         } catch (Exception e) {
-            response.put("error", "server_error");
+            response.put("error", "[500] server_error");
             response.put("message", "Server Error");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse<>(
+                    HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                    ApiResponseMessage.INTERNAL_SERVER_ERROR.getMessage(),
+                    response
+            ));
         }
     }
 

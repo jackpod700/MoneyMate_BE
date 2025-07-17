@@ -43,13 +43,16 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             } catch (InvalidTokenException | io.jsonwebtoken.JwtException e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
-                response.getWriter().write("{\"error\":\"invalid_token\",\"message\":\"" + e.getMessage() + "\"}");
+                response.getWriter().write("{\"status\":\"Unauthorized\",\"message\":\"" + e.getMessage() + "\", \"data\": { \"message\": \"[401] invalid token.\"}}");
+                // "{\"error\":\"invalid_token\",\"message\":\"" + e.getMessage() + "\"}"
                 return;
             } catch (Exception e) {
                 // catch any unexpected error
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 response.setContentType("application/json");
-                response.getWriter().write("{\"error\":\"server_error\",\"message\":\"" + e.getMessage() + "\"}");
+                response.getWriter().write("{\"status\":\"Server Error\",\"message\":\"" + e.getMessage() + "\", \"data\": { \"message\": \"[401] invalid token.\"}}");
+
+
                 return;
             }
         }

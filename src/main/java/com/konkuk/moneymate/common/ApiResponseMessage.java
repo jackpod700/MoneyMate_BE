@@ -18,15 +18,27 @@ public enum ApiResponseMessage {
     NO_ACCESS_AUTHORITY("접근권한 없음"),
     INTERNAL_SERVER_ERROR("서버 내부 오류"),
 
+
     USER_LOGIN_SUCCESS("로그인 성공"),
+    USER_LOGIN_FAIL("로그인 실패, 아이디와 비밀번호를 확인해 주세요"),
     USER_LOGOUT_SUCCESS("로그아웃 성공"),
+
+    INVALID_TOKEN("유효하지 않은 token 입니다"),
+    INVALID_REFRESH_TOKEN("유효하지 않은 Refresh Token 입니다"),
+    INVALID_ACCESS_TOKEN("유효하지 않은 access Token 입니다"),
+
+
     USER_REGISTER_SUCCESS("회원가입 성공"),
-    
+    USER_REGISTER_FAIL("회원가입 실패"),
+    USER_ID_EXISTS("이미 존재하는 ID 입니다"),
+    USER_ID_NOT_EXISTS("존재하지 않는 ID 입니다"),
+    USER_ID_AVAILABLE("사용 가능한 ID 입니다"),
+
     SMS_SEND_SUCCESS("인증 요청을 성공적으로 보냈습니다"),
     SMS_VERIFY_SUCCESS("sms 인증이 완료되었습니다"),
+    SMS_VERIFY_FAIL("sms 인증 실패, 다시 시도해 주세요");
 
-    INVALID_REFRESH_TOKEN("유효하지 않은 Refresh Token 입니다"),
-    INVALID_ACCESS_TOKEN("유효하지 않은 access Token 입니다");
+
 
     private String message;
 

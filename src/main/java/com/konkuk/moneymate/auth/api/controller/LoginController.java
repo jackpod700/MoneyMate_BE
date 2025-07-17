@@ -4,6 +4,7 @@ package com.konkuk.moneymate.auth.api.controller;
 import com.konkuk.moneymate.auth.api.response.AuthTokensResponse;
 import com.konkuk.moneymate.auth.application.UserCredentials;
 import com.konkuk.moneymate.auth.service.JwtService;
+import com.konkuk.moneymate.auth.service.LoginService;
 import com.konkuk.moneymate.common.ApiResponse;
 import com.konkuk.moneymate.common.ApiResponseMessage;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,11 +35,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RestController
 public class LoginController {
-
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     private final JwtService jwtService;
-
-    private final AuthenticationManager authenticationManager;
+    private final LoginService loginService;
 
     /**
      * <h3> Post : /login </h3>
@@ -46,17 +45,8 @@ public class LoginController {
      * @return ResponseEntity.OK
      */
     @PostMapping("/login")
-    public ResponseEntity<?> getToken(@RequestBody UserCredentials credentials) {
-        UsernamePasswordAuthenticationToken creds = new UsernamePasswordAuthenticationToken(credentials.userid(),credentials.password());
-
-        Authentication auth = authenticationManager.authenticate(creds);
-        String accessToken = jwtService.getAccessToken(auth.getName());
-        String refreshToken = jwtService.getRefreshToken(auth.getName());
-
-        AuthTokensResponse tokenResponse = AuthTokensResponse.of(accessToken, refreshToken, "Bearer");
-
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
-                ApiResponseMessage.USER_LOGIN_SUCCESS.getMessage(), tokenResponse));
+    public ResponseEntity<?> login(@RequestBody UserCredentials credentials) {
+        return loginService.login(credentials);
     }
 
 

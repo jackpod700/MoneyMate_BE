@@ -28,4 +28,12 @@ public class MessageAuthController {
         return messageAuthService.smsSend(phoneNumber);
     }
 
+    @PostMapping("/user/verify/sms-request")
+    public ResponseEntity<?> smsRequest(@RequestBody SmsMessageRequest smsMessageRequest) {
+        String phoneNumber = smsMessageRequest.getPhoneNumber();
+        Integer verifyCode = smsMessageRequest.getVerifyCode();
+
+        return messageAuthService.smsVerify(phoneNumber, verifyCode);
+    }
+
 }
