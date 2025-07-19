@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -55,6 +57,33 @@ public class RegisterService {
                             ApiResponseMessage.USER_REGISTER_FAIL.getMessage(),
                             "[400] BAD REQUEST"
                     ));
+        }
+    }
+
+
+    public ResponseEntity<?> checkUserId(String userId) {
+        try{
+            Optional<User> user = userRepository.findByUserId(userId);
+            if(user.isPresent()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse<>(
+                        HttpStatus.CONFLICT.getReasonPhrase(),
+                        ApiResponseMessage.USER_ID_EXISTS.getMessage(),
+                        "[409] userId 중복"
+                ));
+            } else {
+                return ResponseEntity.ok(new ApiResponse<>(
+                        HttpStatus.OK.getReasonPhrase(),
+                        ApiResponseMessage.USER_ID_AVAILABLE.getMessage(),
+                        userId
+                ));
+            }
+
+        } catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(
+                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                    ApiResponseMessage.BAD_REQUEST.getMessage(),
+                    null
+            ));
         }
     }
 }

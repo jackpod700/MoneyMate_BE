@@ -21,6 +21,9 @@ public enum ApiResponseMessage {
     USER_LOGIN_SUCCESS("로그인 성공"),
     USER_LOGIN_FAIL("로그인 실패, 아이디와 비밀번호를 확인해 주세요"),
     USER_LOGOUT_SUCCESS("로그아웃 성공"),
+    USER_DELETE_SUCCESS("회원탈퇴 성공"),
+    USER_ID_PW_VERIFY_SUCCESS("ID-PW 확인 성공"),
+    USER_ID_PW_VERIFY_FAIL("ID-PW 확인 실패"),
 
     INVALID_TOKEN("This token is Invalid"),
     INVALID_REFRESH_TOKEN("This refresh token is Invalid"),
@@ -32,10 +35,13 @@ public enum ApiResponseMessage {
     USER_ID_EXISTS("이미 존재하는 ID 입니다"),
     USER_ID_NOT_EXISTS("존재하지 않는 ID 입니다"),
     USER_ID_AVAILABLE("사용 가능한 ID 입니다"),
+    USER_ID_FIND_SUCCESS("아이디 찾기 성공"),
 
     SMS_SEND_SUCCESS("인증 요청을 성공적으로 보냈습니다"),
     SMS_VERIFY_SUCCESS("sms 인증이 완료되었습니다"),
-    SMS_VERIFY_FAIL("sms 인증 실패, 다시 시도해 주세요");
+    SMS_VERIFY_FAIL("sms 인증 실패, 다시 시도해 주세요"),
+
+    BAD_REQUEST("[400] 기타 오류가 발생했습니다");
 
 
 

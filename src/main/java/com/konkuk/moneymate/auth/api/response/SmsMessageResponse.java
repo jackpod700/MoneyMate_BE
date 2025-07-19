@@ -12,11 +12,11 @@ import lombok.Setter;
 public class SmsMessageResponse<T> {
     private String phoneNumber;
     private Integer verifyCode;
-
-    // 사용 안 함
     private String message;
+    private String userVerifyCode;
 
-    public static SmsMessageResponse of(String phoneNumber, Integer verifyCode, String message) {
-        return new SmsMessageResponse(phoneNumber, verifyCode, message);
+
+    public static SmsMessageResponse of(String phoneNumber, Integer verifyCode, String message, String userVerifyCode) {
+        return new SmsMessageResponse(phoneNumber, verifyCode, message, userVerifyCode);
     }
 }

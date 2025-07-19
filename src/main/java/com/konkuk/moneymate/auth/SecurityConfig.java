@@ -58,6 +58,8 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/v2/api-docs",
+            "/user/find-id",
+            "/user/reset-pw",
             "/swagger-resources/**",
             "/webjars/**",
             "/favicon.ico",

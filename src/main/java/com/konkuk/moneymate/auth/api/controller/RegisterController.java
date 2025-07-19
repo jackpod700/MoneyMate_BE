@@ -44,22 +44,9 @@ public class RegisterController {
     }
 
 
-
-
     @GetMapping("/user/check-id")
     public ResponseEntity<?> checkUserId(@RequestParam String userId) {
-        try{
-
-            Optional<User> user = userRepository.findByUserId(userId);
-            if(user.isPresent()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("중복 id 입니다.");
-            } else {
-                return ResponseEntity.ok(userId);
-            }
-
-        } catch(Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        return registerService.checkUserId(userId);
     }
 
 

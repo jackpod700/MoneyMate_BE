@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
@@ -113,9 +114,17 @@ public class MessageAuthService     {
         // 인증 성공 시 Redis 삭제
         redisTemplate.delete(receiver);
 
+        String userVerifyCode = UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+        // String pwVerifyCode = UUID.randomUUID().toString().replace("-", "").substring(0, 12);
+
+        long ID_VERIFY_CODE_EXPIRE_SEC = 5 * 60L;
+        redisTemplate.opsForValue().set(receiver, userVerifyCode, ID_VERIFY_CODE_EXPIRE_SEC, TimeUnit.SECONDS);
+
+        log.info("userVerifyCode 발급 완료. receiver={}, userVerifyCode={}", receiver, userVerifyCode);
+
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
                 ApiResponseMessage.SMS_VERIFY_SUCCESS.getMessage(),
-                SmsMessageResponse.of(receiver, verifyCode,"[MoneyMate] 인증 성공")));
+                SmsMessageResponse.of(receiver, verifyCode,"[MoneyMate] 인증 성공", userVerifyCode)));
     }
 }
 
