@@ -20,8 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Data
 @Component
 public class JwtService {
-    static final long ACCESS_TOKEN_EXPIRE_TIME = 3600000L; // 1 hr
-    static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 3600000L; // 7 days
+    static final long ACCESS_TOKEN_EXPIRE_TIME = 5 * 60 * 1000L; // 1 hr
+    static final long REFRESH_TOKEN_EXPIRE_TIME = 1 * 24 * 60 * 60 * 1000L; // 1 days
 
     static final String AUTHORIZATION_HEADER = "Authorization";
     static final String BEARER_TYPE = "Bearer";

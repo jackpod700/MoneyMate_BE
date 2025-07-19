@@ -2,6 +2,7 @@ package com.konkuk.moneymate.auth.api.controller;
 
 import com.konkuk.moneymate.activities.entity.User;
 import com.konkuk.moneymate.activities.repository.UserRepository;
+import com.konkuk.moneymate.auth.service.RegisterService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public class RegisterController {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final RegisterService registerService;
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
@@ -36,31 +38,13 @@ public class RegisterController {
      *
      *
      */
-
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
-        user.encodeBCryptPassword();
-
-        try{
-            /**
-             * 중복 검사를 자체적으로 하지만, 흐름은 회원 가입 폼에서 제어합니다
-             */
-            if(userRepository.existsByUserId(user.getUserId())){
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("중복 id 입니다.");
-            }
-
-            userRepository.save(user);
-            return ResponseEntity.ok("회원 가입이 완료되었습니다.");
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            //400 Bad Request
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("회원가입 중 오류가 발생했습니다: " + e.getMessage());
-        }
-
+        return registerService.register(user);
     }
+
+
+
 
     @GetMapping("/user/check-id")
     public ResponseEntity<?> checkUserId(@RequestParam String userId) {

@@ -1,5 +1,6 @@
 package com.konkuk.moneymate.auth.service;
 
+import com.konkuk.moneymate.auth.api.request.RefreshTokenBody;
 import com.konkuk.moneymate.auth.application.RefreshTokenValidator;
 import com.konkuk.moneymate.auth.exception.InvalidTokenException;
 import com.konkuk.moneymate.common.ApiResponse;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,12 +30,13 @@ public class LogoutService {
     private final RefreshTokenValidator refreshTokenValidator;
     private final JwtBlackListService jwtBlackListService;
 
-    public ResponseEntity<?> logout(HttpServletRequest request) {
+    public ResponseEntity<?> logout(RefreshTokenBody refreshTokenBody, HttpServletRequest request) {
         Map<String, String> response = new HashMap<>();
         System.out.println("/logout");
 
         String accessTokenHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String refreshToken = request.getHeader("refresh");
+        String refreshToken = refreshTokenBody.getRefreshToken();
+        // String refreshToken = request.getHeader("refresh");
 
         log.info("== accessTokenHeader : {}", accessTokenHeader);
         if (refreshToken == null || accessTokenHeader == null || !accessTokenHeader.startsWith("Bearer ")) {

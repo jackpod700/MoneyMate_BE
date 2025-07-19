@@ -1,6 +1,7 @@
 package com.konkuk.moneymate.auth.api.controller;
 
 
+import com.konkuk.moneymate.auth.api.request.RefreshTokenBody;
 import com.konkuk.moneymate.auth.service.JwtService;
 import com.konkuk.moneymate.auth.service.LogoutService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -37,8 +39,8 @@ public class LogoutController {
      * @return ResponseEntity.status(HttpStatus. )
      */
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request) throws IOException {
-        return logoutService.logout(request);
+    public ResponseEntity<?> logout(@RequestBody RefreshTokenBody refreshTokenBody, HttpServletRequest request) throws IOException {
+        return logoutService.logout(refreshTokenBody, request);
     }
 
 

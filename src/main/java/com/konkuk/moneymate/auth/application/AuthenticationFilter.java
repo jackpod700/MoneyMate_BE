@@ -37,7 +37,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
                 // token 검증 시 발생하는 모든 예외 처리
                 String user = jwtService.getAuthUser(request);
-                Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+                Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());   
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             } catch (InvalidTokenException | io.jsonwebtoken.JwtException e) {

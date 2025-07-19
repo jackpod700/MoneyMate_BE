@@ -18,15 +18,14 @@ public enum ApiResponseMessage {
     NO_ACCESS_AUTHORITY("접근권한 없음"),
     INTERNAL_SERVER_ERROR("서버 내부 오류"),
 
-
     USER_LOGIN_SUCCESS("로그인 성공"),
     USER_LOGIN_FAIL("로그인 실패, 아이디와 비밀번호를 확인해 주세요"),
     USER_LOGOUT_SUCCESS("로그아웃 성공"),
 
-    INVALID_TOKEN("유효하지 않은 token 입니다"),
-    INVALID_REFRESH_TOKEN("유효하지 않은 Refresh Token 입니다"),
-    INVALID_ACCESS_TOKEN("유효하지 않은 access Token 입니다"),
-
+    INVALID_TOKEN("This token is Invalid"),
+    INVALID_REFRESH_TOKEN("This refresh token is Invalid"),
+    INVALID_ACCESS_TOKEN("This access token is Invalid"),
+    TOKEN_REISSUE_SUCCESS("토큰 재발급 성공"),
 
     USER_REGISTER_SUCCESS("회원가입 성공"),
     USER_REGISTER_FAIL("회원가입 실패"),

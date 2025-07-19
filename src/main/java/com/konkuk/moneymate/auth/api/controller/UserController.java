@@ -3,6 +3,7 @@ package com.konkuk.moneymate.auth.api.controller;
 import com.konkuk.moneymate.activities.dto.UserDto;
 import com.konkuk.moneymate.activities.entity.User;
 import com.konkuk.moneymate.activities.repository.UserRepository;
+import com.konkuk.moneymate.auth.api.request.RefreshTokenBody;
 import com.konkuk.moneymate.auth.service.JwtService;
 import com.konkuk.moneymate.auth.service.LogoutService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +36,7 @@ public class UserController {
      * @return ResponseEntity.status <br> 및 계정 삭제 처리
      */
     @DeleteMapping("/user/delete")
-    public ResponseEntity<String> deleteUser(HttpServletRequest request) {
+    public ResponseEntity<String> deleteUser(@RequestBody RefreshTokenBody refreshTokenBody, HttpServletRequest request) {
         try{
             String userId = jwtService.getAuthUser(request);
 
@@ -43,7 +44,7 @@ public class UserController {
                     .orElseThrow(() -> new RuntimeException("cannot find user"));
 
             userRepository.delete(user);
-            logoutService.logout(request);
+            logoutService.logout(refreshTokenBody, request);
             return ResponseEntity.ok("200: User " + userId + " deleted");
 
         } catch (Exception e) {

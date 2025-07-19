@@ -4,6 +4,7 @@ import com.konkuk.moneymate.auth.exception.InvalidTokenException;
 import com.konkuk.moneymate.auth.exception.RefreshTokenExpiredException;
 import com.konkuk.moneymate.auth.repository.BlackListTokenRepository;
 import com.konkuk.moneymate.auth.service.JwtService;
+import com.konkuk.moneymate.common.ApiResponseMessage;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +26,9 @@ public class RefreshTokenValidator {
         try {
             jwtService.getUserIdFromRefreshToken(token);
         } catch (ExpiredJwtException e) {
-            throw new RefreshTokenExpiredException("[ERROR] Refresh Token is expired!");
+            throw new RefreshTokenExpiredException(ApiResponseMessage.INVALID_REFRESH_TOKEN.getMessage());
         } catch (JwtException e) {
-            throw new RefreshTokenExpiredException("[ERROR] Refresh Token is invalid!");
+            throw new RefreshTokenExpiredException(ApiResponseMessage.INVALID_REFRESH_TOKEN.getMessage());
         }
     }
 
@@ -38,7 +39,7 @@ public class RefreshTokenValidator {
         String userId = jwtService.getUserIdFromRefreshToken(refreshToken);
 
         if (!id.equals(userId)) {
-            throw new RuntimeException("[ERROR] 로그인한 사용자의 Refresh Token이 아닙니다!");
+            throw new RuntimeException(ApiResponseMessage.INVALID_REFRESH_TOKEN.getMessage());
         }
     }
 
@@ -48,7 +49,7 @@ public class RefreshTokenValidator {
      */
     public void validateBlacklistedToken(String refreshToken) {
         if (blackListTokenRepository.existsByInvalidRefreshToken(refreshToken)) {
-            throw new RuntimeException("[ERROR] 이미 로그아웃된 사용자입니다!");
+            throw new RuntimeException(ApiResponseMessage.INVALID_REFRESH_TOKEN.getMessage());
         }
     }
 
