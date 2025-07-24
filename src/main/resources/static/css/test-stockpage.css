@@ -8,8 +8,22 @@
 
 body {
     font-family: NoonnuBasicGothicRegular, Arial, sans-serif;
-    padding: 40px;
     background-color: #f5f5f5;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+
+    /* 패딩을 뷰포트에 따라 자동 조절 */
+    /* 최소 10px, 5vw, 최대 40px 사이*/
+    padding: clamp(10px, 5vw, 40px);
+}
+
+@media (max-width: 480px) {
+    body {
+        /* 화면이 480px 이하일 땐 패딩을 더 줄이거나 */
+        padding: 12px;
+    }
 }
 
 h1 {
