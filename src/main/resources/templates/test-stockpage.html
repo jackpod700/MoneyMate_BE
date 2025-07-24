@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Page</title>
+    <link rel="stylesheet" type="text/css" href="/css/test-stockpage.css">
+    <link rel="stylesheet" type="text/css" href="/css/test-stockpage-tab.css">
+    <link rel="stylesheet" type="text/css" href="/css/test-stockpage-bulk.css">
+</head>
+
+<body>
+
+<h1>📈 주식 정보 페이지</h1>
+
+<div class="tab-bar">
+    <div class="tab active" data-tab="stock">시세 조회</div>
+    <div class="tab" data-tab="naver">실시간 시세</div>
+    <div class="tab" data-tab="bulk">전체 종목</div>
+</div>
+
+<div class="tab-content active" id="tab-stock">
+    <div class="stock-form-div">
+        <form id="stockForm">
+            <label for="market">국가 선택</label>
+            <select id="market" name="market">
+                <option value="US">미국</option>
+                <option value="KO">한국</option>
+                <option value="INDX">지수종목</option>
+            </select>
+
+            <label for="ticker">종목코드</label>
+            <div class="inline-input-button">
+                <input type="text" id="ticker" name="ticker" placeholder="예: AAPL, 005930, KS11">
+                <button type="submit">조회</button>
+            </div>
+        </form>
+
+        <div id="result-box" class="hidden-section">
+            찾는 중...
+        </div>
+    </div>
+</div>
+
+<div class="tab-content" id="tab-naver">
+    <div class="stock-form-div">
+        <form id="naverRealtimeForm">
+            <label for="marketSelect">시장 선택</label>
+            <select id="marketSelect">
+                <option value="KR">한국 - KOSPI / KOSDAQ</option>
+                <option value="US_K">미국 - NYSE</option>
+                <option value="US_O">미국 - NASDAQ</option>
+            </select>
+
+            <label for="symbol">종목코드</label>
+            <div class="inline-input-button">
+                <input type="text" id="symbol" placeholder="예: AAPL, CPNG, 005930" />
+                <button type="submit">실시간 조회</button>
+            </div>
+        </form>
+        <div id="naverRealtimeResult" class="hidden-section">불러오는 중...</div>
+    </div>
+</div>
+
+
+
+
+
+<div class="tab-content" id="tab-bulk">
+    <h2>📊 전체 종목 시세 조회</h2>
+    <div style="margin-bottom:10px;">
+        <label for="bulk-market">국가 선택:</label>
+        <select id="bulk-market">
+            <option value="KO">한국</option>
+            <option value="US">미국</option>
+        </select>
+        <button id="bulk-fetch-btn">전체 조회</button>
+    </div>
+    <div id="bulk-result" class="result-card">데이터를 조회하려면 버튼을 누르세요.<br>주의 - 미국 주식은 조회하지 않는 것을 권장합니다</div>
+</div>
+
+<script src="/js/test-stockpage.js"></script>
+<script>
+</script>
+
+</body>
+</html>

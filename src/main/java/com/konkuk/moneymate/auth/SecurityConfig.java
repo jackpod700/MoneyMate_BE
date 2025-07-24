@@ -66,7 +66,12 @@ public class SecurityConfig {
             "/user/reissue-token",
             "/health",
             "/user/verify/sms-send",
-            "/user/verify/sms-request"
+            "/user/verify/sms-request",
+            "/test/page/stock",
+            "/css/**",
+            "/images/**",
+            "/js/**",
+            "/api/naver/realtime"
     };
 
     /**
