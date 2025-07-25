@@ -1,0 +1,58 @@
+.exchange-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.exchange-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 0.9rem;
+}
+.exchange-item.up .change      { color: red; }
+.exchange-item.down .change    { color: blue; }
+.exchange-item.neutral .change { color: gray; }
+
+.currency { flex: 2; }
+.price    { flex: 1; text-align: left; }
+.change   { flex: 1; text-align: right; }
+
+#toggle-more {
+    margin: 8px 0;
+    padding: 4px 8px;
+    cursor: pointer;
+    background: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.toggle-label {
+    display: block;
+    margin: 8px 0;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.toggle-btn-300{
+    background-color: transparent;
+    width: 300px;
+    color: #000;
+    border: none;
+    padding: 0.5em 0.1em;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+#toggle-secondary {
+    margin-bottom: 8px;
+    display: block;
+    text-align: left;
+    cursor: pointer;
+    background: #ffffff;
+    color: #000000;
+    user-select: none;
+}
+#toggle-secondary:hover {
+    text-decoration: underline;
+}

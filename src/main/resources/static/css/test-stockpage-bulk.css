@@ -37,3 +37,7 @@
     border-bottom: 2px solid #ccc;
     z-index: 2;
 }
+
+.hidden {
+    display: none;
+}

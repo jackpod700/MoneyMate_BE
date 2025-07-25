@@ -31,7 +31,7 @@ h1 {
 }
 
 h2 {
-    margin: 3px 0 0 0;
+    margin: 5px 0;
 }
 
 .stock-form-div {
@@ -181,5 +181,7 @@ form > * {
 }
 
 .stock-form-div {
+    color: #000000;
+    background: #FFFFFF;
     padding: 5px 20px;
 }

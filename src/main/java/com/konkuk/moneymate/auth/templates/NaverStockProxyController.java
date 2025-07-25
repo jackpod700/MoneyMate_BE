@@ -178,7 +178,7 @@ public class NaverStockProxyController {
      */
     @GetMapping("/api/proxy/naver-stock/exchange")
     public ResponseEntity<?> getExchangeIndex() {
-        String url = "https://m.stock.naver.com/front-api/marketIndex/exchange/world";
+        String url = "https://m.stock.naver.com/front-api/marketIndex/exchange/new";
 
         try {
             HttpClient client = HttpClient.newHttpClient();

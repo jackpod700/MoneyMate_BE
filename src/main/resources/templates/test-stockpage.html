@@ -6,6 +6,7 @@
     <title>Stock Page</title>
     <link rel="stylesheet" type="text/css" href="/css/test-stockpage.css">
     <link rel="stylesheet" type="text/css" href="/css/test-stockpage-tab.css">
+    <link rel="stylesheet" type="text/css" href="/css/test-stockpage-index.css">
     <link rel="stylesheet" type="text/css" href="/css/test-stockpage-bulk.css">
 </head>
 
@@ -69,7 +70,11 @@
     <div class="stock-form-div">
         <div id="div-exchange" class="div-market">
             <h2>💵 환율 요약</h2>
-            <div id="exchange-show" class="show"></div>
+            <div id="exchange-show" class="show">
+                <div id="exchange-primary"></div>
+                <div class="div-description">5초마다 자동으로 갱신됩니다.</div>
+                <div id="exchange-extra"></div>
+            </div>
         </div>
 
         <div id="div-index" class="div-market">
@@ -79,12 +84,22 @@
 
         <div id="div-stock-dom" class="div-market">
             <h2>🏛️ 국내 주식 </h2>
-            <div id="dom-show" class="show"></div>
+            <div id="dom-show" class="show">
+                <h3>시가총액</h3><hr>
+                <h3>상승 TOP</h3><hr>
+                <h3>하락 TOP</h3><hr>
+                <h3>배당 TOP</h3><hr>
+            </div>
         </div>
 
         <div id="div-stock-ex" class="div-market">
             <h2>🏛️ 해외 주식 </h2>
-            <div id="ex-show" class="show"></div>
+            <div id="ex-show" class="show">
+                <h3>시가총액</h3><hr>
+                <h3>상승 TOP</h3><hr>
+                <h3>하락 TOP</h3><hr>
+                <h3>배당 TOP</h3><hr>
+            </div>
         </div>
 
 
@@ -111,6 +126,8 @@
 
 
 <script src="/js/test-stockpage.js"></script>
+<script src="/js/test-stockpage-exchange.js"></script>
+<script src="/js/test-stockpage-stock-sync.js"></script>
 <script>
 </script>
 
