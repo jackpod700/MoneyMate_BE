@@ -1,10 +1,9 @@
-
 function formatStock(item) {
     const nameKor  = item.stockName || '';
     const exchCode = item.stockExchangeType?.name || '';
     const displayName = exchCode
         ? `${nameKor} (${exchCode})`
-            : nameKor;
+        : nameKor;
 
     const price = item.closePrice
         || (item.now && item.now.tradePrice)
@@ -25,13 +24,13 @@ function formatStock(item) {
     const cls   = changeVal > 0 ? 'up' : changeVal < 0 ? 'down' : 'neutral';
 
     return `
-      <li class="exchange-item ${cls}">
-        <span class="currency">${displayName}</span>
-        <span class="price">${price}</span>
-        <span class="change">
-          ${arrow}${Math.abs(changeVal).toFixed(2)} (${pct.toFixed(2)}%)
-        </span>
-      </li>`;
+    <li class="exchange-item ${cls}">
+      <span class="currency">${displayName}</span>
+      <span class="price">${price}</span>
+      <span class="change">
+        ${arrow}${Math.abs(changeVal).toFixed(2)} (${pct.toFixed(2)}%)
+      </span>
+    </li>`;
 }
 
 function renderStockList(list) {
@@ -39,126 +38,95 @@ function renderStockList(list) {
         return '<p>데이터가 없습니다.</p>';
     }
     return `
-      <ul class="exchange-list">
-        ${list.slice(0, 20).map(formatStock).join('')}
-      </ul>`;
+    <ul class="exchange-list">
+      ${list.slice(0, 20).map(formatStock).join('')}
+    </ul>`;
 }
 
+function formatIndustry(item) {
+    const rate = parseFloat(item.changeRate);
+    const arrow = rate > 0 ? '▲' : rate < 0 ? '▼' : '=';
+    const cls   = rate > 0 ? 'up' : rate < 0 ? 'down' : 'neutral';
 
+    return `
+    <li class="exchange-item ${cls}">
+      <span class="currency">${item.name}</span>
+      <span class="change">${arrow}${Math.abs(rate).toFixed(2)}%</span>
+    </li>`;
+}
 
+function renderIndustryList(groups) {
+    if (!Array.isArray(groups) || groups.length === 0) {
+        return '<p>업종 데이터가 없습니다.</p>';
+    }
+    return `
+    <ul class="exchange-list">
+      ${groups.map(formatIndustry).join('')}
+    </ul>`;
+}
 
+// 공통 fetch 함수: 서버가 text/plain 으로 String 응답해도 안전히 파싱
+function fetchProxy(path, params) {
+    const qs = new URLSearchParams(params).toString();
+    return fetch(`${path}?${qs}`)
+        .then(res => {
+            if (!res.ok) throw new Error(res.statusText);
+            return res.text();
+        })
+        .then(txt => JSON.parse(txt));
+}
 
+function fetchList(type, page = 1, pageSize = 20) {
+    return fetchProxy('/api/proxy/naver-stock/domestic', { type, page, pageSize })
+        .then(json => {
+            // 국내주식 market/up/down 은 stocks 프로퍼티, industry 는 groups
+            if (json.stocks)  return json.stocks;
+            if (json.result)  return json.result;
+            return json;
+        });
+}
 
+function fetchIndustry(page = 1, pageSize = 20) {
+    return fetchProxy('/api/proxy/naver-stock/domestic', { type: 'industry', page, pageSize })
+        .then(json => json.groups || []);
+}
 
+function fetchDomesticStocks() {
+    const marketTab = document.getElementById('tab-marketindex');
+    if (!marketTab.classList.contains('active')) return;
 
-
-
-
-
-
-
+    Promise.all([
+        fetchList('market'),
+        fetchList('up'),
+        fetchList('down'),
+        Promise.all([1,2,3,4].map(p => fetchIndustry(p))).then(arr => arr.flat())
+    ])
+        .then(([marketList, upList, downList, industryGroups]) => {
+            document.getElementById('dom-value').innerHTML    = renderStockList(marketList);
+            document.getElementById('dom-up').innerHTML       = renderStockList(upList);
+            document.getElementById('dom-down').innerHTML     = renderStockList(downList);
+            document.getElementById('dom-industry').innerHTML = renderIndustryList(industryGroups);
+        })
+        .catch(err => {
+            console.error('국내 주식 조회 오류:', err);
+            const msg = `<p class="error">조회 오류: ${err.message}</p>`;
+            ['dom-value','dom-up','dom-down','dom-industry'].forEach(id => {
+                document.getElementById(id).innerHTML = msg;
+            });
+        });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-    const tabs             = document.querySelectorAll('.tab');
-    const tabContents      = document.querySelectorAll('.tab-content');
-    const domValueContainer    = document.getElementById('dom-value');
-    const domUpContainer       = document.getElementById('dom-up');
-    const domDownContainer     = document.getElementById('dom-down');
-    const domIndustryContainer = document.getElementById('dom-industry');
-
+    const tabs        = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
     let countDom = 0;
-
-    function formatIndustry(item) {
-        const rate = parseFloat(item.changeRate);
-        const arrow = rate > 0 ? '▲' : rate < 0 ? '▼' : '=';
-        const cls   = rate > 0 ? 'up' : rate < 0 ? 'down' : 'neutral';
-
-        return `
-      <li class="exchange-item ${cls}">
-        <span class="currency">${item.name}</span>
-        <span class="change">${arrow}${Math.abs(rate).toFixed(2)}%</span>
-      </li>`;
-    }
-
-    function renderIndustryList(groups) {
-        if (!Array.isArray(groups) || groups.length === 0) {
-            return '<p>업종 데이터가 없습니다.</p>';
-        }
-        return `
-      <ul class="exchange-list">
-        ${groups.map(formatIndustry).join('')}
-      </ul>`;
-    }
-
-
-    function fetchList(type) {
-        return fetch(`/api/proxy/naver-stock/domestic?type=${type}&page=1&pageSize=20`)
-            .then(res => {
-                if (!res.ok) throw new Error(res.statusText);
-                return res.json();
-            })
-            .then(json => {
-                let list = typeof json === 'string' ? JSON.parse(json) : json;
-                if (list.stocks) list = list.stocks;
-                if (list.result) list = list.result;
-                return list;
-            });
-    }
-
-    function fetchIndustry() {
-        // 1~4페이지를 병렬로 요청
-        const pages = [1, 2, 3, 4];
-        const requests = pages.map(page =>
-            fetch(`/api/proxy/naver-stock/domestic?type=industry&page=${page}&pageSize=20`)
-                .then(res => {
-                    if (!res.ok) throw new Error(res.statusText);
-                    return res.json();
-                })
-                .then(json => {
-                    const obj = typeof json === 'string' ? JSON.parse(json) : json;
-                    return obj.groups || [];
-                })
-        );
-
-        return Promise.all(requests)
-            .then(pageGroups => pageGroups.flat());
-    }
-
-
-    function fetchDomesticStocks() {
-        const marketTab = document.getElementById('tab-marketindex');
-        if (!marketTab.classList.contains('active')) return;
-
-        Promise.all([
-            fetchList('market'),
-            fetchList('up'),
-            fetchList('down'),
-            fetchIndustry()
-        ])
-            .then(([marketList, upList, downList, industryGroups]) => {
-                domValueContainer.innerHTML    = renderStockList(marketList);
-                domUpContainer.innerHTML       = renderStockList(upList);
-                domDownContainer.innerHTML     = renderStockList(downList);
-                domIndustryContainer.innerHTML = renderIndustryList(industryGroups);
-            })
-            .catch(err => {
-                console.error('국내 주식 조회 오류:', err);
-                const msg = `<p class="error">조회 오류: ${err.message}</p>`;
-                domValueContainer.innerHTML    = msg;
-                domUpContainer.innerHTML       = msg;
-                domDownContainer.innerHTML     = msg;
-                domIndustryContainer.innerHTML = msg;
-            });
-    }
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
             const targetId = 'tab-' + tab.dataset.tab;
             tabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
-            tabContents.forEach(c =>
-                c.classList.toggle('active', c.id === targetId)
-            );
+            tabContents.forEach(c => c.classList.toggle('active', c.id === targetId));
 
             if (targetId === 'tab-marketindex' && countDom < 1) {
                 fetchDomesticStocks();
@@ -167,5 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // 10초마다 자동 갱신
     setInterval(fetchDomesticStocks, 10000);
 });

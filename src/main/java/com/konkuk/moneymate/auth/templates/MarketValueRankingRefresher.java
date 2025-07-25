@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Component
-public class MarketValueRankingRefresher {
+// @Component // 서버실행 느려짐
+public class    MarketValueRankingRefresher {
 
     private final RestTemplate rest;
     private final ObjectMapper mapper;

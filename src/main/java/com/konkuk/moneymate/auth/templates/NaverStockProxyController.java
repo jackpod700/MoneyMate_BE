@@ -1,7 +1,5 @@
 package com.konkuk.moneymate.auth.templates;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,10 +11,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class NaverStockProxyController {
@@ -104,59 +98,8 @@ public class NaverStockProxyController {
 
         switch (type.toLowerCase()) {
             case "market": // 시가총액
-            {
-                try {
-                    HttpClient client = HttpClient.newHttpClient();
-                    ObjectMapper mapper = new ObjectMapper();
-
-                    // 1) KOSPI, KOSDAQ 각각 상위 pageSize 종목 가져오기
-                    List<StockItem> all = new ArrayList<>();
-                    for (String ex : List.of("KOSPI", "KOSDAQ")) {
-                        String apiUrl = baseUrl + "marketValue/" + ex
-                                + "?page=" + page + "&pageSize=" + pageSize;
-                        HttpRequest req = HttpRequest.newBuilder()
-                                .uri(URI.create(apiUrl))
-                                .header("User-Agent", "Mozilla/5.0")
-                                .build();
-                        HttpResponse<String> resp = client.send(req, HttpResponse.BodyHandlers.ofString());
-
-                        JsonNode stocks = mapper.readTree(resp.body()).path("stocks");
-                        if (stocks.isArray()) {
-                            for (JsonNode node : stocks) {
-                                String code = node.path("reutersCode").asText();
-                                long mv = Long.parseLong(
-                                        node.path("marketValue")
-                                                .asText("0")
-                                                .replaceAll(",", "")
-                                );
-                                all.add(new StockItem(code, mv));
-                            }
-                        }
-                    }
-
-                    // 2) marketValue 기준 내림차순 정렬 후 상위 20개 선택
-                    List<String> topCodes = all.stream()
-                            .sorted(Comparator.comparingLong(StockItem::getMarketValue).reversed())
-                            .limit(20)
-                            .map(StockItem::getReutersCode)
-                            .collect(Collectors.toList());
-
-                    // 3) "%2C" 로 join 한 뒤 실시간 시세 API 호출
-                    String codesParam = String.join("%2C", topCodes);
-                    String pollingUrl = "https://polling.finance.naver.com/api/realtime/domestic/stock/" + codesParam;
-
-                    HttpRequest pollingReq = HttpRequest.newBuilder()
-                            .uri(URI.create(pollingUrl))
-                            .header("User-Agent", "Mozilla/5.0")
-                            .build();
-                    HttpResponse<String> pollingResp = client.send(pollingReq, HttpResponse.BodyHandlers.ofString());
-
-                    return ResponseEntity.ok(pollingResp.body());
-                } catch (Exception e) {
-                    return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
-                            .body("Error fetching market data: " + e.getMessage());
-                }
-            }
+                url = baseUrl + "marketValue/all?page=" + page + "&pageSize=" + pageSize;
+                break;
             case "up": // 상승
                 url = baseUrl + "up/all?page=" + page + "&pageSize=" + pageSize;
                 break;
