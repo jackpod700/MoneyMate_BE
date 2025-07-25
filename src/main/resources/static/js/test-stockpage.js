@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Spring Boot 서버에 프록시 요청
-        const proxyUrl = `/api/naver/realtime?region=${region}&exchange=${exchange}&ticker=${ticker}`;
+        const proxyUrl = `/api/proxy/naver-stock/realtime?region=${region}&exchange=${exchange}&ticker=${ticker}`;
 
         resultDiv.classList.add('show');
         resultDiv.innerText = "🔄 실시간 시세 조회 중...";
@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="timestamp">${formattedTime} ${realTimeLabel}</div>
                     <h3>${stockName} (${ticker})</h3>
                     <p><strong>거래소:</strong> ${market}</p>
-                    <p><strong>종가:</strong> ${close}</p>
+                    <p><strong>현재가:</strong> ${close}</p>
                     <p class="change-line">
                       <strong>전일 대비:</strong>
                       <span class="arrow ${arrowClass}">${arrow}</span>

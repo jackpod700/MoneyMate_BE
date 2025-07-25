@@ -14,8 +14,9 @@
 <h1>📈 주식 정보 페이지</h1>
 
 <div class="tab-bar">
-    <div class="tab active" data-tab="stock">시세 조회</div>
+    <div class="tab active" data-tab="stock">지연 시세</div>
     <div class="tab" data-tab="naver">실시간 시세</div>
+    <div class="tab" data-tab="marketindex">시장 요약</div>
     <div class="tab" data-tab="bulk">전체 종목</div>
 </div>
 
@@ -48,7 +49,7 @@
             <label for="marketSelect">시장 선택</label>
             <select id="marketSelect">
                 <option value="KR">한국 - KOSPI / KOSDAQ</option>
-                <option value="US_K">미국 - NYSE</option>
+                <option value="US_K">미국 - NYSE / AMEX</option>
                 <option value="US_O">미국 - NASDAQ</option>
             </select>
 
@@ -64,7 +65,13 @@
 
 
 
+<div class="tab-content" id="tab-marketindex">
+    <div class="stock-form-div">
+        <h2>📊 주요 종목 시세 요약</h2>
 
+        <div id="marketindexResult" class="hidden-section">불러오는 중...</div>
+    </div>
+</div>
 
 <div class="tab-content" id="tab-bulk">
     <h2>📊 전체 종목 시세 조회</h2>
@@ -78,6 +85,8 @@
     </div>
     <div id="bulk-result" class="result-card">데이터를 조회하려면 버튼을 누르세요.<br>주의 - 미국 주식은 조회하지 않는 것을 권장합니다</div>
 </div>
+
+
 
 <script src="/js/test-stockpage.js"></script>
 <script>
