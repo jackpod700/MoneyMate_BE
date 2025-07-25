@@ -1,0 +1,53 @@
+
+시가총액 20
+https://api.stock.naver.com/stock/exchange/NYSE/marketValue?page=1&pageSize=20
+
+https://api.stock.naver.com/stock/exchange/NASDAQ/marketValue?page=1&pageSize=20
+
+https://api.stock.naver.com/stock/exchange/AMEX/marketValue?page=1&pageSize=20
+
+상승 20
+https://api.stock.naver.com/stock/exchange/NYSE/up?page=1&pageSize=20
+
+https://api.stock.naver.com/stock/exchange/NASDAQ/up?page=1&pageSize=20
+
+https://api.stock.naver.com/stock/exchange/AMEX/up?page=1&pageSize=20
+
+하락 20
+https://api.stock.naver.com/stock/exchange/NYSE/down?page=1&pageSize=20
+
+https://api.stock.naver.com/stock/exchange/NASDAQ/down?page=1&pageSize=20
+
+https://api.stock.naver.com/stock/exchange/AMEX/down?page=1&pageSize=20
+
+배당 20
+https://api.stock.naver.com/stock/exchange/NYSE/dividend?page=1&pageSize=20
+
+https://api.stock.naver.com/stock/exchange/NASDAQ/dividend?page=1&pageSize=20
+
+https://api.stock.naver.com/stock/exchange/AMEX/dividend?page=1&pageSize=20
+
+
+환율
+https://m.stock.naver.com/front-api/marketIndex/exchange/new
+
+시가총액 20 - 국장
+https://m.stock.naver.com/api/stocks/marketValue/all?page=1&pageSize=20
+
+상승 20 - 국장
+https://m.stock.naver.com/api/stocks/up/all?page=1&pageSize=20
+
+하락 20 - 국장
+https://m.stock.naver.com/api/stocks/down/all?page=1&pageSize=20
+
+인기검색 20 - 국장
+https://m.stock.naver.com/api/stocks/searchTop/all?page=1&pageSize=20
+
+업종 20 - 국장
+https://m.stock.naver.com/api/stocks/industry?page=1&pageSize=20
+
+테마 20 - 국장
+https://m.stock.naver.com/api/stocks/theme?page=1&pageSize=20
+
+업종 입력시 
+https://m.stock.naver.com/api/stocks/industry/327?pageSize=20&page=1
