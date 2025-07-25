@@ -12,7 +12,8 @@
 
 <body>
 
-<h1>📈 주식 정보 페이지</h1>
+<h1>📈 Stock API Test Page</h1>
+<div class="div-description">테스트 용도로만 사용</div>
 
 <div class="tab-bar">
     <div class="tab active" data-tab="stock">지연 시세</div>
@@ -57,7 +58,7 @@
             <label for="symbol">종목코드</label>
             <div class="inline-input-button">
                 <input type="text" id="symbol" placeholder="예: AAPL, CPNG, 005930" />
-                <button type="submit">실시간 조회</button>
+                <button type="submit">조회</button>
             </div>
         </form>
         <div id="naverRealtimeResult" class="hidden-section">불러오는 중...</div>
@@ -68,11 +69,14 @@
 
 <div class="tab-content" id="tab-marketindex">
     <div class="stock-form-div">
+        <div th:style="'color: gray;'">
+            아래 데이터는 모두 실시간으로 제공되며 자동으로 갱신 됩니다.
+        </div>
         <div id="div-exchange" class="div-market">
             <h2>💵 환율 요약</h2>
             <div id="exchange-show" class="show">
                 <div id="exchange-primary"></div>
-                <div class="div-description">5초마다 자동으로 갱신됩니다.</div>
+                <div class="div-description">실시간 시세, 10초마다 자동으로 갱신됩니다.</div>
                 <div id="exchange-extra"></div>
             </div>
         </div>
@@ -93,11 +97,18 @@
                 <div id="dom-down" class="show"></div>
                 <h3>배당 TOP</h3><hr>
                 <div id="dom-dividend" class="show"></div>
+                <h3>업종</h3><hr>
+                <div id="dom-industry" class="show"></div>
             </div>
         </div>
 
         <div id="div-stock-ex" class="div-market">
             <h2>🏛️ 해외 주식 </h2>
+            <div class="exchange-tabs">
+                <button class="ex-tab active" data-ex="NASDAQ">NASDAQ</button>
+                <button class="ex-tab"        data-ex="NYSE">NYSE</button>
+                <button class="ex-tab"        data-ex="AMEX">AMEX</button>
+            </div>
             <div id="ex-show" class="show">
                 <h3>시가총액</h3><hr>
                 <div id="ex-value" class="show"></div>
@@ -134,8 +145,9 @@
 <script src="/js/test-stockpage.js"></script>
 <script src="/js/test-stockpage-exchange.js"></script>
 <script src="/js/test-stockpage-stock-sync.js"></script>
-<script src="/js/test-stockpage-stock-ex.js"></script>
 <script src="/js/test-stockpage-stock-dom.js"></script>
+<script src="/js/test-stockpage-stock-ex.js"></script>
+<script src="/js/test-stockpage-major.js"></script>
 
 <script>
 </script>

@@ -112,6 +112,6 @@
             });
         });
 
-        // 최초 로드 및 5초마다 갱신
-        setInterval(fetchExchangeData, 5000);
+        // 최초 로드 및 10초마다 갱신
+        setInterval(fetchExchangeData, 10000);
     });

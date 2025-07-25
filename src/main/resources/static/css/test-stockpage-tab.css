@@ -2,15 +2,16 @@
 .tab-bar {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
+    margin: 20px 0;
     max-width: 400px;
-    padding: 0 20px;
+    padding: 0 2px;
 }
 
 .tab {
     flex: 1;
     text-align: center;
-    padding: 10px 15px;
+    font-size: 15px;
+    padding: 8px 5px;
     background-color: #ddd;
     border-radius: 5px;
     cursor: pointer;

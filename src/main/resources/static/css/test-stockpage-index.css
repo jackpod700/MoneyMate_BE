@@ -14,8 +14,8 @@
 .exchange-item.neutral .change { color: gray; }
 
 .currency { flex: 2; }
-.price    { flex: 1; text-align: left; }
-.change   { flex: 1; text-align: right; }
+.price    { flex: 1; text-align: left; padding-left: 10px; }
+.change   { flex: 1; text-align: right; padding-left: 10px; }
 
 #toggle-more {
     margin: 8px 0;
