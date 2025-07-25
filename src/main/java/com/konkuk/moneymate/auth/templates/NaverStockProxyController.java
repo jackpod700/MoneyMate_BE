@@ -171,4 +171,26 @@ public class NaverStockProxyController {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Error: " + e.getMessage());
         }
     }
+
+
+    /**
+     * 환율
+     */
+    @GetMapping("/api/proxy/naver-stock/exchange")
+    public ResponseEntity<?> getExchangeIndex() {
+        String url = "https://m.stock.naver.com/front-api/marketIndex/exchange/world";
+
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("User-Agent", "Mozilla/5.0")
+                    .build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return ResponseEntity.ok(response.body());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Error: " + e.getMessage());
+        }
+    }
+
 }
