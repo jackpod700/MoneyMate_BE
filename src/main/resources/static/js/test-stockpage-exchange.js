@@ -2,7 +2,7 @@
         const tabs = document.querySelectorAll('.tab');
         const tabContents = document.querySelectorAll('.tab-content');
 
-        // 이름(name) 기준으로 걸러낼 6개
+        // major 6개
         const showNames = [
             '미국 USD', '유럽 EUR', '일본 JPY',
             '중국 CNY', '영국 GBP', '홍콩 HKD'
@@ -70,7 +70,6 @@
                         return;
                     }
 
-                    // 이름(name) 기준 필터 + 정해진 순서대로 정렬
                     const primaryItems = list
                         .filter(i => showNames.includes(i.name))
                         .sort((a, b) => showNames.indexOf(a.name) - showNames.indexOf(b.name));
@@ -96,8 +95,6 @@
                 .catch(err => console.error('환율 조회 오류:', err));
         }
 
-
-        // 탭 클릭 시 바로 데이터 로드
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 const targetId = 'tab-' + tab.dataset.tab; // 'tab-marketindex'
@@ -112,6 +109,5 @@
             });
         });
 
-        // 최초 로드 및 10초마다 갱신
         setInterval(fetchExchangeData, 10000);
     });

@@ -13,10 +13,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const rawInput = document.getElementById('symbol').value;
 
-        if (/[<>]/.test(rawInput)) {
+        if (rawInput.includes('<') || rawInput.includes('>')) {
             resultDiv.innerHTML = `
                 <div class="error-box">
-                  다음 입력은 사용할 수 없습니다. [XSS 방지]
+                  [ERROR]: 다음 입력은 사용할 수 없습니다.
                 </div>
               `;
             nSubmit.disabled = false;
@@ -41,7 +41,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         fetch(proxyUrl)
             .then(response => {
-                if (!response.ok) throw new Error("서버 응답 오류");
+                if (response.status === 409) throw new Error("[ERROR] 거래소와 종목명을 다시 확인해 주세요");
+                if (!response.ok) throw new Error("[ERROR] 기타 오류 발생");
                 return response.json();
             })
             .then(data => {
@@ -96,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(err => {
                 console.error(err);
-                resultDiv.innerHTML = `<div class="error-box">[ERROR] 오류 발생: ${err}</div>`;
+                resultDiv.innerHTML = `<div class="error-box">${err}</div>`;
             });
     });
 

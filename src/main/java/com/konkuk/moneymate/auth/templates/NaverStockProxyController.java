@@ -1,5 +1,6 @@
 package com.konkuk.moneymate.auth.templates;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+@Slf4j
 @RestController
 public class NaverStockProxyController {
     private static final HttpClient client = HttpClient.newHttpClient();
@@ -21,6 +23,10 @@ public class NaverStockProxyController {
     @GetMapping("/api/proxy/naver-stock/latetime")
     public ResponseEntity<String> getLatetimeStock(@RequestParam String url) {
         String apiKey = "687f9cc717eea0.26361602";
+
+        /**
+         * 작성 중
+         */
 
         try {
             HttpClient client = HttpClient.newHttpClient();
@@ -42,8 +48,11 @@ public class NaverStockProxyController {
                                                    @RequestParam String region,
                                                    @RequestParam String exchange) {
         HttpClient client = HttpClient.newHttpClient();
+
+        log.info("[Entry] getRealtimeStock region={}, ticker={}, exchange={}", region, ticker, exchange);
         if ("KR".equalsIgnoreCase(region)) {
             String url = "https://m.stock.naver.com/api/stock/" + ticker + "/basic";
+            log.info("[KR] fetching → {}", url);
             return fetch(client, url);
         }
 
@@ -63,31 +72,6 @@ public class NaverStockProxyController {
         return primaryResponse;
     }
 
-    /**
-     * 주어진 URL을 User-Agent 헤더와 함께 GET 요청하고,
-     * 예외가 터지면 502로 감싸서 리턴해 주는 헬퍼 메서드
-     */
-    private ResponseEntity<String> fetch(HttpClient client, String url) {
-        try {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("User-Agent", "Mozilla/5.0")
-                    .GET()
-                    .build();
-            HttpResponse<String> resp = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return ResponseEntity
-                    .status(resp.statusCode())
-                    .body(resp.body());
-        } catch (IOException | InterruptedException e) {
-            // 스레드 상태 복원을 위해 다시 인터럽트
-            if (e instanceof InterruptedException) {
-                Thread.currentThread().interrupt();
-            }
-            return ResponseEntity
-                    .status(HttpStatus.BAD_GATEWAY)
-                    .body("Error fetching " + url + ": " + e.getMessage());
-        }
-    }
 
 
 
@@ -239,6 +223,43 @@ public class NaverStockProxyController {
             return ResponseEntity.ok(response.body());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Error: " + e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 주어진 URL을 User-Agent 헤더와 함께 GET 요청하고,
+     * 예외가 터지면 502로 감싸서 리턴해 주는 헬퍼
+     */
+    private ResponseEntity<String> fetch(HttpClient client, String url) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("User-Agent", "Mozilla/5.0")
+                    .GET()
+                    .build();
+            HttpResponse<String> resp = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return ResponseEntity
+                    .status(resp.statusCode())
+                    .body(resp.body());
+        } catch (IOException | InterruptedException e) {
+            // 스레드 상태 복원을 위해 다시 인터럽트
+            if (e instanceof InterruptedException) {
+                Thread.currentThread().interrupt();
+            }
+            return ResponseEntity
+                    .status(HttpStatus.BAD_GATEWAY)
+                    .body("Error fetching " + url + ": " + e.getMessage());
         }
     }
 
