@@ -21,7 +21,6 @@ body {
 
 @media (max-width: 480px) {
     body {
-        /* 화면이 480px 이하일 땐 패딩을 더 줄이거나 */
         padding: 12px;
     }
 }

@@ -3,12 +3,49 @@
     margin: 0;
     padding: 0;
 }
+
 .exchange-item {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 4px 0;
     font-size: 0.9rem;
 }
+
+.exchange-item .change {
+    width: auto;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.exchange-item .riseCount{
+    color: red;
+}
+
+.exchange-item .fallCount{
+    color: blue;
+}
+
+.exchange-item .steadyCount {
+    color: gray;
+}
+
+.exchange-item .riseCount,
+.exchange-item .fallCount,
+.exchange-item .steadyCount {
+    display: inline-block;
+    width: 5ch;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.exchange-item .counts {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
 .exchange-item.up .change      { color: red; }
 .exchange-item.down .change    { color: blue; }
 .exchange-item.neutral .change { color: gray; }
@@ -56,3 +93,4 @@
 #toggle-secondary:hover {
     text-decoration: underline;
 }
+

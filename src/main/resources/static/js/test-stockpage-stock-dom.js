@@ -40,7 +40,7 @@ function renderStockList(list) {
     return `
     <ul class="exchange-list">
       ${list.slice(0, 20).map(formatStock).join('')}
-    </ul>`;
+    </ul>` + '<div class="div-description">실시간 시세, 1분마다 자동으로 갱신됩니다.</div>';
 }
 
 function formatIndustry(item) {
@@ -48,11 +48,18 @@ function formatIndustry(item) {
     const arrow = rate > 0 ? '▲' : rate < 0 ? '▼' : '=';
     const cls   = rate > 0 ? 'up' : rate < 0 ? 'down' : 'neutral';
 
+    const riseCount   = item.riseCount   ?? 0;
+    const fallCount   = item.fallCount   ?? 0;
+    const steadyCount = item.steadyCount ?? 0;
+
     return `
-    <li class="exchange-item ${cls}">
-      <span class="currency">${item.name}</span>
-      <span class="change">${arrow}${Math.abs(rate).toFixed(2)}%</span>
-    </li>`;
+      <li class="exchange-item ${cls}">
+        <span class="currency">${item.name} </span>
+        <span class="riseCount"> ▲${riseCount} </span>
+        <span class="fallCount"> ▼${fallCount} </span>
+        <span class="steadyCount"> =${steadyCount}     </span>
+        <span class="change">${arrow}${Math.abs(rate).toFixed(2)}%</span>
+      </li>`;
 }
 
 function renderIndustryList(groups) {
@@ -62,10 +69,9 @@ function renderIndustryList(groups) {
     return `
     <ul class="exchange-list">
       ${groups.map(formatIndustry).join('')}
-    </ul>`;
+    </ul>` + '<div class="div-description">실시간 시세, 1분마다 자동으로 갱신됩니다.</div>';
 }
 
-// 공통 fetch 함수: 서버가 text/plain 으로 String 응답해도 안전히 파싱
 function fetchProxy(path, params) {
     const qs = new URLSearchParams(params).toString();
     return fetch(`${path}?${qs}`)
@@ -79,7 +85,6 @@ function fetchProxy(path, params) {
 function fetchList(type, page = 1, pageSize = 20) {
     return fetchProxy('/api/proxy/naver-stock/domestic', { type, page, pageSize })
         .then(json => {
-            // 국내주식 market/up/down 은 stocks 프로퍼티, industry 는 groups
             if (json.stocks)  return json.stocks;
             if (json.result)  return json.result;
             return json;
@@ -99,12 +104,14 @@ function fetchDomesticStocks() {
         fetchList('market'),
         fetchList('up'),
         fetchList('down'),
+        Promise.resolve([]),
         Promise.all([1,2,3,4].map(p => fetchIndustry(p))).then(arr => arr.flat())
     ])
-        .then(([marketList, upList, downList, industryGroups]) => {
+        .then(([marketList, upList, downList, dividendList, industryGroups]) => {
             document.getElementById('dom-value').innerHTML    = renderStockList(marketList);
             document.getElementById('dom-up').innerHTML       = renderStockList(upList);
             document.getElementById('dom-down').innerHTML     = renderStockList(downList);
+            document.getElementById('dom-dividend').innerHTML = renderStockList(dividendList);
             document.getElementById('dom-industry').innerHTML = renderIndustryList(industryGroups);
         })
         .catch(err => {
@@ -136,5 +143,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 10초마다 자동 갱신
-    setInterval(fetchDomesticStocks, 10000);
+    setInterval(fetchDomesticStocks, 60000);
 });

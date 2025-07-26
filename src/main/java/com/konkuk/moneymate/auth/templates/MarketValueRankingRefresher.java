@@ -21,7 +21,6 @@ public class    MarketValueRankingRefresher {
     private final ObjectMapper mapper;
     private final RedisTemplate<String, String> redis;
 
-    // Redis key patterns
     private static final String ZKEY = "stocks:%s";          // sorted set: stocks:NASDAQ, stocks:KOSPI 등
     private static final String HKEY = "stockRank:%s:%s";    // hash: stockRank:NASDAQ:NVDA.O 등
 
@@ -31,6 +30,7 @@ public class    MarketValueRankingRefresher {
     // 외국 주식 API base
     @Value("${naver.stock.api.base:https://api.stock.naver.com/stock/exchange}")
     private String foreignApiBase;
+
     // 국내 주식 API base
     @Value("${naver.stock.domestic.api.base:https://m.stock.naver.com/api/stocks/marketValue}")
     private String domesticApiBase;
@@ -99,7 +99,7 @@ public class    MarketValueRankingRefresher {
                     if (list.size() >= MAX_RANK) break;
 
                     String code   = node.path("reutersCode").asText();
-                    // "marketValue": "4,239,256,000" → 숫자로 변환
+                    // "marketValue": 숫자로 변환
                     String mvText = node.path("marketValue").asText("0")
                             .replaceAll(",", "");
                     long   mv     = Long.parseLong(mvText);
@@ -115,7 +115,8 @@ public class    MarketValueRankingRefresher {
         return list;
     }
 
-    /** reutersCode + marketValue(시가총액) 보관용 DTO */
+    /**
+     * reutersCode + marketValue(시가총액) 보관용 DTO */
     private static class StockInfo {
         final String reutersCode;
         final long   marketValue;

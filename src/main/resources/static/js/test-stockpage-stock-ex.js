@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fetchListEx(exchange, 'marketValue'),
             fetchListEx(exchange, 'up'),
             fetchListEx(exchange, 'down'),
-            fetchListEx(exchange, 'dividend')
+            // fetchListEx(exchange, 'dividend')
         ])
             .then(([mv, up, down, div]) => {
                 mv.sort((a, b) => {
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setInterval(() => {
         Object.keys(loadedMap).forEach(ex => fetchForeignStocks(ex));
-    }, 10000);
+    }, 60000);
 
 
     const initEx = document.querySelector('.exchange-tabs .ex-tab[data-ex="NASDAQ"]');

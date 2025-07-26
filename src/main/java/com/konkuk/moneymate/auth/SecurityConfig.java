@@ -71,7 +71,8 @@ public class SecurityConfig {
             "/css/**",
             "/images/**",
             "/js/**",
-            "/api/proxy/naver-stock/**"
+            "/api/proxy/naver-stock/**",
+            "/api/proxy/eodhd/**"
     };
 
     /**

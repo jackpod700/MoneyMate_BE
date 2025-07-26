@@ -58,13 +58,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 const tradedAt = new Date(data.localTradedAt);
+                const formattedDate = tradedAt.toLocaleDateString('ko-KR', {
+                    year:  'numeric',
+                    month: '2-digit',
+                    day:   '2-digit'
+                });
                 const formattedTime = tradedAt.toLocaleTimeString('ko-KR', {
                     hour:   '2-digit',
                     minute: '2-digit',
                     second: '2-digit'
                 });
 
-                const realTimeLabel = data.delayTimeName || '';
+                const realTimeLabel = data.marketStatus === 'CLOSE'
+                    ? '마감'
+                    : (data.delayTimeName || '');
 
                 const changeValue   = parseFloat(data.compareToPreviousClosePrice);
                 const changePercent = parseFloat(data.fluctuationsRatio);
@@ -83,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 resultDiv.innerHTML = `
                   <div class="result-card">
-                    <div class="timestamp">${formattedTime} ${realTimeLabel}</div>
+                    <div class="timestamp">${formattedDate} ${formattedTime} ${realTimeLabel}</div>
                     <h3>${stockName} (${ticker})</h3>
                     <p><strong>거래소:</strong> ${market}</p>
                     <p><strong>현재가:</strong> ${close}</p>

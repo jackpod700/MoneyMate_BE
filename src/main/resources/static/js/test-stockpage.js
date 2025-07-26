@@ -61,16 +61,47 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         const symbol = `${ticker}.${market}`;
-        const url = `https://eodhd.com/api/real-time/${symbol}?api_token=687f9cc717eea0.26361602&fmt=json`;
+        // const url = `https://eodhd.com/api/real-time/${symbol}?api_token=-------&fmt=json`;
+        const proxyUrl = `/api/proxy/eodhd/realtime/15min`
+            + `?ticker=${encodeURIComponent(ticker)}`
+            + `&market=${encodeURIComponent(market)}`;
 
         resultBox.classList.add('show');
         resultBox.innerHTML = `<p> <strong>${symbol}</strong> 시세 조회 중...</p>`;
 
-        fetch(url)
-            .then(res => res.json())
+        fetch(proxyUrl)
+            .then(res => {
+                if (res.status === 500) {
+                    resultBox.innerHTML = `
+                      <div class="error-box">
+                        기타 오류가 발생했습니다.
+                      </div>`;
+                    return Promise.reject();
+                }
+                if (res.status === 409) {
+                    resultBox.innerHTML = `
+                      <div class="error-box">
+                        거래소와 종목 코드를 다시 확인해 주세요
+                      </div>`;
+                    return Promise.reject();
+                }
+                if (!res.ok) {
+                    resultBox.innerHTML = `
+                      <div class="error-box">
+                        오류가 발생했습니다. (코드: ${res.status})
+                      </div>`;
+                    return Promise.reject();
+                }
+                return res.json();
+            })
             .then(data => {
                 const ts = data.timestamp + (data.gmtoffset || 0);
                 const date = new Date(ts * 1000);
+                const formattedDate = date.toLocaleDateString('ko-KR', {
+                    year:  'numeric',
+                    month: '2-digit',
+                    day:   '2-digit'
+                });
                 const formattedTime = date.toLocaleTimeString('ko-KR', {
                     hour:   '2-digit',
                     minute: '2-digit',
@@ -91,8 +122,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 resultBox.innerHTML = `
                 <div class="result-card">
-                    <div class="timestamp">${formattedTime}</div>
-                    <h2>${symbol}</h2>
+                    <div class="timestamp">${formattedDate} ${formattedTime} 기준 <br></div>
+                    <h3>${symbol}</h3>
                     <p><strong>시가:</strong> ${data.open}</p>
                     <p><strong>종가:</strong> ${data.close}</p>
                     <p><strong>고가:</strong> ${data.high}</p>
@@ -117,49 +148,70 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Bulk 조회
-    const bulkBtn = document.getElementById('bulk-fetch-btn');
+    const bulkBtn    = document.getElementById('bulk-fetch-btn');
     const bulkMarket = document.getElementById('bulk-market');
     const bulkResult = document.getElementById('bulk-result');
 
     if (bulkBtn) {
         bulkBtn.addEventListener('click', () => {
             const market = bulkMarket.value;
-            const url = `https://eodhd.com/api/eod-bulk-last-day/${market}?api_token=687f9cc717eea0.26361602&fmt=json`;
+            const proxyUrl = `/api/proxy/eodhd/bulk?market=${encodeURIComponent(market)}`;
 
             bulkResult.classList.add('show');
             bulkResult.innerHTML = `🔄 ${market} 전체 종목 시세 조회 중...`;
 
-            fetch(url)
-                .then(res => res.json())
+            fetch(proxyUrl)
+                .then(res => {
+                    if (res.status === 500) {
+                        bulkResult.innerHTML = `
+                        <div class="error-box">
+                          기타 오류가 발생했습니다.
+                        </div>`;
+                        return Promise.reject();
+                    }
+                    if (res.status === 409) {
+                        bulkResult.innerHTML = `
+                        <div class="error-box">
+                          기타 오류가 발생했습니다.
+                        </div>`;
+                        return Promise.reject();
+                    }
+                    if (!res.ok) {
+                        bulkResult.innerHTML = `
+                        <div class="error-box">
+                          오류가 발생했습니다. (코드: ${res.status})
+                        </div>`;
+                        return Promise.reject();
+                    }
+                    return res.json();
+                })
                 .then(data => {
                     if (!Array.isArray(data)) {
                         bulkResult.innerHTML = `<div class="error-box">[ERROR] API 오류: ${JSON.stringify(data)}</div>`;
                         return;
                     }
-
                     const limitedData = data.slice(0, 65535);
                     let html = `<table><thead><tr>
-                        <th>종목코드</th><th>시가</th><th>종가</th><th>고가</th><th>저가</th></tr></thead><tbody>`;
+                      <th>종목코드</th><th>시가</th><th>종가</th><th>고가</th><th>저가</th>
+                    </tr></thead><tbody>`;
                     for (const item of limitedData) {
                         const open = item.open >= 999999 ? '999999+' : item.open;
                         const close = item.close >= 999999 ? '999999+' : item.close;
                         const high = item.high >= 999999 ? '999999+' : item.high;
                         const low = item.low >= 999999 ? '999999+' : item.low;
-
                         html += `<tr>
-                            <td>${item.code}</td>
-                            <td>${open}</td>
-                            <td>${close}</td>
-                            <td>${high}</td>
-                            <td>${low}</td>
-                        </tr>`;
+                     <td>${item.code}</td>
+                     <td>${open}</td>
+                     <td>${close}</td>
+                     <td>${high}</td>
+                     <td>${low}</td>
+                   </tr>`;
                     }
                     html += `</tbody></table>`;
                     bulkResult.innerHTML = html;
                 })
                 .catch(err => {
                     console.error(err);
-                    bulkResult.innerHTML = `<div class="error-box">[ERROR] 오류 발생: ${err}</div>`;
                 });
         });
     }

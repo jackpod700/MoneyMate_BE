@@ -21,19 +21,30 @@ import java.net.http.HttpResponse;
 public class EodhdProxyController {
     private final HttpClient client = HttpClient.newHttpClient();
 
-    // real‑time 데이터만 프록시
-    @GetMapping("/realtime")
+    @GetMapping("/realtime/15min")
     public ResponseEntity<String> realtime(
             @RequestParam String ticker,
             @RequestParam String market) {
-        // 서버에만 감춰진 API 토큰
         String apiToken = "687f9cc717eea0.26361602";
-        // 서버 측에서 URL 조립
         String url = String.format(
                 "https://eodhd.com/api/real-time/%s.%s?api_token=%s&fmt=json",
                 ticker, market, apiToken
         );
 
+        return fetch(url);
+    }
+
+    /**
+     * Bulk – 전종목 시세 (마지막 영업일)
+     */
+    @GetMapping("/bulk")
+    public ResponseEntity<String> bulk(
+            @RequestParam String market) {
+        String apiToken = "687f9cc717eea0.26361602";
+        String url = String.format(
+                "https://eodhd.com/api/eod-bulk-last-day/%s?api_token=%s&fmt=json",
+                market, apiToken
+        );
         return fetch(url);
     }
 
@@ -54,5 +65,7 @@ public class EodhdProxyController {
                     .body("Error fetching " + url + ": " + e.getMessage());
         }
     }
+
+
 }
 
