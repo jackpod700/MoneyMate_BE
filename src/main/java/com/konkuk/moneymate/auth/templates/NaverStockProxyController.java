@@ -20,29 +20,6 @@ public class NaverStockProxyController {
     private static final HttpClient client = HttpClient.newHttpClient();
 
 
-    @GetMapping("/api/proxy/naver-stock/latetime")
-    public ResponseEntity<String> getLatetimeStock(@RequestParam String url) {
-        String apiKey = "687f9cc717eea0.26361602";
-
-        /**
-         * 작성 중
-         */
-
-        try {
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("User-Agent", "Mozilla/5.0")
-                    .build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return ResponseEntity.ok(response.body());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Error: " + e.getMessage());
-        }
-
-    }
-
-
     @GetMapping("/api/proxy/naver-stock/realtime")
     public ResponseEntity<String> getRealtimeStock(@RequestParam String ticker,
                                                    @RequestParam String region,
