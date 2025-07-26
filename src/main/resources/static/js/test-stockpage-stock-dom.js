@@ -5,32 +5,39 @@ function formatStock(item) {
         ? `${nameKor} (${exchCode})`
         : nameKor;
 
-    const price = item.closePrice
-        || (item.now && item.now.tradePrice)
-        || '';
+    const priceRaw =
+        item.closePrice?.value ??
+        item.closePrice ??
+        item.now?.tradePrice?.value ??
+        item.now?.tradePrice ??
+        '';
+    const price = priceRaw != null ? priceRaw : '';
 
-    const changeVal = parseFloat(
-        item.compareToPreviousClosePrice
-        || item.now?.compareToPreviousClosePrice
-        || 0
-    );
-    const pct = parseFloat(
-        item.fluctuationsRatio
-        || item.now?.fluctuationsRatio
-        || 0
-    );
+    const rawChangeStr = (
+        item.compareToPreviousClosePrice ??
+        item.now?.compareToPreviousClosePrice ??
+        '0'
+    ).toString().replace(/,/g, '');  // “1,234.56” → “1234.56”
+    const changeVal = parseFloat(rawChangeStr);
+
+    const rawPctStr = (
+        item.fluctuationsRatio ??
+        item.now?.fluctuationsRatio ??
+        '0'
+    ).toString().replace(/,/g, '');
+    const pct = parseFloat(rawPctStr);
 
     const arrow = changeVal > 0 ? '▲' : changeVal < 0 ? '▼' : '=';
     const cls   = changeVal > 0 ? 'up' : changeVal < 0 ? 'down' : 'neutral';
 
     return `
-    <li class="exchange-item ${cls}">
-      <span class="currency">${displayName}</span>
-      <span class="price">${price}</span>
-      <span class="change">
-        ${arrow}${Math.abs(changeVal).toFixed(2)} (${pct.toFixed(2)}%)
-      </span>
-    </li>`;
+        <li class="exchange-item ${cls}">
+          <span class="currency">${displayName}</span>
+          <span class="price">${price}</span>
+          <span class="change">
+            ${arrow}${Math.abs(changeVal).toFixed(2)} (${pct.toFixed(2)}%)
+          </span>
+        </li>`;
 }
 
 function renderStockList(list) {
@@ -142,6 +149,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 10초마다 자동 갱신
     setInterval(fetchDomesticStocks, 60000);
 });
