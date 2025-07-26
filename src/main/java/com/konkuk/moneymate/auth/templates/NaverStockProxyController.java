@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -17,16 +18,9 @@ public class NaverStockProxyController {
     private static final HttpClient client = HttpClient.newHttpClient();
 
 
-    @GetMapping("/api/proxy/naver-stock/realtime")
-    public ResponseEntity<String> getRealtimeStock(@RequestParam String ticker,
-                                                   @RequestParam String region,
-                                                   @RequestParam String exchange) {
-        String url;
-        if ("KR".equalsIgnoreCase(region)) {
-            url = "https://m.stock.naver.com/api/stock/" + ticker + "/basic";
-        } else {
-            url = "https://api.stock.naver.com/stock/" + ticker + "." + exchange + "/basic";
-        }
+    @GetMapping("/api/proxy/naver-stock/latetime")
+    public ResponseEntity<String> getLatetimeStock(@RequestParam String url) {
+        String apiKey = "687f9cc717eea0.26361602";
 
         try {
             HttpClient client = HttpClient.newHttpClient();
@@ -39,7 +33,62 @@ public class NaverStockProxyController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Error: " + e.getMessage());
         }
+
     }
+
+
+    @GetMapping("/api/proxy/naver-stock/realtime")
+    public ResponseEntity<String> getRealtimeStock(@RequestParam String ticker,
+                                                   @RequestParam String region,
+                                                   @RequestParam String exchange) {
+        HttpClient client = HttpClient.newHttpClient();
+        if ("KR".equalsIgnoreCase(region)) {
+            String url = "https://m.stock.naver.com/api/stock/" + ticker + "/basic";
+            return fetch(client, url);
+        }
+
+        String primaryUrl  = "https://api.stock.naver.com/stock/" + ticker + "." + exchange + "/basic";
+        String fallbackUrl = "https://api.stock.naver.com/stock/" + ticker + "/basic";
+
+        ResponseEntity<String> primaryResponse = fetch(client, primaryUrl);
+        if (primaryResponse.getStatusCode().is2xxSuccessful()) {
+            return primaryResponse;
+        }
+
+        ResponseEntity<String> fallbackResponse = fetch(client, fallbackUrl);
+        if (fallbackResponse.getStatusCode().is2xxSuccessful()) {
+            return fallbackResponse;
+        }
+
+        return primaryResponse;
+    }
+
+    /**
+     * 주어진 URL을 User-Agent 헤더와 함께 GET 요청하고,
+     * 예외가 터지면 502로 감싸서 리턴해 주는 헬퍼 메서드
+     */
+    private ResponseEntity<String> fetch(HttpClient client, String url) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("User-Agent", "Mozilla/5.0")
+                    .GET()
+                    .build();
+            HttpResponse<String> resp = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return ResponseEntity
+                    .status(resp.statusCode())
+                    .body(resp.body());
+        } catch (IOException | InterruptedException e) {
+            // 스레드 상태 복원을 위해 다시 인터럽트
+            if (e instanceof InterruptedException) {
+                Thread.currentThread().interrupt();
+            }
+            return ResponseEntity
+                    .status(HttpStatus.BAD_GATEWAY)
+                    .body("Error fetching " + url + ": " + e.getMessage());
+        }
+    }
+
 
 
     /**
