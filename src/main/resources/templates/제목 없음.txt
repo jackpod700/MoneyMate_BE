@@ -1,3 +1,34 @@
+EOD.hd 예시
+
+15분 지연시세 조회
+https://eodhd.com/api/real-time/AAPL.US?api_token={      }&fmt=json
+
+
+
+History 예시
+https://eodhd.com/api/eod/MCD.US?api_token={     }&fmt=json
+
+
+
+예시-AAPL의 7.10 to 7.27 데이터 조회
+https://eodhd.com/api/eod/AAPL.US?from=2025-07-10&to=2025-07-27&period=d&api_token={     }&fmt=json
+
+
+
+Bulk last day
+예시-미국 모든종목의 마지막 영업일 종가 일괄 조회
+https://eodhd.com/api/eod-bulk-last-day/US?api_token={     }&fmt=json
+
+
+일중 과거 히스토리
+기본 120일간 과거 주가 5분단위로 일괄 출력
+https://eodhd.com/api/intraday/AAPL.US?api_token={     }&fmt=json
+
+뉴스 10개 조회 - 네이버/다음으로 쓰는걸 추천함
+https://eodhd.com/api/news?s= AAPL.US &offset= 0 &limit= 10 &api_token={     } &fmt=json
+
+===
+네이버 
 
 시가총액 20
 https://api.stock.naver.com/stock/exchange/NYSE/marketValue?page=1&pageSize=20
@@ -27,9 +58,18 @@ https://api.stock.naver.com/stock/exchange/NASDAQ/dividend?page=1&pageSize=20
 
 https://api.stock.naver.com/stock/exchange/AMEX/dividend?page=1&pageSize=20
 
+실시간 국장
+https://polling.finance.naver.com/api/realtime/domestic/stock/005930
+https://m.stock.naver.com/api/stock/298060/basic
+
+실시간 해외
+https://polling.finance.naver.com/api/realtime/worldstock/stock/A
+https://api.stock.naver.com/stock/CPNG.K/basic
+
 
 환율
 https://m.stock.naver.com/front-api/marketIndex/exchange/new
+미국 USD, 유럽 EUR, 일본 JPY, 중국 CNY, 유로/달러, 영국 파운드/달러 주요 6개 먼저 찾아서 우선순위로 정렬하도록 별도로 구성해야 함
 
 시가총액 20 - 국장
 https://m.stock.naver.com/api/stocks/marketValue/all?page=1&pageSize=20
