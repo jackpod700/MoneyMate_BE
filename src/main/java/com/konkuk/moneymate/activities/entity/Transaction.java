@@ -45,6 +45,7 @@ public class Transaction {
     @Column(name = "income")
     private Integer income;
 
+    // @Enumerated(EnumType.STRING) // DB 데이터 타입 완전 일치하면 주석 해제
     @Column(name="category", nullable = false)
     private String category;
 
