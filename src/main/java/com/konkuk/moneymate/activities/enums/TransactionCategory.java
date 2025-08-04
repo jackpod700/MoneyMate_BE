@@ -53,6 +53,8 @@ public enum TransactionCategory {
     CARD_PAYMENT("카드대금"),   // 월별 카드대금
     EXCHANGE("환전"),              // 외화 거래
     REMITTANCE("해외송금"),         // 외화 보내기
+    STOCK("주식거래"),
+
 
 
 
