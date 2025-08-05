@@ -22,6 +22,8 @@ import java.util.Properties;
 /**
  * <h3>DataInsert : 데이터 삽입 클래스 </h3>
  * <p>Spring bean에 포함되어 자동으로 실행됩니다</p>
+ *
+ * <h5>중복 삽입 오류가 발생하면 @Component 를 주석처리 해주세요 </h5>
  */
 @Component
 @Slf4j
