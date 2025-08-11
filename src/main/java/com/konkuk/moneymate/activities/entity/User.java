@@ -41,10 +41,6 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonIgnore
-    private Set<MonthlyAssetHistory> monthlyAssetHistorys;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    @JsonIgnore
     private Set<Asset> assets;
 
 

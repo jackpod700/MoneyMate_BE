@@ -12,12 +12,10 @@ import java.util.UUID;
 public class AssetDto {
     private UUID assetUid;
     private String assetName;
-    private String assetType;
     private Long assetPrice;
 
-    public AssetDto(String assetName, String assetType, Long assetPrice) {
+    public AssetDto(String assetName, Long assetPrice) {
         this.assetName = assetName;
-        this.assetType = assetType;
         this.assetPrice = assetPrice;
     }
 
@@ -25,8 +23,7 @@ public class AssetDto {
         return new Asset(
                 user,
                 this.assetPrice,
-                this.assetName,
-                this.assetType
+                this.assetName
         );
     }
 }

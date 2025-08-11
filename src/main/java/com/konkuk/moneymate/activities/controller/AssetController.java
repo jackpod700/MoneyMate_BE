@@ -35,9 +35,8 @@ public class AssetController {
 
         String userUid = jwtService.getUserUid(request);
         String assetName = body.get("assetName").toString();
-        String assetType = body.get("assetType").toString();
         Long assetPrice = Long.parseLong(body.get("assetPrice").toString());
-        AssetDto assetDto = new AssetDto(assetName, assetType, assetPrice);
+        AssetDto assetDto = new AssetDto(assetName,assetPrice);
 
         try {
             assetService.registerAsset(assetDto, userUid);

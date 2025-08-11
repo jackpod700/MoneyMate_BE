@@ -34,7 +34,6 @@ public class DataInsert implements CommandLineRunner {
     private final AssetRepository assetRepository;
     private final BankAccountRepository bankAccountRepository;
     private final TransactionRepository transactionRepository;
-    private final MonthlyAssetHistoryRepository monthlyAssetHistoryRepository;
 
     @Value("${jdbc.url}")
     private String jdbcUrl;
@@ -83,12 +82,9 @@ public class DataInsert implements CommandLineRunner {
         Transaction transaction2 = new Transaction(bankAccount1, bankAccount2.getAccountNumber(), 20000, null, "이체", LocalDateTime.of(2025, 5, 24, 10, 32), 100000L);
         Transaction transaction3 = new Transaction(bankAccount1, bankAccount2.getAccountNumber(), 30000, null, "이체", LocalDateTime.of(2025, 5, 24, 10, 33), 50000L);
 
-        Asset asset1 = new Asset(user1, 3700000000L, "반포자이 84A", "부동산");
-        Asset asset2 = new Asset(user1, 50000000L, "제네시스 G80/2G---", "투자");
-        Asset asset3 = new Asset(user2, 2147483637L, "e편한세상광진그랜드파크 105A", "부동산");
-
-        MonthlyAssetHistory monthlyAssetHistory1 = new MonthlyAssetHistory(user1, LocalDate.of(2025, 5, 1), 100000L, 0L, 50000L);
-        MonthlyAssetHistory monthlyAssetHistory2 = new MonthlyAssetHistory(user2, LocalDate.of(2025, 5, 1), 50000L, 30000L, 0L);
+        Asset asset1 = new Asset(user1, 3700000000L, "반포자이 84A");
+        Asset asset2 = new Asset(user1, 50000000L, "제네시스 G80/2G---");
+        Asset asset3 = new Asset(user2, 2147483637L, "e편한세상광진그랜드파크 105A");
 
         userRepository.save(user1);
         userRepository.save(user2);
@@ -100,8 +96,6 @@ public class DataInsert implements CommandLineRunner {
         assetRepository.save(asset1);
         assetRepository.save(asset2);
         assetRepository.save(asset3);
-        monthlyAssetHistoryRepository.save(monthlyAssetHistory1);
-        monthlyAssetHistoryRepository.save(monthlyAssetHistory2);
     }
 
     private static void executeSqlScript(Connection conn, String filePath) {
