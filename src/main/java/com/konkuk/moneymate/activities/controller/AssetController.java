@@ -1,6 +1,8 @@
 package com.konkuk.moneymate.activities.controller;
 
 import com.konkuk.moneymate.activities.dto.AssetDto;
+import com.konkuk.moneymate.activities.dto.StockHoldingDto;
+import com.konkuk.moneymate.activities.dto.StockHoldingResponseDto;
 import com.konkuk.moneymate.activities.service.AssetService;
 import com.konkuk.moneymate.common.ApiResponse;
 import com.konkuk.moneymate.common.ApiResponseMessage;
@@ -35,9 +37,8 @@ public class AssetController {
 
         String userUid = jwtService.getUserUid(request);
         String assetName = body.get("assetName").toString();
-        String assetType = body.get("assetType").toString();
         Long assetPrice = Long.parseLong(body.get("assetPrice").toString());
-        AssetDto assetDto = new AssetDto(assetName, assetType, assetPrice);
+        AssetDto assetDto = new AssetDto(assetName,assetPrice);
 
         try {
             assetService.registerAsset(assetDto, userUid);
@@ -110,5 +111,42 @@ public class AssetController {
         Long totalPrice = assetService.getTotalPrice(userUid);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
                 ApiResponseMessage.ASSET_TOTAL_SUCCESS.getMessage(), totalPrice));
+    }
+
+    @GetMapping("/asset/stock")
+    public ResponseEntity<?> getStock(HttpServletRequest request) {
+        String userUid = jwtService.getUserUid(request);
+        if(userUid == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponse<>(HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                            ApiResponseMessage.USER_NOT_FOUND.getMessage()));
+        }
+
+        List<StockHoldingDto> stockAssets;
+        try{
+            stockAssets = assetService.getStockHoldingsWithPrice(userUid);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                            ApiResponseMessage.INTERNAL_SERVER_ERROR.getMessage()));
+        }
+
+        // DTO 리스트를 응답용 DTO 리스트로 변환
+        List<StockHoldingResponseDto> responseAssets = stockAssets.stream()
+                .map(holding -> new StockHoldingResponseDto(
+                        holding.getAccountName(),
+                        holding.getStockName(),
+                        holding.getTicker(),
+                        holding.getQuantity().toString(),
+                        holding.getCurrentTotalPrice().toString(), // 필드명을 'totalPrice'로 변경
+                        holding.getProfit().toString()))
+                .toList();
+
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("stockAssets", responseAssets); // 변환된 리스트를 담기
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
+                        ApiResponseMessage.STOCK_ASSET_QUERY_SUCCESS.getMessage(), responseData));
     }
 }

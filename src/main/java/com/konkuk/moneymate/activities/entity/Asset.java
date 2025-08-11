@@ -40,21 +40,16 @@ public class Asset {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "type", nullable = false)
-    private String type;
-
-    public Asset(User user, Long price, String name, String type) {
+    public Asset(User user, Long price, String name) {
         this.user = user;
         this.price = price;
         this.name = name;
-        this.type = type;
     }
 
     public AssetDto toDto(){
         return new AssetDto(
                 this.uid,
                 this.name,
-                this.type,
                 this.price
         );
     }

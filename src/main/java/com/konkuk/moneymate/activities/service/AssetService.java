@@ -2,13 +2,18 @@ package com.konkuk.moneymate.activities.service;
 
 import com.konkuk.moneymate.activities.dto.AssetDto;
 import com.konkuk.moneymate.activities.dto.BankAccountDto;
+import com.konkuk.moneymate.activities.dto.StockHoldingDto;
 import com.konkuk.moneymate.activities.entity.Asset;
 import com.konkuk.moneymate.activities.entity.User;
+import com.konkuk.moneymate.activities.repository.AccountStockRepository;
 import com.konkuk.moneymate.activities.repository.AssetRepository;
 import com.konkuk.moneymate.activities.repository.UserRepository;
-import com.konkuk.moneymate.activities.validator.AssetValidator;
 import com.konkuk.moneymate.common.ApiResponseMessage;
+import com.konkuk.moneymate.common.StockPriceApiClient;
 import jakarta.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,23 +25,21 @@ import java.util.UUID;
 public class AssetService {
 
     private final BankAccountService bankAccountService;
-    private final AssetValidator assetValidator;
     private final AssetRepository assetRepository;
     private final UserRepository userRepository;
+    private final AccountStockRepository accountStockRepository;
 
     public AssetService( BankAccountService bankAccountService,
-                        AssetValidator assetValidator,
                         AssetRepository assetRepository,
-                        UserRepository userRepository) {
+                        UserRepository userRepository,
+                         AccountStockRepository accountStockRepository) {
         this.bankAccountService = bankAccountService;
-        this.assetValidator = new AssetValidator();
         this.assetRepository = assetRepository;
         this.userRepository = userRepository;
+        this.accountStockRepository = accountStockRepository;
     }
 
     public void registerAsset(AssetDto assetDto, String userUid) {
-
-        assetValidator.checkAsset(assetDto);
 
         User user = userRepository.findByUid(UUID.fromString(userUid))
                 .orElseThrow(() -> new EntityNotFoundException(ApiResponseMessage.USER_NOT_FOUND.getMessage()));
@@ -83,5 +86,29 @@ public class AssetService {
             totalPrice += bankAccountDto.getAccountBalance();
         }
         return totalPrice;
+    }
+
+    public List<StockHoldingDto> getStockHoldingsWithPrice(String userUid) {
+        List<StockHoldingDto> holdings = accountStockRepository.findAllStockHoldings(UUID.fromString(userUid));
+
+        Map<String, BigDecimal> prices;
+        try{
+            prices = StockPriceApiClient.getCurrentPrices(holdings);
+        } catch (Exception e) {
+            throw new RuntimeException("실시간 주식 조회 중 오류 발생: " + e.getMessage(), e);
+        }
+
+        for (StockHoldingDto dto : holdings) {
+            BigDecimal currentPrice = prices.get(dto.getTicker() + "." + dto.getExchangeId());
+            BigDecimal currentTotal = currentPrice.multiply(BigDecimal.valueOf(dto.getQuantity()));
+            BigDecimal buyPrice = dto.getAveragePrice().multiply(BigDecimal.valueOf(dto.getQuantity()));
+            BigDecimal profit = currentTotal.subtract(buyPrice)
+                    .divide(buyPrice, 2, RoundingMode.HALF_UP);
+
+            dto.setCurrentTotalPrice(currentTotal);
+            dto.setProfit(profit);
+        }
+
+        return holdings;
     }
 }

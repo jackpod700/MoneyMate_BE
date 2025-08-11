@@ -12,6 +12,8 @@ public enum ApiResponseMessage {
     ASSET_TOTAL_SUCCESS("전체자산조회 성공"),
     NEWS_TOTAL_SUCCESS("전체뉴스조회 성공"),
     NEWS_DETAIL_SUCCESS("뉴스상세조회 성공"),
+    STOCK_ASSET_QUERY_SUCCESS("보유주식 조회 성공"),
+
     //실패시
     USER_NOT_FOUND("사용자를 찾을 수 없습니다"),
     ACCOUNT_NOT_FOUND("계좌를 찾을 수 없습니다"),
