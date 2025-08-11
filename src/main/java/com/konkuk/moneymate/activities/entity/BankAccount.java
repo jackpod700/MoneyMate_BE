@@ -43,6 +43,9 @@ public class BankAccount {
     @JsonIgnore
     private List<Transaction> transactions;
 
+    @OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY)
+    private List<AccountStock> accountStocks;
+
     @Column(name="account_number", nullable = false)
     private String accountNumber;
 
