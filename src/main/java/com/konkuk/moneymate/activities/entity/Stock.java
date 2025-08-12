@@ -20,4 +20,7 @@ public class Stock {
 
     @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private String currency;
 }
