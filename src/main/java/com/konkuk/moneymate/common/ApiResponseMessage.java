@@ -46,7 +46,10 @@ public enum ApiResponseMessage {
     SMS_VERIFY_SUCCESS("sms 인증이 완료되었습니다"),
     SMS_VERIFY_FAIL("sms 인증 실패, 다시 시도해 주세요"),
 
-    BAD_REQUEST("[400] 기타 오류가 발생했습니다");
+    BAD_REQUEST("[400] 기타 오류가 발생했습니다"),
+
+    CONSUMPTION_STATS_LOAD_SUCCESS("소비 통계 조회 성공"),
+    CONSUMPTION_STATS_LOAD_FAIL("소비 통계 조회 실패");
 
 
 

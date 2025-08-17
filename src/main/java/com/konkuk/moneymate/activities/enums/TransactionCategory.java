@@ -1,5 +1,7 @@
 package com.konkuk.moneymate.activities.enums;
 
+import java.util.Arrays;
+
 public enum TransactionCategory {
 
 
@@ -60,6 +62,8 @@ public enum TransactionCategory {
     CARD_PAYMENT("카드대금"),   // 월별 카드대금
     EXCHANGE("환전"),              // 외화 거래
     REMITTANCE("해외송금"),         // 외화 보내기
+
+
     STOCK("주식거래"),
 
 
@@ -69,14 +73,21 @@ public enum TransactionCategory {
     ETC("기타");
 
 
-    private final String categoryName;
+    private final String displayName;
 
     TransactionCategory(String displayName) {
-        this.categoryName = displayName;
+        this.displayName = displayName;
     }
 
     public String getDisplayName() {
-        return categoryName;
+        return displayName;
+    }
+
+    public static TransactionCategory fromDisplayName(String displayName) {
+        return Arrays.stream(values())
+                .filter(c -> c.displayName.equals(displayName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unknown category: " + displayName));
     }
 
 }
