@@ -172,9 +172,9 @@ INSERT IGNORE INTO transaction (transaction_no, bank_account_uid, counter_accoun
 -- user 설명
 /*
 UNHEX(REPLACE('f47ac10b-58cc-4372-a567-0e02b2c3d479', '-', ''))  abcd 홍길동 1234
-UNHEX(REPLACE('c9bf9e57-1685-4c89-bafb-ff5af830be8a', '-', ''))  aaaa 김철수
-UNHEX(REPLACE('a2cb3298-937e-463b-8476-7f0e5fd7e2f1', '-', ''))  minji 최민지
-UNHEX(REPLACE('e4d1a9fa-6e60-48db-865a-5cf0b1b07e7e', '-', ''))  jinho 박진호
+UNHEX(REPLACE('c9bf9e57-1685-4c89-bafb-ff5af830be8a', '-', ''))  aaaa 김철수 1234
+UNHEX(REPLACE('a2cb3298-937e-463b-8476-7f0e5fd7e2f1', '-', ''))  minji 최민지 5678
+UNHEX(REPLACE('e4d1a9fa-6e60-48db-865a-5cf0b1b07e7e', '-', ''))  jinho 박진호 4321
 
 abcd 홍길동
 7e8a4d2a-1a58-4d2e-a61e-3ff6c6e1a111 청년도약계좌 1
