@@ -1,6 +1,8 @@
 package com.konkuk.moneymate.activities.entity;
 
 import com.konkuk.moneymate.activities.dto.TransactionDto;
+import com.konkuk.moneymate.activities.enums.TransactionCategory;
+import com.konkuk.moneymate.activities.enums.TransactionCategoryConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,9 +48,12 @@ public class Transaction {
     @Column(name = "income")
     private Integer income;
 
-    // @Enumerated(EnumType.STRING) // DB 데이터 타입 완전 일치하면 주석 해제
+    /**
+     * Converter 적용, DB에는 한글 displayname이 저장됩니다
+     */
+    @Convert(converter = TransactionCategoryConverter.class)
     @Column(name="category", nullable = false)
-    private String category;
+    private TransactionCategory category;
 
     @Column(name="time", nullable = false)
     private LocalDateTime time;
@@ -56,7 +61,8 @@ public class Transaction {
     @Column(name="after_balance", nullable = false)
     private Long afterBalance;
 
-    public Transaction(BankAccount bankAccount, String counterAccount, Integer outcome, Integer income, String category, LocalDateTime time, Long afterBalance) {
+    public Transaction(BankAccount bankAccount, String counterAccount, Integer outcome, Integer income,
+                       TransactionCategory category, LocalDateTime time, Long afterBalance) {
         this.bankAccount = bankAccount;
         this.counterAccount = counterAccount;
         this.outcome = outcome;

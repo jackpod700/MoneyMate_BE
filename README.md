@@ -20,6 +20,9 @@ test directory 안의 패키지 구조는 main\java와 똑같이 해주세요
 ...
 
 <hr>
+<li>08-13-2 데이터 추가예정</li>
+
+<hr>
 <li>08-06-1 데이터베이스 이전</li>
 접속 주소는 application.properties 참고해 주세요 <br>
 접속 계정과 패스워드는 동일합니다 <br><br>
