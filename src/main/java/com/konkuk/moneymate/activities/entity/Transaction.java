@@ -26,6 +26,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name="transaction")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Transaction {
 
     @Id

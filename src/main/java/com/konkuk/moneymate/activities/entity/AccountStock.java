@@ -8,8 +8,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import lombok.Getter;
 
 @Entity
+@Getter
 @Table(name = "account_stock")
 @IdClass(AccountStockId.class) // 복합키
 public class AccountStock {

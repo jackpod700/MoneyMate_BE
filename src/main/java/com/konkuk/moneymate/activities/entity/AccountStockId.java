@@ -1,20 +1,16 @@
 package com.konkuk.moneymate.activities.entity;
 
+import lombok.AllArgsConstructor;
+
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
+@AllArgsConstructor
 public class AccountStockId implements Serializable {
 
     private UUID bankAccount;
     private String stock;
-
-    public AccountStockId() {}
-
-    public AccountStockId(UUID bankAccount, String stock) {
-        this.bankAccount = bankAccount;
-        this.stock = stock;
-    }
 
     @Override
     public boolean equals(Object o) {
