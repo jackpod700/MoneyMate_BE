@@ -11,7 +11,7 @@
 -- ('a8d0f1c3-5b8d-4e3f-a7aa-fb3b4c6b6414', 'e4d1a9fa-6e60-48db-865a-5cf0b1b07e7e', '4561237890', '카카오뱅크통장', '090', 5500000, '입출금'),
 -- ('b0c1a8e5-3b1a-4cb6-8bba-67d4e4c6d415', 'e4d1a9fa-6e60-48db-865a-5cf0b1b07e7e', '2022020202020', '하나 적금통장', '081', 7800000, '예적금');
 
-INSERT INTO bank_account (uid, user_uid, account_number, name, bank, current_balance, deposit_type) VALUES
+INSERT IGNORE INTO bank_account (uid, user_uid, account_number, name, bank, current_balance, deposit_type) VALUES
 (UNHEX(REPLACE('7e8a4d2a-1a58-4d2e-a61e-3ff6c6e1a111', '-', '')), UNHEX(REPLACE('f47ac10b-58cc-4372-a567-0e02b2c3d479', '-', '')), '1234567890', '국민 청년도약계좌', '004', 12050000, '예적금'),
 (UNHEX(REPLACE('b349fa3e-2b63-48a5-9672-f8913b5e5111', '-', '')), UNHEX(REPLACE('f47ac10b-58cc-4372-a567-0e02b2c3d479', '-', '')), '1234567890156', '토스뱅크통장', '092', 6500000, '입출금'),
 (UNHEX(REPLACE('e9f1c8d7-7654-43e2-9a2e-8adf2bbfe111', '-', '')), UNHEX(REPLACE('f47ac10b-58cc-4372-a567-0e02b2c3d479', '-', '')), '1564165135123', '미래에셋증권', '230', 5000000, '증권'),

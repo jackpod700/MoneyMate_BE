@@ -20,6 +20,9 @@ test directory 안의 패키지 구조는 main\java와 똑같이 해주세요
 ...
 
 <hr>
+<li>08-18-3 소비통계 api 작성</li>
+
+<hr>
 <li>08-13-2 데이터 추가예정</li>
 
 <hr>

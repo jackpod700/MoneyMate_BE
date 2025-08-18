@@ -1,5 +1,5 @@
 
-INSERT INTO asset (asset_uid, user_uid, name, type, price) VALUES
+INSERT IGNORE INTO asset (asset_uid, user_uid, name, type, price) VALUES
 (UNHEX(REPLACE('5cea9ac9-a31e-4002-a958-75d6b1b9b43b', '-', '')), UNHEX(REPLACE('f47ac10b-58cc-4372-a567-0e02b2c3d479', '-', '')), '헬리오시티 84H', '부동산', 2500000000),
 (UNHEX(REPLACE('78b4bd85-ff35-435e-aa1d-37db8ada0385', '-', '')), UNHEX(REPLACE('f47ac10b-58cc-4372-a567-0e02b2c3d479', '-', '')), '미국 국채 10년(US10YT=RR)', '투자', 158611200),
 (UNHEX(REPLACE('0ab36f39-79ab-4b1f-9f7b-ba46394ae63d', '-', '')), UNHEX(REPLACE('f47ac10b-58cc-4372-a567-0e02b2c3d479', '-', '')), '가상화폐자산', '투자', 7910420),
@@ -11,7 +11,7 @@ INSERT INTO asset (asset_uid, user_uid, name, type, price) VALUES
 (UNHEX(REPLACE('00925dd4-d6e1-4d2c-9440-dea4ae30ea6f', '-', '')), UNHEX(REPLACE('e4d1a9fa-6e60-48db-865a-5cf0b1b07e7e', '-', '')), '가상화폐자산', '투자', 54020000 );
 
 
-INSERT INTO asset (asset_uid, user_uid, name, type, price) VALUES
+INSERT IGNORE INTO asset (asset_uid, user_uid, name, type, price) VALUES
 (UNHEX(REPLACE('0ab36f39-79ab-4b1f-9f7b-ba46394ae63d', '-', '')), UNHEX(REPLACE('f47ac10b-58cc-4372-a567-0e02b2c3d479', '-', '')), '가상화폐자산', '투자', 7910420),
 
 -- user_uid

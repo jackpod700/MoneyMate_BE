@@ -1,4 +1,4 @@
-INSERT INTO stock (ISIN, exchange_id, ticker, name, currency) VALUES
+INSERT IGNORE  INTO stock (ISIN, exchange_id, ticker, name, currency) VALUES
 -- NASDAQ
 ('US67066G1040', 'US', 'NVDA', '엔비디아', 'USD'),
 ('US46090E1038', 'US', 'QQQ', 'Invesco QQQ Trust Series 1', 'USD'),
