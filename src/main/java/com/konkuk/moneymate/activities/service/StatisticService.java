@@ -1,8 +1,5 @@
 package com.konkuk.moneymate.activities.service;
 
-import static java.util.Locale.filter;
-
-import com.konkuk.moneymate.activities.dto.AssetHistoryDto;
 import com.konkuk.moneymate.activities.entity.AccountStock;
 import com.konkuk.moneymate.activities.entity.Asset;
 import com.konkuk.moneymate.activities.entity.BankAccount;
@@ -24,9 +21,12 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -176,11 +176,43 @@ public class StatisticService {
                 YearMonth.now().minusMonths(monthNum).atDay(1).atStartOfDay(),
                 YearMonth.now().atEndOfMonth().atTime(23, 59, 59)
                 );
+
+
         // 2. 현재 보유중인 주식 정보(AccountStock)를 가져온다.
         List<AccountStock> stocks = accountStockRepository.findAccountStocksByBankAccount(bankAccount);
         HashMap<Stock, Integer> stockInfo = new HashMap<>();
         for(AccountStock stock:stocks){
             stockInfo.put(stock.getStock(), stock.getQuantity());
+        }
+
+        //거래내역에 존재하는 주식종류를 뽑아낸다
+        HashSet<Stock> stockSet = new HashSet<>();
+        HashSet<String> currencySet = new HashSet<>();
+        //현재 계좌에 가지고 있는 주식들 추가
+        for(AccountStock s: stocks){
+            stockSet.add(s.getStock());
+            currencySet.add(s.getStock().getCurrency());
+        }
+        //거래내역에 존재하는 주식들 추가
+        for(StockTransaction t : stockTransactions){
+            stockSet.add(t.getStock());
+            currencySet.add(t.getStock().getCurrency());
+        }
+
+        //뽑아낸 주식종류의 가격기록과 환율정보를 가져온다
+        HashMap<Stock, HashMap<LocalDate, BigDecimal>> stockHistory = new HashMap<>();
+        HashMap<String, HashMap<LocalDate, BigDecimal>> exchangeHistory = new HashMap<>();
+
+        for(Stock s:stockSet){
+            HashMap<LocalDate, BigDecimal> stockPriceHistoryHashMap = ((HashMap<LocalDate, BigDecimal>) stockPriceHistoryRepository.findByISINOrderByDateDesc(s.getISIN()).stream()
+                    .collect(Collectors.toMap(StockPriceHistory::getDate,StockPriceHistory::getEndPrice)));
+            stockHistory.put(s,stockPriceHistoryHashMap);
+        }
+
+        for(String cs:currencySet){
+            HashMap<LocalDate, BigDecimal> exchangePriceHistoryHashMap = (HashMap<LocalDate, BigDecimal>) exchangeHistoryRepository.findByBaseCurrency(cs).stream()
+                    .collect(Collectors.toMap(ExchangeHistory::getDate, ExchangeHistory::getEndPrice));
+            exchangeHistory.put(cs,exchangePriceHistoryHashMap);
         }
 
         // 3. 주식 거래내역과 현재 보유중인 주식정보를 토대로 특정 달의 마지막날에 보유중인 주식을 계산한다(시간역순)
@@ -225,28 +257,27 @@ public class StatisticService {
                 BigDecimal exchangePrice = new BigDecimal(1);
                 //환율 가격 계산
                 if(!stock.getCurrency().equals("KRW")){
-                    exchangePrice = exchangeHistoryRepository.findByBaseCurrency(stock.getCurrency()).stream()
-                            .filter(t->t.getDate().isBefore(boundaryTime))
-                            .max(Comparator.comparing(ExchangeHistory::getDate))
-                            .map(ExchangeHistory::getEndPrice)
-                            .orElseThrow(() -> new RuntimeException("해당 조건에 맞는 환율 정보가 없습니다."));
+                    exchangePrice = exchangeHistory.get(stock.getCurrency())
+                            .entrySet().stream()
+                            .filter(entry->entry.getKey().isBefore(boundaryTime))
+                            .max(Map.Entry.comparingByKey())
+                            .map(Map.Entry::getValue)
+                            .orElse(exchangePrice);
                 }
                 //현재 계산중인 주식의 현재 달의 마지막 가격 가져오기
-                List<StockPriceHistory> stockPriceHistory = stockPriceHistoryRepository.findByISINOrderByDateDesc(stock.getISIN());
-                Optional<StockPriceHistory> lastDayStockPriceHistory = stockPriceHistory.stream()
-                        // 경계 시간보다 이전에 일어난 거래만 필터링
-                        .filter(t -> t.getDate().isBefore(boundaryTime))
-                        // 필터링된 거래 중 시간이 가장 최신인 것을 찾음
-                        .max(Comparator.comparing(StockPriceHistory::getDate));
-                if(lastDayStockPriceHistory.isPresent()){
-                    lastDayEndPrice=lastDayStockPriceHistory.get().getEndPrice();
-                }
+                lastDayEndPrice = stockHistory.get(stock)
+                        .entrySet().stream()
+                        .filter(entry->entry.getKey().isBefore(boundaryTime))
+                        .max(Map.Entry.comparingByKey())
+                        .map(Map.Entry::getValue)
+                        .orElse(lastDayEndPrice);
+
                 //result에 더해주기
                 result.replace(targetMonth,
                         result.get(targetMonth)
-                                .add(lastDayEndPrice
-                                        .multiply(new BigDecimal(targetMonthHoldingStock.get(stock).toString()))
-                                        .multiply(exchangePrice)));
+                                .add(lastDayEndPrice//주식가격
+                                        .multiply(new BigDecimal(targetMonthHoldingStock.get(stock).toString()))//개수
+                                        .multiply(exchangePrice)));//환율가격
             }
 
         }
