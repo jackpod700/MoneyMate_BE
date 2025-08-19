@@ -22,8 +22,8 @@ public class ConsumptionStatsController {
 
     @GetMapping("/asset/stats/consumption")
     public ResponseEntity<?> consumptionStats(
-            @RequestParam String startDay,
-            @RequestParam String endDay,
+            @RequestParam("startDay") String startDay,
+            @RequestParam("endDay") String endDay,
             HttpServletRequest request) {
 
         return consumptionStatsService.consumptionStats(startDay, endDay, request);

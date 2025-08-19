@@ -105,9 +105,6 @@ public class RetirementSimulController {
                     .build());
         }
 
-
-
-
         return resultList;
     }
 

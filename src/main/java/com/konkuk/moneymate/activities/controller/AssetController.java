@@ -126,6 +126,7 @@ public class AssetController {
         try{
             stockAssets = assetService.getStockHoldingsWithPrice(userUid);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
                             ApiResponseMessage.INTERNAL_SERVER_ERROR.getMessage()));

@@ -1,11 +1,13 @@
 package com.konkuk.moneymate.activities.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
+@NoArgsConstructor
 @AllArgsConstructor
 public class AccountStockId implements Serializable {
 
