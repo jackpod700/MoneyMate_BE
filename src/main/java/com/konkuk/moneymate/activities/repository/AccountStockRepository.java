@@ -5,6 +5,7 @@ import com.konkuk.moneymate.activities.entity.AccountStock;
 import com.konkuk.moneymate.activities.entity.AccountStockId;
 import com.konkuk.moneymate.activities.entity.BankAccount;
 import java.util.List;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import java.util.UUID;
@@ -26,6 +27,6 @@ public interface AccountStockRepository extends JpaRepository<AccountStock, Acco
         JOIN ast.stock s
         WHERE ba.user.uid = :userUid
         """)
-    List<StockHoldingDto> findAllStockHoldings(UUID userUid);
+    List<StockHoldingDto> findAllStockHoldings(@Param("userUid") UUID userUid);
     List<AccountStock> findAccountStocksByBankAccount(BankAccount bankAccount);
 }

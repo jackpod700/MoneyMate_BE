@@ -26,7 +26,7 @@ public class StatisticController {
     private final StatisticService statisticService;
 
     @GetMapping("/asset/stats/history")
-    public ResponseEntity<?> getAssetHistory(HttpServletRequest httpServletRequest, @RequestParam String category){
+    public ResponseEntity<?> getAssetHistory(HttpServletRequest httpServletRequest, @RequestParam("category") String category){
         String userUid = jwtService.getUserUid(httpServletRequest);
         HashMap<YearMonth, BigDecimal> assetHistory;
         switch(category){
