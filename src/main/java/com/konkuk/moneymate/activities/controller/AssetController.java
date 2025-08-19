@@ -143,11 +143,8 @@ public class AssetController {
                         holding.getProfit().toString()))
                 .toList();
 
-        Map<String, Object> responseData = new HashMap<>();
-        responseData.put("stockAssets", responseAssets); // 변환된 리스트를 담기
-
         return ResponseEntity.ok(
                 new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
-                        ApiResponseMessage.STOCK_ASSET_QUERY_SUCCESS.getMessage(), responseData));
+                        ApiResponseMessage.STOCK_ASSET_QUERY_SUCCESS.getMessage(), responseAssets));
     }
 }
