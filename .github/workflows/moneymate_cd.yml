@@ -52,6 +52,8 @@ jobs:
             JAR_FILE=$(ls -t moneymate-BE-*.jar | head -n 1)
             echo "Launching $JAR_FILE"
             nohup java -jar $JAR_FILE > app.log 2>&1 &
+            
+            disown
             sleep 25
             
             NEW_PID=$(pgrep -f "moneymate-BE-.*\.jar" | head -n 1)
