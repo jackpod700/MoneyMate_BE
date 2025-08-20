@@ -35,7 +35,7 @@ jobs:
             PID=$(pgrep -f 'moneymate-BE-.*\.jar' || true)
             if [ -n "$PID" ]; then
               echo "Killing process $PID"
-              kill -9 $PID
+              kill $PID
             fi
             
             cd build/libs
