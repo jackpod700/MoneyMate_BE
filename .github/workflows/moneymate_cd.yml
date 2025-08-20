@@ -42,7 +42,8 @@ jobs:
             JAR_FILE=$(ls -t moneymate-BE-*.jar | head -n 1)
             echo "Launching $JAR_FILE"
             nohup java -jar $JAR_FILE > app.log 2>&1 &
-            tail -n 50 app.log
+            sleep 5
+            tail -n 50 app.log || true
 
 
 
