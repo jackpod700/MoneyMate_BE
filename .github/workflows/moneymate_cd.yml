@@ -34,38 +34,8 @@ jobs:
             ./gradlew clean
             ./gradlew build
 
-            PID=$(pgrep -f 'moneymate-BE-.*\.jar' || true)
-            if [ -n "$PID" ]; then
-              echo "Stopping process $PID"
-              kill $PID
-              sleep 15
-              if ps -p $PID > /dev/null 2>&1; then
-                echo "Force killing $PID"
-                kill -9 $PID
-                sleep 15
-              fi
-              echo "Old process stopped"
-            fi
-                        
-            
-            cd build/libs
-            JAR_FILE=$(ls -t moneymate-BE-*.jar | head -n 1)
-            echo "Launching $JAR_FILE"
-            nohup java -jar $JAR_FILE > app.log 2>&1 &
-            
-            disown
-            sleep 25
-            
-            NEW_PID=$(pgrep -f "moneymate-BE-.*\.jar" | head -n 1)
-            if [ -n "$NEW_PID" ]; then
-              echo "Started new process with PID: $NEW_PID"
-              echo "Application started successfully"
-              tail -n 20 app.log || echo "Log not available yet"
-            else
-              echo "Application failed to start"
-              cat app.log || echo "No log file found"
-              exit 1
-            fi
+            sudo systemctl daemon-reload
+            sudo systemctl restart moneymate
 
 
 
