@@ -31,30 +31,47 @@ jobs:
             ./gradlew --stop
             ./gradlew clean
             ./gradlew build
-            
+
             PID=$(pgrep -f 'moneymate-BE-.*\.jar' || true)
             if [ -n "$PID" ]; then
-              echo "Killing process $PID"
+              echo "Stopping process $PID"
               kill $PID
-              sleep 15
+              for i in {1..10}; do
+                if ! ps -p $PID > /dev/null; then
+                  echo "Old process stopped"
+                  break
+                fi
+                sleep 1
+              done
+              if ps -p $PID > /dev/null; then
+                echo "Force killing $PID"
+                kill -9 $PID
+              fi
             fi
+            
             
             cd build/libs
             JAR_FILE=$(ls -t moneymate-BE-*.jar | head -n 1)
             echo "Launching $JAR_FILE"
             nohup java -jar $JAR_FILE > app.log 2>&1 &
-            NEW_PID=$!
+            sleep 25
+            
+            NEW_PID=$(pgrep -f "moneymate-BE-.*\.jar" | head -n 1)
             echo "Started new process with PID: $NEW_PID"
-            sleep 15  
             
             if ps -p $NEW_PID > /dev/null; then
-              echo "Application is running"
-              tail -n 50 app.log
+              if grep -q "Tomcat started" app.log; then
+                echo "Application started successfully"
+              else
+                echo "Application running, but startup message not found yet"
+                tail -n 50 app.log
+              fi
             else
               echo "Application failed to start"
               cat app.log
               exit 1
             fi
+
 
 
 
