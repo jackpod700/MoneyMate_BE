@@ -1,0 +1,122 @@
+name: Moneymate_server CD to EC2
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    #paths:
+      #- "!src/main/test/**"
+
+jobs:
+  deploy-to-ec2:
+    runs-on: ubuntu-latest  # Ec2 is Ubuntu 2404 Runner 위에서 실행하는 게 아니라 필요없음
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 접속
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.PUBLIC_EC2_DNS }}       
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}     # ssh -i "hanay4502-seoul.pem" ubuntu@{host}
+          script: |
+            cd ~/MoneyMate_BE
+            git reset --hard HEAD
+            git clean -fd
+            git pull origin main
+            
+            chmod 700 ./gradlew
+            ./gradlew --stop
+            ./gradlew clean
+            ./gradlew build
+
+            PID=$(pgrep -f 'moneymate-BE-.*\.jar' || true)
+            if [ -n "$PID" ]; then
+              echo "Stopping process $PID"
+              kill $PID
+              for i in {1..10}; do
+                if ! ps -p $PID > /dev/null; then
+                  echo "Old process stopped"
+                  break
+                fi
+                sleep 1
+              done
+              if ps -p $PID > /dev/null; then
+                echo "Force killing $PID"
+                kill -9 $PID
+              fi
+            fi
+            
+            
+            cd build/libs
+            JAR_FILE=$(ls -t moneymate-BE-*.jar | head -n 1)
+            echo "Launching $JAR_FILE"
+            nohup java -jar $JAR_FILE > app.log 2>&1 &
+            sleep 25
+            
+            NEW_PID=$(pgrep -f "moneymate-BE-.*\.jar" | head -n 1)
+            echo "Started new process with PID: $NEW_PID"
+            
+            if ps -p $NEW_PID > /dev/null; then
+              if grep -q "Tomcat started" app.log; then
+                echo "Application started successfully"
+              else
+                echo "Application running, but startup message not found yet"
+                tail -n 50 app.log
+              fi
+            else
+              echo "Application failed to start"
+              cat app.log
+              exit 1
+            fi
+
+
+
+
+#name: Moneymate_server CD to EC2
+
+#env:
+  #DOCKER_HUB_REPOSITORY: 
+
+#on:
+#  workflow_dispatch:
+#   push:
+#     branches:
+#       - main
+#     #paths:
+#       #- "!src/main/test/**"
+#       
+# jobs:
+#   deploy-to-ec2:
+#     runs-on: [self-hosted, dev] # EC2 runner 태그
+#     steps:
+#       - name: git pull
+#         working-directory: ~/MoneyMate_BE
+#         run: |
+#           git reset --hard HEAD
+#           git clean -fd
+#           git pull origin main
+# 
+#       - name: gradlew 권한수정후 다시 빌드하는 절차
+#         working-directory: ~/MoneyMate_BE
+#         run: |
+#           chmod 700 ./gradlew
+#           ./gradlew --stop
+#           ./gradlew clean
+#           ./gradlew build
+# 
+#       - name: 원래 ps aux | grep java 후 kill
+#         run: |
+#           PID=$(pgrep -f 'moneymate-BE-0.0.1-SNAPSHOT.jar' || true)
+#           if [ -n "$PID" ]; then
+#             echo "Killing process $PID"
+#             kill -9 $PID
+#           fi
+# 
+#       - name: Spring boot 서버 실행
+#         working-directory: ~/MoneyMate_BE/backend/build/libs
+#         run: |
+#           nohup java -jar moneymate-BE-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+#           tail -n 50 app.log
