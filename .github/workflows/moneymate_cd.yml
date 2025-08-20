@@ -36,14 +36,25 @@ jobs:
             if [ -n "$PID" ]; then
               echo "Killing process $PID"
               kill $PID
+              sleep 15
             fi
             
             cd build/libs
             JAR_FILE=$(ls -t moneymate-BE-*.jar | head -n 1)
             echo "Launching $JAR_FILE"
             nohup java -jar $JAR_FILE > app.log 2>&1 &
-            sleep 5
-            tail -n 50 app.log || true
+            NEW_PID=$!
+            echo "Started new process with PID: $NEW_PID"
+            sleep 15  
+            
+            if ps -p $NEW_PID > /dev/null; then
+              echo "Application is running"
+              tail -n 50 app.log
+            else
+              echo "Application failed to start"
+              cat app.log
+              exit 1
+            fi
 
 
 
