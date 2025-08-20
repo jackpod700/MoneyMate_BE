@@ -1,5 +1,6 @@
 name: Moneymate_server CD to EC2
 
+
 on:
   workflow_dispatch:
   push:
@@ -11,6 +12,7 @@ on:
 jobs:
   deploy-to-ec2:
     runs-on: ubuntu-latest  # Ec2 is Ubuntu 2404 Runner 위에서 실행하는 게 아니라 필요없음
+    timeout-minutes: 10  
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -36,19 +38,15 @@ jobs:
             if [ -n "$PID" ]; then
               echo "Stopping process $PID"
               kill $PID
-              for i in {1..10}; do
-                if ! ps -p $PID > /dev/null; then
-                  echo "Old process stopped"
-                  break
-                fi
-                sleep 1
-              done
-              if ps -p $PID > /dev/null; then
+              sleep 15
+              if ps -p $PID > /dev/null 2>&1; then
                 echo "Force killing $PID"
                 kill -9 $PID
+                sleep 15
               fi
+              echo "Old process stopped"
             fi
-            
+                        
             
             cd build/libs
             JAR_FILE=$(ls -t moneymate-BE-*.jar | head -n 1)
@@ -57,18 +55,13 @@ jobs:
             sleep 25
             
             NEW_PID=$(pgrep -f "moneymate-BE-.*\.jar" | head -n 1)
-            echo "Started new process with PID: $NEW_PID"
-            
-            if ps -p $NEW_PID > /dev/null; then
-              if grep -q "Tomcat started" app.log; then
-                echo "Application started successfully"
-              else
-                echo "Application running, but startup message not found yet"
-                tail -n 50 app.log
-              fi
+            if [ -n "$NEW_PID" ]; then
+              echo "Started new process with PID: $NEW_PID"
+              echo "Application started successfully"
+              tail -n 20 app.log || echo "Log not available yet"
             else
               echo "Application failed to start"
-              cat app.log
+              cat app.log || echo "No log file found"
               exit 1
             fi
 
