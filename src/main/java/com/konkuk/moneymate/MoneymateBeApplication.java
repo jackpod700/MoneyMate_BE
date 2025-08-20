@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @SpringBootApplication
 public class MoneymateBeApplication implements CommandLineRunner {
-
+// 8월21일에 추가한 주석입니다
 	public static void main(String[] args) {
 		SpringApplication.run(MoneymateBeApplication.class, args);
 	}
