@@ -2,8 +2,6 @@ package com.konkuk.moneymate.activities.service;
 
 import com.konkuk.moneymate.activities.dto.BankAccountDto;
 import com.konkuk.moneymate.activities.dto.ConsumptionStatsResponse;
-import com.konkuk.moneymate.activities.dto.DateRequestDto;
-import com.konkuk.moneymate.activities.entity.BankAccount;
 import com.konkuk.moneymate.activities.enums.TransactionCategory;
 import com.konkuk.moneymate.activities.repository.TransactionRepository;
 import com.konkuk.moneymate.auth.service.JwtService;
@@ -70,7 +68,7 @@ public class ConsumptionStatsService {
             }
 
 
-            List<Object[]> results = transactionRepository.sumAmountsByCategory(accountUids, startDateTime, endDateTime);
+            List<Object[]> results = transactionRepository.consumptionAmountsByCategory(accountUids, startDateTime, endDateTime);
 
             Map<String, Long> categoryTotals = new LinkedHashMap<>();
             for (TransactionCategory category : TransactionCategory.values()) {
@@ -85,7 +83,10 @@ public class ConsumptionStatsService {
                 Long sum = ((Number) row[1]).longValue();
 
                 if (category != null) {
-                    categoryTotals.put(category.getDisplayName(), sum);
+                    if (category.getFlow() == TransactionCategory.FlowType.OUTCOME
+                            || category.getFlow() == TransactionCategory.FlowType.BOTH) {
+                        categoryTotals.put(category.getDisplayName(), sum);
+                    }
                 } else {
                     log.warn("Unknown category from DB (null)");
                     categoryTotals.put("기타", sum);

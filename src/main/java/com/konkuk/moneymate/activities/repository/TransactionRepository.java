@@ -26,12 +26,12 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             @Param("end") LocalDateTime end
     );
 
-    @Query("SELECT t.category, SUM(COALESCE(t.income,0) + COALESCE(t.outcome,0)) " +
+    @Query("SELECT t.category, SUM(COALESCE(t.outcome,0)) " +
             "FROM Transaction t " +
             "WHERE t.bankAccount.uid IN :accountUids " +
             "AND t.time BETWEEN :start AND :end " +
             "GROUP BY t.category")
-    List<Object[]> sumAmountsByCategory(
+    List<Object[]> consumptionAmountsByCategory(
             @Param("accountUids") List<UUID> accountUids,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
