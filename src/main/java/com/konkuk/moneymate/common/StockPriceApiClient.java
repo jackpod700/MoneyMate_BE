@@ -39,10 +39,10 @@ public class StockPriceApiClient {
 
             // 5. 스트림을 사용하여 리스트를 Map으로 변환
             return responseList.stream()
-                    .filter(dto -> dto.getCode() != null && dto.getPreviousClose() != null) // 안전장치
+                    .filter(dto -> dto.getCode() != null && dto.getClose() != null) // 안전장치
                     .collect(Collectors.toMap(
                             BatchApiResponseDto::getCode,        // Map의 Key
-                            BatchApiResponseDto::getPreviousClose, // Map의 Value
+                            BatchApiResponseDto::getClose, // Map의 Value
                             (existing, replacement) -> existing   // 중복된 Key가 있을 경우 기존 값 유지
                     ));
 
@@ -66,7 +66,7 @@ public class StockPriceApiClient {
 
             // 4. JSON 배열을 DTO 객체로 파싱
             BatchApiResponseDto responseData = objectMapper.readValue(response.body(), new TypeReference<>() {});
-            exchangeRate = responseData.getPreviousClose();
+            exchangeRate = responseData.getClose();
 
             // 5. 환율 반환
             return exchangeRate;
@@ -86,8 +86,8 @@ public class StockPriceApiClient {
         @JsonProperty("code")
         private String code;
 
-        @JsonProperty("previousClose")
-        private BigDecimal previousClose;
+        @JsonProperty("close")
+        private BigDecimal close;
     }
 }
 
