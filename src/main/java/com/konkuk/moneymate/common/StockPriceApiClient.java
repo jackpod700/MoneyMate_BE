@@ -52,6 +52,31 @@ public class StockPriceApiClient {
         }
     }
 
+    public static BigDecimal getKRWUSD_exchangeRate(){
+        BigDecimal exchangeRate;
+        String url = apiUrl+"KRW.FOREX"+parameter.replace("&api_token","?api_token");
+
+        HttpClient client = HttpClient.newHttpClient();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            // 3. API 요청 및 응답 수신
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // 4. JSON 배열을 DTO 객체로 파싱
+            BatchApiResponseDto responseData = objectMapper.readValue(response.body(), new TypeReference<>() {});
+            exchangeRate = responseData.getPreviousClose();
+
+            // 5. 환율 반환
+            return exchangeRate;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("실시간 달러-원 환율 조회 중 오류 발생: ", e);
+        }
+    }
+
     /**
      * API 응답 배열의 각 JSON 객체 구조에 맞는 DTO 클래스
      */

@@ -13,6 +13,7 @@ import com.konkuk.moneymate.common.StockPriceApiClient;
 import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
@@ -92,16 +93,31 @@ public class AssetService {
         List<StockHoldingDto> holdings = accountStockRepository.findAllStockHoldings(UUID.fromString(userUid));
 
         Map<String, BigDecimal> prices;
+        HashMap<String, BigDecimal> exchangeRates = new HashMap<>();
+        exchangeRates.put("USD", StockPriceApiClient.getKRWUSD_exchangeRate());
+
         try{
             prices = StockPriceApiClient.getCurrentPrices(holdings);
+
         } catch (Exception e) {
             throw new RuntimeException("실시간 주식 조회 중 오류 발생: " + e.getMessage(), e);
         }
 
         for (StockHoldingDto dto : holdings) {
-            BigDecimal currentPrice = prices.get(dto.getTicker() + "." + dto.getExchangeId());
+            BigDecimal currentPrice;
+            BigDecimal buyPrice;
+            if(dto.getCurrency().equals("KRW")){
+                currentPrice = prices.get(dto.getTicker() + "." + dto.getExchangeId());
+                buyPrice = dto.getAveragePrice().multiply(BigDecimal.valueOf(dto.getQuantity()));
+            }
+            else {
+                currentPrice = prices.get(dto.getTicker() + "." + dto.getExchangeId())
+                        .multiply(exchangeRates.get(dto.getCurrency()));
+                buyPrice = dto.getAveragePrice()
+                        .multiply(exchangeRates.get(dto.getCurrency()))
+                        .multiply(BigDecimal.valueOf(dto.getQuantity()));
+            }
             BigDecimal currentTotal = currentPrice.multiply(BigDecimal.valueOf(dto.getQuantity()));
-            BigDecimal buyPrice = dto.getAveragePrice().multiply(BigDecimal.valueOf(dto.getQuantity()));
             BigDecimal profit = currentTotal.subtract(buyPrice)
                     .divide(buyPrice, 2, RoundingMode.HALF_UP);
 
