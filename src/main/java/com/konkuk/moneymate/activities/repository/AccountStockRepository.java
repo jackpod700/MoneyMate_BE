@@ -20,7 +20,8 @@ public interface AccountStockRepository extends JpaRepository<AccountStock, Acco
             s.exchangeId, 
             s.ticker, 
             ast.quantity, 
-            ast.averagePrice
+            ast.averagePrice,
+            s.currency
         )
         FROM AccountStock ast
         JOIN ast.bankAccount ba

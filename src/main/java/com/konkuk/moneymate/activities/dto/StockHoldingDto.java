@@ -14,6 +14,7 @@ public class StockHoldingDto {
     private String stockName;
     private String exchangeId;
     private String ticker;
+    private String currency;
     private Integer quantity;
     private BigDecimal averagePrice;
     private BigDecimal currentTotalPrice; // 실시간 API로 채움
@@ -21,7 +22,7 @@ public class StockHoldingDto {
 
     public StockHoldingDto(UUID accountUid, String accountName, String ISIN,
                            String stockName, String exchangeId, String ticker,
-                           Integer quantity, BigDecimal averagePrice) {
+                           Integer quantity, BigDecimal averagePrice, String currency) {
         this.accountUid = accountUid;
         this.accountName = accountName;
         this.ISIN = ISIN;
@@ -30,5 +31,6 @@ public class StockHoldingDto {
         this.ticker = ticker;
         this.quantity = quantity;
         this.averagePrice = averagePrice;
+        this.currency = currency;
     }
 }

@@ -39,16 +39,41 @@ public class StockPriceApiClient {
 
             // 5. 스트림을 사용하여 리스트를 Map으로 변환
             return responseList.stream()
-                    .filter(dto -> dto.getCode() != null && dto.getPreviousClose() != null) // 안전장치
+                    .filter(dto -> dto.getCode() != null && dto.getClose() != null) // 안전장치
                     .collect(Collectors.toMap(
                             BatchApiResponseDto::getCode,        // Map의 Key
-                            BatchApiResponseDto::getPreviousClose, // Map의 Value
+                            BatchApiResponseDto::getClose, // Map의 Value
                             (existing, replacement) -> existing   // 중복된 Key가 있을 경우 기존 값 유지
                     ));
 
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("실시간 주식 조회 중 오류 발생: ", e);
+        }
+    }
+
+    public static BigDecimal getKRWUSD_exchangeRate(){
+        BigDecimal exchangeRate;
+        String url = apiUrl+"KRW.FOREX"+parameter.replace("&api_token","?api_token");
+
+        HttpClient client = HttpClient.newHttpClient();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            // 3. API 요청 및 응답 수신
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // 4. JSON 배열을 DTO 객체로 파싱
+            BatchApiResponseDto responseData = objectMapper.readValue(response.body(), new TypeReference<>() {});
+            exchangeRate = responseData.getClose();
+
+            // 5. 환율 반환
+            return exchangeRate;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("실시간 달러-원 환율 조회 중 오류 발생: ", e);
         }
     }
 
@@ -61,8 +86,8 @@ public class StockPriceApiClient {
         @JsonProperty("code")
         private String code;
 
-        @JsonProperty("previousClose")
-        private BigDecimal previousClose;
+        @JsonProperty("close")
+        private BigDecimal close;
     }
 }
 
