@@ -42,7 +42,7 @@ public enum TransactionCategory {
     SAVINGS(FlowType.BOTH, "예적금"),
     EXCHANGE(FlowType.OUTCOME, "환전"),
     REFUND(FlowType.INCOME, "환불"),
-    BUSINESS(FlowType.BOTH, "사업"),
+    // BUSINESS(FlowType.BOTH, "사업"),
     STOCK(FlowType.BOTH, "주식거래"),
     ETC_BANK(FlowType.BOTH, "기타");
 

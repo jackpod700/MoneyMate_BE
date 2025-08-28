@@ -72,7 +72,10 @@ public class ConsumptionStatsService {
 
             Map<String, Long> categoryTotals = new LinkedHashMap<>();
             for (TransactionCategory category : TransactionCategory.values()) {
-                categoryTotals.put(category.getDisplayName(), 0L);
+                if (category.getFlow() == TransactionCategory.FlowType.OUTCOME
+                        || category.getFlow() == TransactionCategory.FlowType.BOTH) {
+                    categoryTotals.put(category.getDisplayName(), 0L);
+                }
             }
 
             /**
