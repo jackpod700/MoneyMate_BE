@@ -2,20 +2,19 @@ package com.konkuk.moneymate.auth.application;
 
 import com.konkuk.moneymate.auth.exception.InvalidTokenException;
 import com.konkuk.moneymate.auth.exception.RefreshTokenExpiredException;
-import com.konkuk.moneymate.auth.repository.BlackListTokenRepository;
+import com.konkuk.moneymate.auth.service.JwtBlackListService;
 import com.konkuk.moneymate.auth.service.JwtService;
 import com.konkuk.moneymate.common.ApiResponseMessage;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
 @Component
 public class RefreshTokenValidator {
-    private final BlackListTokenRepository blackListTokenRepository;
     private final JwtService jwtService;
+    private final JwtBlackListService jwtBlackListService;
     String userId;
 
     /**
@@ -47,10 +46,20 @@ public class RefreshTokenValidator {
     /**
      * 확인 3: 블랙리스트에 등록된 토큰인지 검증
      */
+
     public void validateBlacklistedToken(String refreshToken) {
-        if (blackListTokenRepository.existsByInvalidRefreshToken(refreshToken)) {
-            throw new RuntimeException(ApiResponseMessage.INVALID_REFRESH_TOKEN.getMessage());
+        if (jwtBlackListService.isRefreshTokenBlacklisted(refreshToken)) {
+            throw new InvalidTokenException(ApiResponseMessage.INVALID_REFRESH_TOKEN.getMessage());
         }
     }
-
 }
+
+
+
+/*
+
+if (blackListTokenRepository.existsByInvalidRefreshToken(refreshToken)) {
+            throw new RuntimeException(ApiResponseMessage.INVALID_REFRESH_TOKEN.getMessage());
+        }
+
+ */

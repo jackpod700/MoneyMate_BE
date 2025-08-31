@@ -31,6 +31,9 @@ public class ReissueTokenManageService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
+        /**
+         * 기존 access token도 BLACKLIST 하도록 추가해야함
+         */
         try {
             refreshTokenValidator.validateToken(refreshToken);
             refreshTokenValidator.validateBlacklistedToken(refreshToken);

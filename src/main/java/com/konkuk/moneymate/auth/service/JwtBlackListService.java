@@ -1,9 +1,6 @@
 package com.konkuk.moneymate.auth.service;
 
-import com.konkuk.moneymate.auth.entity.BlackListToken;
 import com.konkuk.moneymate.auth.exception.InvalidTokenException;
-import com.konkuk.moneymate.auth.exception.UnAuthorizationException;
-import com.konkuk.moneymate.auth.repository.BlackListTokenRepository;
 import com.konkuk.moneymate.common.ApiResponseMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
