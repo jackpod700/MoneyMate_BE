@@ -27,6 +27,10 @@ https://eodhd.com/api/intraday/AAPL.US?api_token={     }&fmt=json
 뉴스 10개 조회 - 네이버/다음으로 쓰는걸 추천함
 https://eodhd.com/api/news?s= AAPL.US &offset= 0 &limit= 10 &api_token={     } &fmt=json
 
+
+
+
+
 ===
 네이버 
 

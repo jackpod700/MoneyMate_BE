@@ -24,47 +24,56 @@ repositories {
 }
 
 dependencies {
+	// Spring boot
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-rest' //
-	implementation('org.springframework.boot:spring-boot-starter-oauth2-client')
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
 
-	// implementation 'com.h2database:h2' // 임시용입니다. MySQL 연결하면 나중에 삭제
-
+	// MySQL
 	implementation 'mysql:mysql-connector-java:8.0.33'
 
 	// https://mvnrepository.com/artifact/io.codef.api/easycodef-java-v2
 	implementation("io.codef.api:easycodef-java-v2:2.0.0-beta-005")
-
+	// openai
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 
 	compileOnly 'org.projectlombok:lombok'
-	// runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.batch:spring-batch-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	// jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5', 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
+	// coolSMS
 	implementation 'net.nurigo:sdk:4.3.2'
 
+	// Spring-boot Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.session:spring-session-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
 
-	//implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	//implementation 'org.springframework.session:spring-session-data-redis'
-	//implementation 'org.springframework.boot:spring-boot-starter-cache'
-
-	//rss
+	// rss
 	implementation 'org.jsoup:jsoup:1.21.1'
 
 	implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 	implementation 'com.google.code.gson:gson:2.11.0'
+
+	// 사용하지 않는것, 복사 용도
+	// runtimeOnly 'com.mysql:mysql-connector-j'
+	// implementation 'com.h2database:h2' // 임시용입니다. MySQL 연결하면 나중에 삭제
+	// implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	// implementation 'org.springframework.session:spring-session-data-redis'
+	// implementation 'org.springframework.boot:spring-boot-starter-cache'
 }
 
 tasks.named('test') {
