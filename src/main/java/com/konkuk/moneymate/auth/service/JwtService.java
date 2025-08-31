@@ -145,6 +145,26 @@ public class JwtService {
         return null;
     }
 
+    public Date getExpiration(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            Date expiration = claims.getExpiration();
+            logger.info("Token Expiration: {}", expiration);
+            return expiration;
+        } catch (ExpiredJwtException e) {
+            Date expiration = e.getClaims().getExpiration();
+            logger.info("Expired Token Expiration: {}", expiration);
+            return expiration;
+        } catch (JwtException e) {
+            throw new RuntimeException("Invalid Token", e);
+        }
+    }
+
 
     public String getUserIdFromRefreshToken(String token) {
         try {
