@@ -6,8 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -35,12 +39,33 @@ public class StockHistoryFetcher {
         List<Stock> stocks = loadStocks();
 
         for (Stock stock : stocks) {
-            String apiUrl = String.format(
-                    "https://eodhd.com/api/eod/%s.%s?api_token=%s&fmt=json",
-                    stock.getTicker(),
-                    stock.getExchangeId(),
-                    apiKey
-            );
+            String apiUrl;
+            boolean isKor = "KO".equalsIgnoreCase(stock.getExchangeId());
+
+            /**
+             * isKor : exchage_id가 KO
+             */
+            if (isKor) {
+                ZonedDateTime nowKST = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+                String endDateTime = nowKST
+                        .minusDays(1)
+                        .toLocalDate()
+                        .atTime(23, 59)
+                        .format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+
+                apiUrl = String.format(
+                        "https://api.stock.naver.com/chart/domestic/item/%s/day?startDateTime=197001010000&endDateTime=%s",
+                        stock.getTicker(),
+                        endDateTime
+                );
+            } else {
+                apiUrl = String.format(
+                        "https://eodhd.com/api/eod/%s.%s?api_token=%s&fmt=json",
+                        stock.getTicker(),
+                        stock.getExchangeId(),
+                        apiKey
+                );
+            }
 
             try {
                 String response = new java.util.Scanner(new java.net.URL(apiUrl).openStream(), "UTF-8")
@@ -57,36 +82,51 @@ public class StockHistoryFetcher {
                     int count = 0;
 
                     for (JsonNode node : root) {
+                        LocalDate date;
+                        BigDecimal open, high, low, close;
+
+                        if (isKor) {
+                            date = LocalDate.parse(node.get("localDate").asText(),
+                                    java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
+                            open = node.get("openPrice").decimalValue();
+                            high = node.get("highPrice").decimalValue();
+                            low  = node.get("lowPrice").decimalValue();
+                            close= node.get("closePrice").decimalValue();
+                        } else {
+                            date = LocalDate.parse(node.get("date").asText());
+                            open = node.get("open").decimalValue();
+                            high = node.get("high").decimalValue();
+                            low  = node.get("low").decimalValue();
+                            close= node.get("close").decimalValue();
+                        }
+
                         ps.setString(1, stock.getIsin());
-                        ps.setDate(2, Date.valueOf(LocalDate.parse(node.get("date").asText())));
-                        ps.setBigDecimal(3, node.get("open").decimalValue());
-                        ps.setBigDecimal(4, node.get("high").decimalValue());
-                        ps.setBigDecimal(5, node.get("low").decimalValue());
-                        ps.setBigDecimal(6, node.get("close").decimalValue());
+                        ps.setDate(2, Date.valueOf(date));
+                        ps.setBigDecimal(3, open);
+                        ps.setBigDecimal(4, high);
+                        ps.setBigDecimal(5, low);
+                        ps.setBigDecimal(6, close);
 
                         ps.addBatch();
                         count++;
 
                         if (count % batchSize == 0) {
                             ps.executeBatch();
-                            log.info("{}.{} INFO: {} rows 처리완료",
-                                    stock.getTicker(), stock.getExchangeId(), count);
+                            log.info("{}.{} INFO: {} rows 처리완료", stock.getTicker(), stock.getExchangeId(), count);
                         }
                     }
 
                     ps.executeBatch();
                     log.info("{}.{} [{}] Batch INFO: Total {} saved.",
-                            stock.getTicker(), stock.getExchangeId(), stock.getName() ,count);
+                            stock.getTicker(), stock.getExchangeId(), stock.getName(), root.size());
                 }
 
-                log.info("[OK] {}.{} [{}] SAVED ({} rows)\n",
-                        stock.getTicker(), stock.getExchangeId(), stock.getName() ,root.size());
-
             } catch (Exception e) {
-                System.err.printf("[FAIL] %s.%s [%s] FAIL: %s\n",
-                        stock.getTicker(), stock.getExchangeId(), stock.getName() ,e.getMessage());
+                log.error("[FAIL] {}.{} [{}] FAIL: {}",
+                        stock.getTicker(), stock.getExchangeId(), stock.getName(), e.getMessage());
             }
         }
+
 
         connection.close();
     }
