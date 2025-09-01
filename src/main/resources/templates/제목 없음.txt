@@ -4,14 +4,12 @@ EOD.hd 예시
 https://eodhd.com/api/real-time/AAPL.US?api_token={      }&fmt=json
 
 
-
 History 예시
 https://eodhd.com/api/eod/MCD.US?api_token={     }&fmt=json
 
 
-
 예시-AAPL의 7.10 to 7.27 데이터 조회
-https://eodhd.com/api/eod/AAPL.US?from=2025-07-10&to=2025-07-27&period=d&api_token={     }&fmt=json
+https://eodhd.com/api/eod/AAPL.US?from=2025-07-10&to=2025-07-27&period=d&api_token={     }x
 
 
 
