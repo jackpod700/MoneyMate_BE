@@ -3,6 +3,7 @@ package com.konkuk.moneymate.activities.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.konkuk.moneymate.activities.entity.Stock;
+import com.konkuk.moneymate.activities.repository.ExchangeHistoryRepository;
 import com.konkuk.moneymate.activities.repository.StockPriceHistoryRepository;
 import com.konkuk.moneymate.activities.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.List;
 public class StockLastdayFetchService {
 
     private final StockRepository stockRepository;
+    private final ExchangeHistoryRepository exchangeHistoryRepository;
     private final StockPriceHistoryRepository stockPriceHistoryRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -37,6 +39,9 @@ public class StockLastdayFetchService {
 
         List<Stock> stocks = stockRepository.findAll();
 
+        /**
+         * 주식 Fetch
+         */
         for (Stock stock : stocks) {
             try {
                 if ("KO".equalsIgnoreCase(stock.getExchangeId())) {
@@ -48,6 +53,16 @@ public class StockLastdayFetchService {
                 log.error("[FAIL] {}.{} [{}] : {}", stock.getTicker(),
                         stock.getExchangeId(), stock.getName(), e.getMessage());
             }
+        }
+
+        /**
+         * 환율 Fetch
+         */
+        try {
+            fetchExchangeHistory("USD"); // USD/KRW
+            fetchExchangeHistory("EUR"); // EUR/KRW
+        } catch (Exception e) {
+            log.error("Forex insert FAILED : {}", e.getMessage());
         }
 
         log.info("=== Stock price fetch job completed ===");
@@ -132,4 +147,43 @@ public class StockLastdayFetchService {
         log.info("[OK] {}.{} [{}] Foreign data saved ({})",
                 stock.getTicker(), stock.getExchangeId(), stock.getName(), root.size());
     }
+
+    /**
+     * 환율 데이터
+     */
+    public void fetchExchangeHistory(String baseCurrency) throws Exception {
+        LocalDate end = LocalDate.now();
+        LocalDate start = end.minusMonths(1);
+
+        String apiUrl = String.format(
+                "https://eodhd.com/api/eod/%sKRW.FOREX?api_token=%s&fmt=json&from=%s&to=%s",
+                baseCurrency,
+                apiKey,
+                start.toString(),
+                end.toString()
+        );
+
+        String response = new java.util.Scanner(new java.net.URL(apiUrl).openStream(), "UTF-8")
+                .useDelimiter("\\A").next();
+
+        JsonNode root = objectMapper.readTree(response);
+
+        int count = 0;
+        for (JsonNode node : root) {
+            LocalDate date = LocalDate.parse(node.get("date").asText());
+            BigDecimal open = node.get("open").decimalValue();
+            BigDecimal high = node.get("high").decimalValue();
+            BigDecimal low = node.get("low").decimalValue();
+            BigDecimal close = node.get("close").decimalValue();
+
+            exchangeHistoryRepository.insertIgnore(
+                    baseCurrency, date, open, high, low, close
+            );
+
+            count++;
+        }
+
+        log.info("[OK] {} 환율 데이터 저장 완료 ({} rows)", baseCurrency, count);
+    }
+
 }

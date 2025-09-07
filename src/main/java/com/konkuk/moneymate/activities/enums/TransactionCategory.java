@@ -36,15 +36,15 @@ public enum TransactionCategory {
     /**
      * 은행
      */
-    TRANSFER(FlowType.OUTCOME, "이체"),
-    DEPOSIT(FlowType.INCOME, "입금"),
-    WITHDRAWAL(FlowType.OUTCOME, "출금"),
-    SAVINGS(FlowType.BOTH, "예적금"),
-    EXCHANGE(FlowType.OUTCOME, "환전"),
+    TRANSFER(FlowType.ETC, "이체"),
+    DEPOSIT(FlowType.ETC, "입금"),
+    WITHDRAWAL(FlowType.ETC, "출금"),
+    SAVINGS(FlowType.ETC, "예적금"),
+    EXCHANGE(FlowType.ETC, "환전"),
     REFUND(FlowType.INCOME, "환불"),
     // BUSINESS(FlowType.BOTH, "사업"),
-    STOCK(FlowType.BOTH, "주식거래"),
-    ETC_BANK(FlowType.BOTH, "기타");
+    STOCK(FlowType.ETC, "주식거래"),
+    ETC_BANK(FlowType.ETC, "기타");
 
     private final FlowType flow;
     private final String displayName;
@@ -70,6 +70,6 @@ public enum TransactionCategory {
     }
 
     public enum FlowType {
-        INCOME, OUTCOME, BOTH
+        INCOME, OUTCOME, BOTH, ETC // ETC : 소비내역에서 제외
     }
 }

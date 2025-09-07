@@ -29,16 +29,16 @@ public class ExchangeHistory {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "openPrice", nullable = false, precision = 20, scale = 6)
+    @Column(name = "open_price", nullable = false, precision = 20, scale = 6)
     private BigDecimal openPrice;
 
-    @Column(name = "highPrice", nullable = false, precision = 20, scale = 6)
+    @Column(name = "high_price", nullable = false, precision = 20, scale = 6)
     private BigDecimal highPrice;
 
-    @Column(name = "lowPrice", nullable = false, precision = 20, scale = 6)
+    @Column(name = "low_price", nullable = false, precision = 20, scale = 6)
     private BigDecimal lowPrice;
 
-    @Column(name = "endPrice", nullable = false, precision = 20, scale = 6)
+    @Column(name = "end_price", nullable = false, precision = 20, scale = 6)
     private BigDecimal endPrice;
 
 }

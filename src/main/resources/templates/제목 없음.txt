@@ -4,13 +4,25 @@ EOD.hd 예시
 https://eodhd.com/api/real-time/AAPL.US?api_token={      }&fmt=json
 
 
+
+
+
 History 예시
 https://eodhd.com/api/eod/MCD.US?api_token={     }&fmt=json
-
 
 예시-AAPL의 7.10 to 7.27 데이터 조회
 https://eodhd.com/api/eod/AAPL.US?from=2025-07-10&to=2025-07-27&period=d&api_token={     }x
 
+지수 종목 8.5.2025 - 8.10.2025 예시
+(NASDAQ - IXIC.INDX)
+https://eodhd.com/api/eod/IXIC.INDX?from=2025-08-05&to=2025-08-10&period=d&api_token={     }&fmt=json
+
+환율 :
+USDKRW.FOREX  한국 KRW - USD
+https://eodhd.com/api/eod/USDKRW.FOREX?from=2025-08-05&to=2025-09-01&period=d&api_token={     }&fmt=json
+
+USDEUR.FOREX
+EURUSD.FOREX
 
 
 Bulk last day
@@ -23,8 +35,20 @@ https://eodhd.com/api/eod-bulk-last-day/US?api_token={     }&fmt=json
 https://eodhd.com/api/intraday/AAPL.US?api_token={     }&fmt=json
 
 뉴스 10개 조회 - 네이버/다음으로 쓰는걸 추천함
-https://eodhd.com/api/news?s= AAPL.US &offset= 0 &limit= 10 &api_token={     } &fmt=json
+https://eodhd.com/api/news?s= AAPL.US &offset= 0 &limit= 10 &api_token={     }&fmt=json
 
+
+
+
+=== 종목 이미지 로고 (svg) 불러오기
+미국주식의 경우 티커가 아니라 로이터 코드를 사용해야 합니다
+https://ssl.pstatic.net/imgstock/fn/real/logo/stock/Stock{종목코드}.svg
+
+예시(한국-삼성전자 005930)
+https://ssl.pstatic.net/imgstock/fn/real/logo/stock/Stock005930.svg
+
+예시(나스닥-애플 AAPL.O)
+https://ssl.pstatic.net/imgstock/fn/real/logo/stock/StockAAPL.O.svg
 
 
 
@@ -69,6 +93,7 @@ https://polling.finance.naver.com/api/realtime/worldstock/stock/A
 https://api.stock.naver.com/stock/CPNG.K/basic
 
 
+
 환율
 https://m.stock.naver.com/front-api/marketIndex/exchange/new
 미국 USD, 유럽 EUR, 일본 JPY, 중국 CNY, 유로/달러, 영국 파운드/달러 주요 6개 먼저 찾아서 우선순위로 정렬하도록 별도로 구성해야 함
@@ -93,6 +118,21 @@ https://m.stock.naver.com/api/stocks/theme?page=1&pageSize=20
 
 업종 입력시 
 https://m.stock.naver.com/api/stocks/industry/327?pageSize=20&page=1
+
+
+개별종목 이미지 수신받기
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 NASDAQ
@@ -157,3 +197,24 @@ KR7004800009, 004800, 효성
 
 
 KOSDAQ
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+reuter code
+S&P 500: GSPC.INDX
+나스닥: IXIC.INDX
+다우존스: DJI.INDX
+코스피: KS11.KS 또는 KOSPI.INDX
+니케이: N225.INDX
