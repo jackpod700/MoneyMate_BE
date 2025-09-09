@@ -13,6 +13,7 @@ public enum ApiResponseMessage {
     NEWS_TOTAL_SUCCESS("전체뉴스조회 성공"),
     NEWS_DETAIL_SUCCESS("뉴스상세조회 성공"),
     STOCK_ASSET_QUERY_SUCCESS("보유주식 조회 성공"),
+    READ_FINANCIAL_PRODUCT_DEPOSIT_SUCCESS("은행상품(정기예금) 조회 완료"),
 
     //실패시
     USER_NOT_FOUND("사용자를 찾을 수 없습니다"),
