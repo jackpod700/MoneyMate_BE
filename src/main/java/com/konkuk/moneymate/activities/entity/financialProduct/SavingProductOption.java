@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
@@ -20,6 +21,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name="saving_product_option")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class SavingProductOption {
     @Id
     @GeneratedValue(generator = "uuid2")

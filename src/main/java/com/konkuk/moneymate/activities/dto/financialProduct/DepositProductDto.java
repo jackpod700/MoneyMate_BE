@@ -16,7 +16,22 @@ public class DepositProductDto extends FinancialProductDto{
     private String etcNote; // 기타 유의사항
     private String maxLimit; // 최고한도
 
-    public DepositProductDto(String bankName, String productName, String joinWay, LocalDate dclsStrtDay, LocalDate dclsEndDay, String url, String callNum, BigDecimal intrRate, BigDecimal maxIntrRate, String intrType, String mtrtInt, String spclCnd, String joinDeny, String joinMember, String etcNote, Long maxLimit) {
+    public DepositProductDto(String bankName,
+                             String productName,
+                             String joinWay,
+                             LocalDate dclsStrtDay,
+                             LocalDate dclsEndDay,
+                             String url,
+                             String callNum,
+                             BigDecimal intrRate,
+                             BigDecimal maxIntrRate,
+                             String intrType,
+                             String mtrtInt,
+                             String spclCnd,
+                             String joinDeny,
+                             String joinMember,
+                             String etcNote,
+                             Long maxLimit) {
         super(bankName, productName, joinWay, dclsStrtDay, dclsEndDay, url, callNum);
         this.intrRate = intrRate.toString();
         this.maxIntrRate = maxIntrRate.toString();

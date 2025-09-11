@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-abstract class FinancialProductDto {
+public abstract class FinancialProductDto {
     private String bankName; //은행명
     private String productName; //상품명
     private String joinWay; //가입방법
