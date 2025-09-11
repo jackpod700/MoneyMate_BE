@@ -13,6 +13,8 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,6 +29,7 @@ public abstract class FinancialProduct {
 
     @ManyToOne
     @JoinColumn(name="financial_company_code", nullable=false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private FinancialCompany financialCompany;
 
     @Column(name="product_code", nullable = false)
@@ -35,7 +38,7 @@ public abstract class FinancialProduct {
     @Column(name="product_name", nullable = false)
     private String productName;
 
-    @Column(name="join_way", nullable = false)
+    @Column(name="join_way")
     private String joinWay;
 
     @Column(name="dcls_strt_day")

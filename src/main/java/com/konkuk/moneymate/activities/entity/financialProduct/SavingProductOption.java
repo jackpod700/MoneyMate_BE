@@ -17,10 +17,10 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@Table(name="deposit_product_option")
+@Table(name="saving_product_option")
 @AllArgsConstructor
 @NoArgsConstructor
-public class DepositProductOption {
+public class SavingProductOption {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -30,7 +30,13 @@ public class DepositProductOption {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="product_uid", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private DepositProduct depositProduct;
+    private SavingProduct savingProduct;
+
+    @Column(name="rsrv_type")
+    private char rsrvType;
+
+    @Column(name="rsrv_type_nm")
+    private String rsrvTypeName;
 
     @Column(name="intr_rate_type")
     private char intrRateType;

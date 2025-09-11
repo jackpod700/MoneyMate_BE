@@ -17,10 +17,10 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@Table(name="deposit_product_option")
+@Table(name="rent_house_loan_product_option")
 @AllArgsConstructor
 @NoArgsConstructor
-public class DepositProductOption {
+public class RentHouseLoanProductOption {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -30,20 +30,26 @@ public class DepositProductOption {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="product_uid", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private DepositProduct depositProduct;
+    private RentHouseLoanProduct rentHouseLoanProduct;
 
-    @Column(name="intr_rate_type")
-    private char intrRateType;
+    @Column(name="rpay_type")
+    private char rpayType;
 
-    @Column(name="intr_rate_type_nm")
-    private String intrRateTypeName;
+    @Column(name="rpay_type_nm", nullable = false)
+    private String rpayTypeName;
 
-    @Column(name="save_trm")
-    private Integer saveTerm;
+    @Column(name="lend_rate_type")
+    private char lendRateType;
 
-    @Column(name="intr_rate")
-    private BigDecimal intrRate;
+    @Column(name="lend_rate_type_nm")
+    private String lendRateTypeName;
 
-    @Column(name="intr_rate2")
-    private BigDecimal intrRate2;
+    @Column(name="lend_rate_min")
+    private BigDecimal lendRateMin;
+
+    @Column(name="lend_rate_max")
+    private BigDecimal lendRateMax;
+
+    @Column(name="lend_rate_avg")
+    private BigDecimal lendRateAvg;
 }

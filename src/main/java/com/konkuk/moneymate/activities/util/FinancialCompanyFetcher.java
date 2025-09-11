@@ -2,15 +2,31 @@ package com.konkuk.moneymate.activities.util;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.konkuk.moneymate.activities.entity.financialProduct.CreditLoanProduct;
+import com.konkuk.moneymate.activities.entity.financialProduct.CreditLoanProductOption;
 import com.konkuk.moneymate.activities.entity.financialProduct.DepositProduct;
 import com.konkuk.moneymate.activities.entity.financialProduct.DepositProductOption;
 import com.konkuk.moneymate.activities.entity.financialProduct.FinancialCompany;
 import com.konkuk.moneymate.activities.entity.financialProduct.FinancialCompanyRegion;
+import com.konkuk.moneymate.activities.entity.financialProduct.MortgageLoanProduct;
+import com.konkuk.moneymate.activities.entity.financialProduct.MortgageLoanProductOption;
+import com.konkuk.moneymate.activities.entity.financialProduct.RentHouseLoanProduct;
+import com.konkuk.moneymate.activities.entity.financialProduct.RentHouseLoanProductOption;
+import com.konkuk.moneymate.activities.entity.financialProduct.SavingProduct;
+import com.konkuk.moneymate.activities.entity.financialProduct.SavingProductOption;
 import com.konkuk.moneymate.activities.enums.financialProduct.FinancialGroupCode;
+import com.konkuk.moneymate.activities.repository.financial.CreditLoanProductOptionRepository;
+import com.konkuk.moneymate.activities.repository.financial.CreditLoanProductRepository;
 import com.konkuk.moneymate.activities.repository.financial.DepositProductOptionRepository;
 import com.konkuk.moneymate.activities.repository.financial.DepositProductRepository;
 import com.konkuk.moneymate.activities.repository.financial.FinancialCompanyRegionRepository;
 import com.konkuk.moneymate.activities.repository.financial.FinancialCompanyRepository;
+import com.konkuk.moneymate.activities.repository.financial.MortgageLoanProductOptionRepository;
+import com.konkuk.moneymate.activities.repository.financial.MortgageLoanProductRepository;
+import com.konkuk.moneymate.activities.repository.financial.RentHouseLoanProductOptionRepository;
+import com.konkuk.moneymate.activities.repository.financial.RentHouseLoanProductRepository;
+import com.konkuk.moneymate.activities.repository.financial.SavingProductOptionRepository;
+import com.konkuk.moneymate.activities.repository.financial.SavingProductRepository;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -37,6 +53,14 @@ public class FinancialCompanyFetcher {
     private final FinancialCompanyRegionRepository financialCompanyRegionRepository;
     private final DepositProductRepository depositProductRepository;
     private final DepositProductOptionRepository depositProductOptionRepository;
+    private final SavingProductRepository savingProductRepository;
+    private final SavingProductOptionRepository savingProductOptionRepository;
+    private final MortgageLoanProductRepository mortgageLoanProductRepository;
+    private final MortgageLoanProductOptionRepository mortgageLoanProductOptionRepository;
+    private final RentHouseLoanProductRepository rentHouseLoanProductRepository;
+    private final RentHouseLoanProductOptionRepository rentHouseLoanProductOptionRepository;
+    private final CreditLoanProductRepository creditLoanProductRepository;
+    private final CreditLoanProductOptionRepository creditLoanProductOptionRepository;
 
     public void scheduledFetchFinlifeInfo(){
         for(FinlifeFunctionParam param : FinlifeFunctionParam.values()){
@@ -111,10 +135,12 @@ public class FinancialCompanyFetcher {
         if (category.equals(FinlifeFunctionParam.DEPOSIT_PRODUCT.name())) {
             for (Object item : parsedResponse.getResult().getBaseList()) {
                 DepositProductBaseInfo baseInfo = (DepositProductBaseInfo) item;
-                //deposit product는 financial company가 반드시 있어야함
+                //product는 financial company가 반드시 있어야함
                 FinancialCompany financialCompany = financialCompanyRepository.findById(
                         baseInfo.getFinancialCompanyNo()).orElse(null);
-
+                if(financialCompany == null) {
+                    continue;
+                }
                 String key = baseInfo.getFinancialCompanyNo() + baseInfo.getFinancialProductCode();
                 allBaseInfo.put(key, baseInfo.toEntity(financialCompany));
                 allOptionInfo.put(key, new ArrayList<>());
@@ -128,7 +154,98 @@ public class FinancialCompanyFetcher {
                 }
             }
             return;
+        }
+        if(category.equals(FinlifeFunctionParam.SAVING_PRODUCT.name())){
+            for (Object item : parsedResponse.getResult().getBaseList()) {
+                SavingProductBaseInfo baseInfo = (SavingProductBaseInfo) item;
+                //product는 financial company가 반드시 있어야함
+                FinancialCompany financialCompany = financialCompanyRepository.findById(
+                        baseInfo.getFinancialCompanyNo()).orElse(null);
+                if(financialCompany == null) {
+                    continue;
+                }
+                String key = baseInfo.getFinancialCompanyNo() + baseInfo.getFinancialProductCode();
+                allBaseInfo.put(key, baseInfo.toEntity(financialCompany));
+                allOptionInfo.put(key, new ArrayList<>());
+            }
+            for (Object item : parsedResponse.getResult().getOptionList()) {
+                SavingProductOptionInfo optionInfo = (SavingProductOptionInfo) item;
 
+                String key = optionInfo.getFinancialCompanyNo() + optionInfo.getFinancialProductCode();
+                if (allOptionInfo.containsKey(key)) {
+                    allOptionInfo.get(key).add(optionInfo);
+                }
+            }
+            return;
+        }
+        if(category.equals(FinlifeFunctionParam.MORTGAGE_LOAN_PRODUCT.name())){
+            for (Object item : parsedResponse.getResult().getBaseList()) {
+                MortgageLoanProductBaseInfo baseInfo = (MortgageLoanProductBaseInfo) item;
+                //product는 financial company가 반드시 있어야함
+                FinancialCompany financialCompany = financialCompanyRepository.findById(
+                        baseInfo.getFinancialCompanyNo()).orElse(null);
+                if(financialCompany == null) {
+                    continue;
+                }
+                String key = baseInfo.getFinancialCompanyNo() + baseInfo.getFinancialProductCode();
+                allBaseInfo.put(key, baseInfo.toEntity(financialCompany));
+                allOptionInfo.put(key, new ArrayList<>());
+            }
+            for (Object item : parsedResponse.getResult().getOptionList()) {
+                MortgageLoanProductOptionInfo optionInfo = (MortgageLoanProductOptionInfo) item;
+
+                String key = optionInfo.getFinancialCompanyNo() + optionInfo.getFinancialProductCode();
+                if (allOptionInfo.containsKey(key)) {
+                    allOptionInfo.get(key).add(optionInfo);
+                }
+            }
+            return;
+        }
+        if(category.equals(FinlifeFunctionParam.RENT_HOUSE_LOAN_PRODUCT.name())){
+            for (Object item : parsedResponse.getResult().getBaseList()) {
+                RentHouseLoanProductBaseInfo baseInfo = (RentHouseLoanProductBaseInfo) item;
+                //product는 financial company가 반드시 있어야함
+                FinancialCompany financialCompany = financialCompanyRepository.findById(
+                        baseInfo.getFinancialCompanyNo()).orElse(null);
+                if(financialCompany == null) {
+                    continue;
+                }
+                String key = baseInfo.getFinancialCompanyNo() + baseInfo.getFinancialProductCode();
+                allBaseInfo.put(key, baseInfo.toEntity(financialCompany));
+                allOptionInfo.put(key, new ArrayList<>());
+            }
+            for (Object item : parsedResponse.getResult().getOptionList()) {
+                RentHouseLoanProductOptionInfo optionInfo = (RentHouseLoanProductOptionInfo) item;
+
+                String key = optionInfo.getFinancialCompanyNo() + optionInfo.getFinancialProductCode();
+                if (allOptionInfo.containsKey(key)) {
+                    allOptionInfo.get(key).add(optionInfo);
+                }
+            }
+            return;
+        }
+        if(category.equals(FinlifeFunctionParam.CREDIT_LOAN_PRODUCT.name())){
+            for (Object item : parsedResponse.getResult().getBaseList()) {
+                CreditLoanProductBaseInfo baseInfo = (CreditLoanProductBaseInfo) item;
+                //product는 financial company가 반드시 있어야함
+                FinancialCompany financialCompany = financialCompanyRepository.findById(
+                        baseInfo.getFinancialCompanyNo()).orElse(null);
+                if(financialCompany == null) {
+                    continue;
+                }
+                String key = baseInfo.getFinancialCompanyNo() + baseInfo.getFinancialProductCode();
+                allBaseInfo.put(key, baseInfo.toEntity(financialCompany));
+                allOptionInfo.put(key, new ArrayList<>());
+            }
+            for (Object item : parsedResponse.getResult().getOptionList()) {
+                CreditLoanProductOptionInfo optionInfo = (CreditLoanProductOptionInfo) item;
+
+                String key = optionInfo.getFinancialCompanyNo() + optionInfo.getFinancialProductCode();
+                if (allOptionInfo.containsKey(key)) {
+                    allOptionInfo.get(key).add(optionInfo);
+                }
+            }
+            return;
         }
     }
 
@@ -173,80 +290,85 @@ public class FinancialCompanyFetcher {
             }
             return;
         }
-    }
+        if(category.equals(FinlifeFunctionParam.SAVING_PRODUCT.name())){
+            // SavingProduct 저장 로직 구현 (DepositProduct와 유사)
+            savingProductRepository.deleteAll();
 
-    public void fetchFinancialCompany(){
-        String apiUrl = "https://finlife.fss.or.kr/finlifeapi/companySearch.json?auth="+authKey;
-        HttpClient client = HttpClient.newHttpClient();
-
-        HashMap<String, FinancialCompany> allBaseInfo = new HashMap<>();
-        HashMap<String, List<FinancialCompanyOptionInfo>> allOptionInfo = new HashMap<>();
-
-        for(FinancialGroupCode groupCode : FinancialGroupCode.values()){
-            int currentPage = 1;
-            String params="&topFinGrpNo="+groupCode.getCode()+"&pageNo="+currentPage;
-            String url = apiUrl + params;
-            try {
-                // 3. API 요청 및 응답 수신
-                HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-                // 4. body내용을 파싱
-                Gson gson = new Gson();
-                Type responseType = new TypeToken<FinlifeApiResponse<FinancialCompanyBaseInfo, FinancialCompanyOptionInfo>>() {}.getType();
-                FinlifeApiResponse<FinancialCompanyBaseInfo,FinancialCompanyOptionInfo> financialCompanyResponse = gson.fromJson(response.body(), responseType);
-
-                // 5. 데이터 처리
-                if (financialCompanyResponse.getResult().getErrorCode().equals("000")) {
-                    for(FinancialCompanyBaseInfo baseInfo : financialCompanyResponse.getResult().getBaseList()) {
-                        allBaseInfo.put(baseInfo.getFinancialCompanyNo(), baseInfo.toEntity(groupCode.getCode()));
-                        allOptionInfo.put(baseInfo.getFinancialCompanyNo(), new ArrayList<>());
-                    }
-                    for(FinancialCompanyOptionInfo optionInfo : financialCompanyResponse.getResult().getOptionList()) {
-                        if(allOptionInfo.containsKey(optionInfo.getFinancialCompanyNo())) {
-                            allOptionInfo.get(optionInfo.getFinancialCompanyNo()).add(optionInfo);
-                        }
-                    }
+            List<SavingProduct> products = allBaseInfo.values().stream()
+                    .map(obj -> (SavingProduct) obj) // 각 obj를 DepositProduct로 형변환
+                    .toList(); // Java 16+ 에서는 .toList() 사용, 이전 버전은 .collect(Collectors.toList())
+            savingProductRepository.saveAll(products);
+            savingProductOptionRepository.deleteAll();
+            for (String key : allOptionInfo.keySet()) {
+                SavingProduct savingProduct = (SavingProduct) allBaseInfo.get(key);
+                Set<SavingProductOption> options = new HashSet<>();
+                for (Object item : allOptionInfo.get(key)) {
+                    SavingProductOptionInfo optionInfo = (SavingProductOptionInfo) item;
+                    options.add(optionInfo.toEntity(savingProduct));
                 }
-                // 6. 페이지가 여러개인 경우 추가 요청
-                for(;currentPage<financialCompanyResponse.getResult().getMaxPageNo();currentPage++){
-                    params="&topFinGrpNo="+groupCode.getCode()+"&pageNo="+currentPage;
-                    url = apiUrl + params;
-                    request = HttpRequest.newBuilder().uri(URI.create(url)).build();
-                    response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                    financialCompanyResponse = gson.fromJson(response.body(), responseType);
-                    if (financialCompanyResponse.getResult().getErrorCode().equals("000")) {
-                        for(FinancialCompanyBaseInfo baseInfo : financialCompanyResponse.getResult().getBaseList()) {
-                            allBaseInfo.put(baseInfo.getFinancialCompanyNo(), baseInfo.toEntity(groupCode.getCode()));
-                            allOptionInfo.put(baseInfo.getFinancialCompanyNo(), new ArrayList<>());
-                        }
-                        for(FinancialCompanyOptionInfo optionInfo : financialCompanyResponse.getResult().getOptionList()) {
-                            if(allOptionInfo.containsKey(optionInfo.getFinancialCompanyNo())) {
-                                allOptionInfo.get(optionInfo.getFinancialCompanyNo()).add(optionInfo);
-                            }
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException("금융 회사 조회중 오류 발생: ", e);
+                savingProductOptionRepository.saveAll(options);
             }
-
+            return;
         }
+        if(category.equals(FinlifeFunctionParam.MORTGAGE_LOAN_PRODUCT.name())){
+            // MortgageLoanProduct 저장 로직 구현 (DepositProduct와 유사)
+            mortgageLoanProductRepository.deleteAll();
 
-        // 6. DB저장
-        financialCompanyRepository.deleteAll();
-        financialCompanyRepository.saveAll(allBaseInfo.values());
-        financialCompanyRegionRepository.deleteAll();
-        for(String finCoNo : allOptionInfo.keySet()){
-            FinancialCompany financialCompany = allBaseInfo.get(finCoNo);
-            Set<FinancialCompanyRegion> regions = new HashSet<>();
-            for(FinancialCompanyOptionInfo optionInfo : allOptionInfo.get(finCoNo)){
-                if(optionInfo.getExistsYn().equals("Y")){
-                    regions.add(optionInfo.toEntity(financialCompany));
+            List<MortgageLoanProduct> products = allBaseInfo.values().stream()
+                    .map(obj -> (MortgageLoanProduct) obj) // 각 obj를 DepositProduct로 형변환
+                    .toList(); // Java 16+ 에서는 .toList() 사용, 이전 버전은 .collect(Collectors.toList())
+            mortgageLoanProductRepository.saveAll(products);
+            mortgageLoanProductOptionRepository.deleteAll();
+            for (String key : allOptionInfo.keySet()) {
+                MortgageLoanProduct mortgageLoanProduct = (MortgageLoanProduct) allBaseInfo.get(key);
+                Set<MortgageLoanProductOption> options = new HashSet<>();
+                for (Object item : allOptionInfo.get(key)) {
+                    MortgageLoanProductOptionInfo optionInfo = (MortgageLoanProductOptionInfo) item;
+                    options.add(optionInfo.toEntity(mortgageLoanProduct));
                 }
+                mortgageLoanProductOptionRepository.saveAll(options);
             }
-            financialCompanyRegionRepository.saveAll(regions);
+            return;
+        }
+        if(category.equals(FinlifeFunctionParam.RENT_HOUSE_LOAN_PRODUCT.name())){
+            // MortgageLoanProduct 저장 로직 구현 (DepositProduct와 유사)
+            rentHouseLoanProductRepository.deleteAll();
+
+            List<RentHouseLoanProduct> products = allBaseInfo.values().stream()
+                    .map(obj -> (RentHouseLoanProduct) obj) // 각 obj를 DepositProduct로 형변환
+                    .toList(); // Java 16+ 에서는 .toList() 사용, 이전 버전은 .collect(Collectors.toList())
+            rentHouseLoanProductRepository.saveAll(products);
+            rentHouseLoanProductOptionRepository.deleteAll();
+            for (String key : allOptionInfo.keySet()) {
+                RentHouseLoanProduct rentHouseLoanProduct = (RentHouseLoanProduct) allBaseInfo.get(key);
+                Set<RentHouseLoanProductOption> options = new HashSet<>();
+                for (Object item : allOptionInfo.get(key)) {
+                    RentHouseLoanProductOptionInfo optionInfo = (RentHouseLoanProductOptionInfo) item;
+                    options.add(optionInfo.toEntity(rentHouseLoanProduct));
+                }
+                rentHouseLoanProductOptionRepository.saveAll(options);
+            }
+            return;
+        }
+        if(category.equals(FinlifeFunctionParam.CREDIT_LOAN_PRODUCT.name())){
+            // MortgageLoanProduct 저장 로직 구현 (DepositProduct와 유사)
+            creditLoanProductRepository.deleteAll();
+
+            List<CreditLoanProduct> products = allBaseInfo.values().stream()
+                    .map(obj -> (CreditLoanProduct) obj) // 각 obj를 DepositProduct로 형변환
+                    .toList(); // Java 16+ 에서는 .toList() 사용, 이전 버전은 .collect(Collectors.toList())
+            creditLoanProductRepository.saveAll(products);
+            creditLoanProductOptionRepository.deleteAll();
+            for (String key : allOptionInfo.keySet()) {
+                CreditLoanProduct creditLoanProduct = (CreditLoanProduct) allBaseInfo.get(key);
+                Set<CreditLoanProductOption> options = new HashSet<>();
+                for (Object item : allOptionInfo.get(key)) {
+                    CreditLoanProductOptionInfo optionInfo = (CreditLoanProductOptionInfo) item;
+                    options.add(optionInfo.toEntity(creditLoanProduct));
+                }
+                creditLoanProductOptionRepository.saveAll(options);
+            }
+            return;
         }
     }
 }

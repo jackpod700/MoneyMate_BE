@@ -11,11 +11,11 @@ import java.util.UUID;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="deposit_product")
+@Table(name="saving_product")
 @NoArgsConstructor
-public class DepositProduct extends FinancialProduct {
+public class SavingProduct extends FinancialProduct {
 
-    public DepositProduct(UUID uid,
+    public SavingProduct(UUID uid,
                           FinancialCompany financialCompany,
                           String productCode,
                           String productName,
@@ -37,8 +37,8 @@ public class DepositProduct extends FinancialProduct {
         this.maxLimit = maxLimit;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "depositProduct")
-    private Set<DepositProductOption> options;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "savingProduct")
+    private Set<SavingProductOption> options;
 
     @Column(name="mtrt_int")
     private String maturityInterest;
