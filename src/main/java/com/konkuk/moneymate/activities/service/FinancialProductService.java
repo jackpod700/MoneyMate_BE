@@ -3,6 +3,7 @@ package com.konkuk.moneymate.activities.service;
 import com.konkuk.moneymate.activities.dto.financialProduct.DepositProductDto;
 import com.konkuk.moneymate.activities.dto.financialProduct.FinancialProductDto;
 import com.konkuk.moneymate.activities.dto.financialProduct.MortgageLoanProductDto;
+import com.konkuk.moneymate.activities.dto.financialProduct.RentHouseLoanProductDto;
 import com.konkuk.moneymate.activities.dto.financialProduct.SavingProductDto;
 import com.konkuk.moneymate.activities.entity.financialProduct.FinancialCompany;
 import com.konkuk.moneymate.activities.entity.financialProduct.FinancialProduct;
@@ -16,6 +17,7 @@ import com.konkuk.moneymate.activities.enums.financialProduct.RsrvType;
 import com.konkuk.moneymate.activities.repository.financial.DepositProductRepository;
 import com.konkuk.moneymate.activities.repository.financial.FinancialCompanyRepository;
 import com.konkuk.moneymate.activities.repository.financial.MortgageLoanProductRepository;
+import com.konkuk.moneymate.activities.repository.financial.RentHouseLoanProductRepository;
 import com.konkuk.moneymate.activities.repository.financial.SavingProductRepository;
 import java.util.List;
 import java.util.stream.Stream;
@@ -30,6 +32,7 @@ public class FinancialProductService {
     private final DepositProductRepository depositProductRepository;
     private final SavingProductRepository savingProductRepository;
     private final MortgageLoanProductRepository mortgageLoanProductRepository;
+    private final RentHouseLoanProductRepository rentHouseLoanProductRepository;
 
     public List<DepositProductDto> getDepositProducts(int savingAmount, int period, String finGrpCode, String region, String intrType, String joinDeny, String joinWay) {
         //savingAmount보다 작은 금액, period와 같은 기간, finGrpCode와 같은 금융그룹코드, region을 포함하는 지역, intrType과 같은 이자계산방식, joinMember를 포함, joinWay를 포함하는 상품들을 products에 추가
@@ -108,6 +111,30 @@ public class FinancialProductService {
         return mortgageLoanProductDtoList;
     }
 
+    public List<RentHouseLoanProductDto> getRentHouseLoanProduct(String finGrpCode, String region, String rpayType, String lendRateType, String joinWay) {
+        List<FinancialCompany> financialCompanyList = getFinancialCompanysByRegionAndFinGrp(finGrpCode, region);
+
+        //금융회사에 따라 상품가져오기
+        List<RentHouseLoanProductDto> rentHouseLoanProductDtoList = rentHouseLoanProductRepository.findByFinancialCompanyCode(
+                financialCompanyList.stream().map(FinancialCompany::getCode).toList()
+        );
+
+        //상환방식 조건에 맞춰 상품 필터링
+        if(!rpayType.equals("all")){
+            rentHouseLoanProductDtoList.removeIf(productDto -> !productDto.getRpayType().equals(RpayType.fromCode(rpayType)));
+        }
+
+        //금리방식에 맞춰 상품 피렅링
+        if(!lendRateType.equals("all")){
+            rentHouseLoanProductDtoList.removeIf(productDto -> !productDto.getLendRateType().equals(LendRateType.fromCode(lendRateType)));
+        }
+
+        //가입방법 조건에 맞추어 데이터 필터링
+        filterByJoinWay(rentHouseLoanProductDtoList, joinWay);
+
+        return rentHouseLoanProductDtoList;
+    }
+
     private List<FinancialCompany> getFinancialCompanysByRegionAndFinGrp(String finGrpCode, String region){
         //지역에 따른 금융회사 가져오기
         List<FinancialCompany> financialCompanyList;
@@ -141,6 +168,7 @@ public class FinancialProductService {
             });
         }
     }
+
 
 
 }
