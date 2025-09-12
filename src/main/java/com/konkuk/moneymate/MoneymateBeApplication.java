@@ -1,22 +1,19 @@
 package com.konkuk.moneymate;
 
-import com.konkuk.moneymate.activities.entity.*;
-import com.konkuk.moneymate.activities.repository.*;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * <h3>MoneymateBeApplication : 메인 실행 클래스 </h3>
  */
 @Slf4j
 @AllArgsConstructor
+@EnableScheduling
 @SpringBootApplication
 public class MoneymateBeApplication implements CommandLineRunner {
 // 8월21일에 추가한 주석입니다
