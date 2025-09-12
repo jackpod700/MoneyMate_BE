@@ -38,8 +38,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class FinancialCompanyFetcher {
@@ -62,10 +65,29 @@ public class FinancialCompanyFetcher {
     private final CreditLoanProductRepository creditLoanProductRepository;
     private final CreditLoanProductOptionRepository creditLoanProductOptionRepository;
 
-    public void scheduledFetchFinlifeInfo(){
-        for(FinlifeFunctionParam param : FinlifeFunctionParam.values()){
-            fetchFinlifeInfo(param.name());
+    /**
+     * 매일 새벽 3시에 cron 표현식에 따라 자동으로 실행됩니다.
+     * cron = "초 분 시 일 월 요일"
+     * "0 0 3 * * *" : 매일 3시 0분 0초에 실행
+     */
+    @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul")
+    public void scheduledFetchFinlifeInfo() {
+        // --- 1. 작업 시작 로그 ---
+        log.info("✅ [SCHEDULE START] 금융 상품 정보 업데이트 스케줄을 시작합니다.");
+
+        for (FinlifeFunctionParam param : FinlifeFunctionParam.values()) {
+            // --- 2. 작업 진행 로그 ---
+            log.info("▶️ Fetching data for category: {}", param.name());
+            try {
+                fetchFinlifeInfo(param.name());
+            } catch (Exception e) {
+                // --- 3. 개별 작업 실패 로그 ---
+                log.error("❌ Category '{}' 처리 중 에러 발생: {}", param.name(), e.getMessage());
+            }
         }
+
+        // --- 4. 작업 완료 로그 ---
+        log.info("✅ [SCHEDULE END] 금융 상품 정보 업데이트 스케줄을 완료했습니다.");
     }
 
     public void fetchFinlifeInfo(String category){
