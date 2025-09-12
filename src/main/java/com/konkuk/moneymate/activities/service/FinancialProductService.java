@@ -1,5 +1,6 @@
 package com.konkuk.moneymate.activities.service;
 
+import com.konkuk.moneymate.activities.dto.financialProduct.CreditLoanProductDto;
 import com.konkuk.moneymate.activities.dto.financialProduct.DepositProductDto;
 import com.konkuk.moneymate.activities.dto.financialProduct.FinancialProductDto;
 import com.konkuk.moneymate.activities.dto.financialProduct.MortgageLoanProductDto;
@@ -7,6 +8,8 @@ import com.konkuk.moneymate.activities.dto.financialProduct.RentHouseLoanProduct
 import com.konkuk.moneymate.activities.dto.financialProduct.SavingProductDto;
 import com.konkuk.moneymate.activities.entity.financialProduct.FinancialCompany;
 import com.konkuk.moneymate.activities.entity.financialProduct.FinancialProduct;
+import com.konkuk.moneymate.activities.enums.financialProduct.CrdtLendRateType;
+import com.konkuk.moneymate.activities.enums.financialProduct.CrdtPrdtType;
 import com.konkuk.moneymate.activities.enums.financialProduct.FinancialCompanyRegionCode;
 import com.konkuk.moneymate.activities.enums.financialProduct.FinancialGroupCode;
 import com.konkuk.moneymate.activities.enums.financialProduct.InterestType;
@@ -14,6 +17,7 @@ import com.konkuk.moneymate.activities.enums.financialProduct.JoinWay;
 import com.konkuk.moneymate.activities.enums.financialProduct.LendRateType;
 import com.konkuk.moneymate.activities.enums.financialProduct.RpayType;
 import com.konkuk.moneymate.activities.enums.financialProduct.RsrvType;
+import com.konkuk.moneymate.activities.repository.financial.CreditLoanProductRepository;
 import com.konkuk.moneymate.activities.repository.financial.DepositProductRepository;
 import com.konkuk.moneymate.activities.repository.financial.FinancialCompanyRepository;
 import com.konkuk.moneymate.activities.repository.financial.MortgageLoanProductRepository;
@@ -33,6 +37,7 @@ public class FinancialProductService {
     private final SavingProductRepository savingProductRepository;
     private final MortgageLoanProductRepository mortgageLoanProductRepository;
     private final RentHouseLoanProductRepository rentHouseLoanProductRepository;
+    private final CreditLoanProductRepository creditLoanProductRepository;
 
     public List<DepositProductDto> getDepositProducts(int savingAmount, int period, String finGrpCode, String region, String intrType, String joinDeny, String joinWay) {
         //savingAmount보다 작은 금액, period와 같은 기간, finGrpCode와 같은 금융그룹코드, region을 포함하는 지역, intrType과 같은 이자계산방식, joinMember를 포함, joinWay를 포함하는 상품들을 products에 추가
@@ -133,6 +138,30 @@ public class FinancialProductService {
         filterByJoinWay(rentHouseLoanProductDtoList, joinWay);
 
         return rentHouseLoanProductDtoList;
+    }
+
+    public List<CreditLoanProductDto> getCreditLoanProduct(String finGrpCode, String region, String crdtPrdtType, String crdtLendRateType, String joinWay) {
+        List<FinancialCompany> financialCompanyList = getFinancialCompanysByRegionAndFinGrp(finGrpCode, region);
+
+        //금융회사에 따라 상품가져오기
+        List<CreditLoanProductDto> creditLoanProductDtoList = creditLoanProductRepository.findByFinancialCompanyCode(
+                financialCompanyList.stream().map(FinancialCompany::getCode).toList()
+        );
+
+        //상환방식 조건에 맞춰 상품 필터링
+        if(!crdtPrdtType.equals("all")){
+            creditLoanProductDtoList.removeIf(productDto -> !productDto.getCrdtPrdtType().equals(CrdtPrdtType.findNamefromCode(crdtPrdtType)));
+        }
+
+        //금리방식에 맞춰 상품 피렅링
+        if(!crdtLendRateType.equals("all")){
+            creditLoanProductDtoList.removeIf(productDto -> !productDto.getCrdtLendRateType().equals(CrdtLendRateType.fromCode(crdtLendRateType)));
+        }
+
+        //가입방법 조건에 맞추어 데이터 필터링
+        filterByJoinWay(creditLoanProductDtoList, joinWay);
+
+        return creditLoanProductDtoList;
     }
 
     private List<FinancialCompany> getFinancialCompanysByRegionAndFinGrp(String finGrpCode, String region){

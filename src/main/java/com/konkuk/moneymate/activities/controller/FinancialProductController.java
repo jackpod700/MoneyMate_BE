@@ -1,5 +1,6 @@
 package com.konkuk.moneymate.activities.controller;
 
+import com.konkuk.moneymate.activities.dto.financialProduct.CreditLoanProductDto;
 import com.konkuk.moneymate.activities.dto.financialProduct.DepositProductDto;
 import com.konkuk.moneymate.activities.dto.financialProduct.MortgageLoanProductDto;
 import com.konkuk.moneymate.activities.dto.financialProduct.RentHouseLoanProductDto;
@@ -86,16 +87,24 @@ public class FinancialProductController {
         List<RentHouseLoanProductDto> products = financialProductService.getRentHouseLoanProduct(finGrpCode, region, rpayType, lendRateType, joinWay);
 
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
-                ApiResponseMessage.READ_FINANCIAL_PRODUCT_MORTGAGE_LOAN_SUCCESS.getMessage(),
+                ApiResponseMessage.READ_FINANCIAL_PRODUCT_RENT_HOUSE_LOAN_SUCCESS.getMessage(),
                 products));
     }
-//
-//    @GetMapping("/financial/products/credit-loan")
-//    public ResponseEntity<?> getCreditLoanProducts(
-//
-//    ){
-//
-//    }
+
+    @GetMapping("/financial/products/credit-loan")
+    public ResponseEntity<?> getCreditLoanProducts(
+            @RequestParam("finGrpCode") String finGrpCode,
+            @RequestParam("region") String region,
+            @RequestParam("crdtPrdtType") String crdtPrdtType,
+            @RequestParam("crdtLendRateType") String crdtLendRateType,
+            @RequestParam("joinWay") String joinWay
+    ){
+        List<CreditLoanProductDto> products = financialProductService.getCreditLoanProduct(finGrpCode, region, crdtPrdtType, crdtLendRateType, joinWay);
+
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
+                ApiResponseMessage.READ_FINANCIAL_PRODUCT_CREDIT_LOAN_SUCCESS.getMessage(),
+                products));
+    }
 
     @GetMapping("/financial/fetchData")
     public void fetchFinancialData() {
