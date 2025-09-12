@@ -3,7 +3,6 @@ package com.konkuk.moneymate.activities.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
