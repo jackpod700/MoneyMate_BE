@@ -1,5 +1,7 @@
 package com.konkuk.moneymate.activities.dto.financialProduct;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import lombok.Getter;
 
 @Getter
@@ -28,14 +30,14 @@ public class MortgageLoanProductDto extends FinancialProductDto {
             String bankName,
             String productName,
             String joinWay,
-            java.time.LocalDate dclsStrtDay,
-            java.time.LocalDate dclsEndDay,
+            LocalDate dclsStrtDay,
+            LocalDate dclsEndDay,
             String url,
             String callNum,
             String lendRateType,
-            String lendRateMin,
-            String lendRateMax,
-            String lendRateAvg,
+            BigDecimal lendRateMin,
+            BigDecimal lendRateMax,
+            BigDecimal lendRateAvg,
             String loanInciExpn,
             String erlyRpayFee,
             String dlyRate,
@@ -45,9 +47,9 @@ public class MortgageLoanProductDto extends FinancialProductDto {
     ) {
         super(bankName, productName, joinWay, dclsStrtDay, dclsEndDay, url, callNum);
         this.lendRateType = lendRateType;
-        this.lendRateMin = lendRateMin;
-        this.lendRateMax = lendRateMax;
-        this.lendRateAvg = lendRateAvg;
+        this.lendRateMin = lendRateMin.toString();
+        this.lendRateMax = lendRateMax.toString();
+        this.lendRateAvg = lendRateAvg!=null?lendRateAvg.toString():null;
         this.loanInciExpn = loanInciExpn;
         this.erlyRpayFee = erlyRpayFee;
         this.dlyRate = dlyRate;

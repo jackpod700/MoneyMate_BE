@@ -1,6 +1,7 @@
 package com.konkuk.moneymate.activities.controller;
 
 import com.konkuk.moneymate.activities.dto.financialProduct.DepositProductDto;
+import com.konkuk.moneymate.activities.dto.financialProduct.MortgageLoanProductDto;
 import com.konkuk.moneymate.activities.dto.financialProduct.SavingProductDto;
 import com.konkuk.moneymate.activities.service.FinancialProductService;
 import com.konkuk.moneymate.activities.util.FinancialCompanyFetcher;
@@ -56,21 +57,30 @@ public class FinancialProductController {
                 products));
     }
 
-//    @GetMapping("/products/mortgage-loan")
-//    public ResponseEntity<?> getMortgageLoanProducts(
+    @GetMapping("/financial/products/mortgage-loan")
+    public ResponseEntity<?> getMortgageLoanProducts(
+            @RequestParam("mrtg_type") String mrtg_type,
+            @RequestParam("finGrpCode") String finGrpCode,
+            @RequestParam("region") String region,
+            @RequestParam("rpayType") String rpayType,
+            @RequestParam("lendRateType") String lendRateType,
+            @RequestParam("joinWay") String joinWay
+    ){
+        List<MortgageLoanProductDto> products = financialProductService.getMortgageLoanProduct(mrtg_type, finGrpCode, region, rpayType, lendRateType, joinWay);
+
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
+                ApiResponseMessage.READ_FINANCIAL_PRODUCT_MORTGAGE_LOAN_SUCCESS.getMessage(),
+                products));
+    }
 //
-//    ){
-//
-//    }
-//
-//    @GetMapping("/products/rent-house-loan")
+//    @GetMapping("/financial/products/rent-house-loan")
 //    public ResponseEntity<?> getRentHouseLoanProducts(
 //
 //    ){
 //
 //    }
 //
-//    @GetMapping("/products/credit-loan")
+//    @GetMapping("/financial/products/credit-loan")
 //    public ResponseEntity<?> getCreditLoanProducts(
 //
 //    ){
