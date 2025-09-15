@@ -39,7 +39,7 @@ public class Transaction {
     @JoinColumn(name="bank_account_uid", nullable=false)
     private BankAccount bankAccount;
 
-    @Column(name="counter_account", nullable = false)
+    @Column(name="counter_account", nullable = true)
     private String counterAccount;
 
     @Column(name = "outcome")

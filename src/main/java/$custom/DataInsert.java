@@ -44,16 +44,20 @@ public class DataInsert {
             log.info("current dir: {}", System.getProperty("user.dir"));
 
             String[] scripts = {
-                    "insert_users",
-                    "insert_stock",
-                    "insert_bankaccount",
-                    "insert_stockaccount",
-                    "insert_asset",
                     "insert_transaction",
-                    "stock_transaction_dummy",
-                    "stock_history_dummy",
-                    "exchange_history_dummy"
             };
+
+            /*
+                "insert_users",
+                "insert_stock",
+                "insert_bankaccount",
+                "insert_stockaccount",
+                "insert_asset",
+                "insert_transaction",
+                "stock_transaction_dummy",
+                "stock_history_dummy",
+                "exchange_history_dummy"
+             */
 
             for (String name : scripts) {
                 String resourcePath = "sql/" + (name.endsWith(".sql") ? name : name + ".sql");
