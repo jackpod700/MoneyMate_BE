@@ -78,7 +78,7 @@ public class StockLastdayFetchService {
                 .withHour(23).withMinute(59)
                 .format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
 
-        String startDateTime = yesterday.minusMonths(1)
+        String startDateTime = yesterday.minusWeeks(1)
                 .withHour(0).withMinute(0)
                 .format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
 
@@ -116,7 +116,7 @@ public class StockLastdayFetchService {
      */
     private void fetchForeignStock(Stock stock) throws Exception {
         LocalDate end = LocalDate.now();
-        LocalDate start = end.minusMonths(1);
+        LocalDate start = end.minusWeeks(1);
 
         String apiUrl = String.format(
                 "https://eodhd.com/api/eod/%s.%s?api_token=%s&fmt=json&from=%s&to=%s",
@@ -153,7 +153,7 @@ public class StockLastdayFetchService {
      */
     public void fetchExchangeHistory(String baseCurrency) throws Exception {
         LocalDate end = LocalDate.now();
-        LocalDate start = end.minusMonths(1);
+        LocalDate start = end.minusWeeks(1);
 
         String apiUrl = String.format(
                 "https://eodhd.com/api/eod/%sKRW.FOREX?api_token=%s&fmt=json&from=%s&to=%s",

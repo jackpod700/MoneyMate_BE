@@ -53,8 +53,13 @@ public enum ApiResponseMessage {
 
     BAD_REQUEST("[400] 기타 오류가 발생했습니다"),
 
-    CONSUMPTION_STATS_LOAD_SUCCESS("소비 통계 조회 성공"),
-    CONSUMPTION_STATS_LOAD_FAIL("소비 통계 조회 실패");
+    CONSUMPTION_DATA_LOAD_SUCCESS("소비 데이터 조회 성공"),
+    CONSUMPTION_DATA_LOAD_FAIL("소비 데이터 조회 실패"),
+
+    STATS_ASSET_DATA_LOAD_SUCCESS("자산 통계 데이터 조회 성공"),
+    STATS_INCOME_DATA_LOAD_SUCCESS("소득 통계 데이터 조회 성공"),
+    STATS_CONSUMPTION_DATA_LOAD_SUCCESS("소비 통계 데이터 조회 성공"),
+    STATS_DATA_LOAD_FAIL("통계 조회 실패");
 
 
 

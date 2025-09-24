@@ -62,7 +62,7 @@ public class ConsumptionStatsService {
             if (accountUids.isEmpty()) {
                 return ResponseEntity.ok(new ApiResponse<>(
                         HttpStatus.OK.getReasonPhrase(),
-                        ApiResponseMessage.CONSUMPTION_STATS_LOAD_SUCCESS.getMessage(),
+                        ApiResponseMessage.CONSUMPTION_DATA_LOAD_SUCCESS.getMessage(),
                         new ConsumptionStatsResponse(startDate, endDate, Collections.emptyMap())
                 ));
             }
@@ -104,7 +104,7 @@ public class ConsumptionStatsService {
 
             return ResponseEntity.ok(new ApiResponse<>(
                     HttpStatus.OK.getReasonPhrase(),
-                    ApiResponseMessage.CONSUMPTION_STATS_LOAD_SUCCESS.getMessage(),
+                    ApiResponseMessage.CONSUMPTION_DATA_LOAD_SUCCESS.getMessage(),
                     response
             ));
 
@@ -114,7 +114,7 @@ public class ConsumptionStatsService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse<>(
                             HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                            ApiResponseMessage.CONSUMPTION_STATS_LOAD_FAIL.getMessage(),
+                            ApiResponseMessage.CONSUMPTION_DATA_LOAD_FAIL.getMessage(),
                             null
                     ));
         }
