@@ -69,6 +69,7 @@ public class SecurityConfig {
             "/user/verify/sms-request",
             "/test/page/stock",
             "/test/page/agent/**",
+            "/test/page/agent/stream",
             "/css/**",
             "/images/**",
             "/js/**",
@@ -117,6 +118,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:8080",
+                "/test/page/agent/**",
                 "http://moneymate.s3-website.ap-northeast-2.amazonaws.com", // 예시
                 "CORS Allow hosts"
         ));
