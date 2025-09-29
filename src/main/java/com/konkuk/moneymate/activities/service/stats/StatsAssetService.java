@@ -88,7 +88,7 @@ public class StatsAssetService {
                             itemName,               // 변환된 항목명
                             e.getYear().toString(), // 연도
                             e.getUnitName(),
-                            toDouble(e.getValue())  // 안전 변환
+                            (int) Double.parseDouble(e.getValue().toString())
                     );
                 })
                 .toList();
@@ -154,6 +154,19 @@ public class StatsAssetService {
                         default -> e.getItemName();
                     };
 
+                    int safeValue;
+                    String raw = e.getValue();
+
+                    if (raw == null || raw.isBlank() || raw.equals("-")) {
+                        safeValue = 0;
+                    } else {
+                        try {
+                            safeValue = (int) Double.parseDouble(raw); // 소수점은 버림
+                        } catch (NumberFormatException ex) {
+                            safeValue = 0;
+                        }
+                    }
+
                     return new StatsDataResponse(
                             c,                      // 25세면 20
                             e.getC2Name(),
@@ -161,7 +174,7 @@ public class StatsAssetService {
                             itemName,
                             e.getYear().toString(),
                             e.getUnitName(),
-                            toDouble(e.getValue())
+                            safeValue
                     );
                 })
                 .toList();
@@ -227,6 +240,19 @@ public class StatsAssetService {
                         default -> e.getItemName();
                     };
 
+                    int safeValue;
+                    String raw = e.getValue();
+
+                    if (raw == null || raw.isBlank() || raw.equals("-")) {
+                        safeValue = 0;
+                    } else {
+                        try {
+                            safeValue = (int) Double.parseDouble(raw);
+                        } catch (NumberFormatException ex) {
+                            safeValue = 0;
+                        }
+                    }
+
                     return new StatsDataResponse(
                             c,
                             e.getC2Name(),
@@ -234,7 +260,7 @@ public class StatsAssetService {
                             itemName,
                             e.getYear().toString(),
                             e.getUnitName(),
-                            toDouble(e.getValue())
+                            safeValue
                     );
                 })
                 .toList();

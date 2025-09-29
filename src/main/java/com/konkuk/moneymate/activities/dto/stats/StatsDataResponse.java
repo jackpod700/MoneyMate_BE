@@ -13,5 +13,5 @@ public class StatsDataResponse
     private String itemName;
     private String year; // pre_de
     private String unitName;
-    private Double value; // value
+    private Integer value; // value  : integer로 수정
 }
