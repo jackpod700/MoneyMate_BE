@@ -68,6 +68,7 @@ public class SecurityConfig {
             "/user/verify/sms-send",
             "/user/verify/sms-request",
             "/test/page/stock",
+            "/test/page/agent/**",
             "/css/**",
             "/images/**",
             "/js/**",
