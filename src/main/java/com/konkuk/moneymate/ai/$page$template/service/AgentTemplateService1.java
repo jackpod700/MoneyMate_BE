@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.ai.service;
+package com.konkuk.moneymate.ai.$page$template.service;
 
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public class AgentTemplateService1 {
             .build();
 
     private PromptTemplate userTemplate = PromptTemplate.builder()
-            .template("다음 질문에 대한 답변을 {language}로 답변해주세요.\n질문: {statement}")
+            .template("다음 질문에 대한 답변을 {language}로 답변해주고 요약을 해주세요.\n질문: {statement}")
             .build();
 
     // ##### 생성자 #####
