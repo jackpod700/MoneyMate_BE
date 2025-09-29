@@ -86,6 +86,12 @@ dependencies {
 	// implementation 'org.springframework.boot:spring-boot-starter-cache'
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+    }
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
