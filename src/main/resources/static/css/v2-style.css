@@ -1,0 +1,59 @@
+.chat-message {
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.user-message {
+    background-color: #e3f2fd;
+    margin-left: 20%;
+}
+
+.ai-message {
+    background-color: #f5f5f5;
+    margin-right: 20%;
+}
+
+#spinner {
+    display: none;
+}
+
+#spinner.active {
+    display: inline-block;
+}
+
+/* Markdown 렌더링 최적화 */
+.response-text h1 {
+    font-size: 1.4rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.response-text h2 {
+    font-size: 1.2rem;
+    margin-top: 0.8rem;
+    margin-bottom: 0.4rem;
+}
+
+.response-text h3 {
+    font-size: 1rem;
+    margin-top: 0.6rem;
+    margin-bottom: 0.3rem;
+}
+
+.response-text p {
+    margin: 0.4rem 0;
+}
+
+.response-text ul,
+.response-text ol {
+    margin-left: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.response-text code {
+    background: #f8f9fa;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
