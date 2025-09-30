@@ -21,12 +21,12 @@ public class AgentTemplateService1 {
             .template("""
           당신은 친절하고 전문적인 AI 어시스턴트입니다.
           사용자의 질문에 명확하고 정확하게 답변해주세요.
-          답변은 구조화되고 이해하기 쉽게 작성해주세요.
+          답변은 markdown 형식으로 구조화되게 작성해주세요.
           """)
             .build();
 
     private PromptTemplate userTemplate = PromptTemplate.builder()
-            .template("다음 질문에 대한 답변을 {language}로 답변해주고 요약을 해주세요.\n질문: {statement}")
+            .template("다음 질문에 대한 답변을 {language}로 답변해주고 markdown 형식으로 요약을 해주세요.\n질문: {statement}")
             .build();
 
     // ##### 생성자 #####
@@ -60,9 +60,8 @@ public class AgentTemplateService1 {
         log.debug("generateResponseWithSystem called - statement: {}, language: {}", statement, language);
 
         Flux<String> response = chatClient.prompt()
-                .messages(
-                        systemTemplate.createMessage(),
-                        userTemplate.createMessage(Map.of("statement", statement, "language", language)))
+                .system(systemTemplate.render())
+                .user(userTemplate.render(Map.of("statement", statement, "language", language)))
                 .stream()
                 .content();
 
@@ -104,7 +103,7 @@ public class AgentTemplateService1 {
         답변 작성 시 주의사항:
         1. 핵심 내용을 먼저 제시
         2. 필요시 상세 설명 추가
-        3. 명확하고 간결하게 작성
+        3. markdown 형식으로 작성
         """.formatted(language, statement);
 
         Flux<String> response = chatClient.prompt()
