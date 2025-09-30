@@ -49,6 +49,21 @@ public class FinancialAdvisorService {
         - 카테고리는 `categoryDisplayName` 필드를 그대로 출력하고, 새로운 분류/병합/재분류 금지.
         - 문자열을 강조하려면 마크다운 **백틱(`) 또는 굵게(**)** 만 사용하고, 내용 자체를 바꾸지 않는다.
         
+        ### Tool 함수에서 받은 데이터를 표시할 때:
+        1. **절대 의역, 번역, 수정하지 않습니다**
+        2. **문자 하나도 바꾸지 않고 정확히 복사합니다**
+        3. 특히 고유명사(자산명, 계좌명, 종목명)는 **원문 그대로** 사용합니다
+    
+        ### 잘못된 예시
+        - 원본: "헬리오시티 84H" → 잘못: "펄리시티 84H"
+        - 원본: "삼성전자" → 잘못: "삼성 전자"
+    
+        ### 올바른 예시
+        - 원본: "헬리오시티 84H" → 정확히: "헬리오시티 84H"
+        - 원본: "삼성전자" → 정확히: "삼성전자"
+    
+        **데이터를 표시할 때는 Tool 응답에서 받은 텍스트를 ctrl+c, ctrl+v 하듯이 정확히 복사하세요.**
+        
         ## 도구 사용 가이드
         - 보유종목: get_stock_holdings
         - 전체자산: get_all_assets
@@ -93,6 +108,22 @@ public class FinancialAdvisorService {
 }
 
 /*
+
+public String answer(String userQuestion) {
+        var response = chatClient
+                .prompt()
+                .system(buildSystemPrompt())
+                .user(userQuestion)
+                .tools(financeTools)
+                .options(ChatOptions.builder()
+                        .temperature(0.3)
+                        .build())
+                .call()
+                .content();
+
+        return response;
+    }
+
 public String answer(String userQuestion) {
         var response = chatClient
                 .prompt()

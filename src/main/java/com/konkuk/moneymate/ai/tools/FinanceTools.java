@@ -45,15 +45,36 @@ public class FinanceTools {
 
     /** 자산 전체 조회 */
     @Tool(name = "get_all_assets",
-            description = "현재 로그인한 사용자의 모든 자산(현금/예적금/부동산/기타 등)을 조회한다.")
-    public List<Asset> getAllAssets() {
+            description = """
+            현재 로그인한 사용자의 모든 자산(현금/예적금/부동산/기타 등)을 조회한다.
+            
+            필수 준수사항:
+            - 반환된 'name' 필드는 절대 변경 금지
+            - 한 글자도 바꾸지 말고 원본 그대로 사용
+            - 예: "헬리오시티 84H"는 반드시 "헬리오시티 84H"로 표시
+            - 의역, 번역, 수정 절대 금지
+            
+            반환 형식: [{uid, name, price}]
+            """)
+    public List<Map<String, Object>> getAllAssets() {
         UUID userUid = currentUserUid();
-        return assetRepository.findByUser_Uid(userUid);
+        List<Asset> list = assetRepository.findByUser_Uid(userUid);
+
+        return list.stream()
+                .map(a -> {
+                    Map<String, Object> m = new LinkedHashMap<>();
+                    m.put("assetUid", a.getUid());
+                    m.put("assetName", a.getName());  // 더 명확한 키명
+                    m.put("assetPrice", a.getPrice());
+                    return m;
+                })
+                .collect(Collectors.toList());
     }
 
     /** 계좌 목록 조회 */
     @Tool(name = "get_bank_accounts",
-            description = "현재 로그인한 사용자의 계좌 목록을 depositType(입출금/예적금/증권) 기준으로 조회한다. depositType 생략 시 전체.")
+            description = "현재 로그인한 사용자의 계좌 목록을 depositType(입출금/예적금/증권) 기준으로 조회한다. " +
+                    "depositType 생략 시 전체. 반환된 계좌명, 은행명 등은 원본 그대로 사용해야 한다.")
     public List<Map<String, Object>> getBankAccounts(Optional<String> depositType) {
         UUID userUid = currentUserUid();
         List<BankAccount> list = depositType
@@ -74,7 +95,7 @@ public class FinanceTools {
 
     /** 카테고리별 지출 합계 (월 범위) */
     @Tool(name = "get_spending_by_category",
-            description = "accountUids와 기간으로 카테고리별 지출 합계를 조회한다. start/end는 YYYY-MM 형식 허용.")
+            description = "accountUids와 기간으로 카테고리별 지출 합계를 조회한다. start/end는 YYYY-MM 형식 허용. 데이터베이스에서 가져온 필드명은 그대로 사용해야 합니다.")
     public List<Map<String, Object>> getSpendingByCategory(
             List<UUID> accountUids,
             String startYm,
@@ -101,7 +122,9 @@ public class FinanceTools {
     /** 소비 통계 (일자 범위) */
     @Tool(
             name = "get_consumption_stats",
-            description = "startDay/endDay(YYYY-MM-DD) 기간 동안 현재 로그인 사용자의 전체 계좌에 대한 카테고리별 지출 합계를 조회한다. OUTCOME/BOTH 카테고리만 포함하며 키는 displayName을 사용한다."
+            description = "startDay/endDay(YYYY-MM-DD) 기간 동안 현재 로그인 사용자의 전체 계좌에 대한 카테고리별 지출 합계를 조회한다. " +
+                    "OUTCOME/BOTH 카테고리만 포함하며 키는 displayName을 사용한다." +
+                    "데이터베이스에서 가져온 필드명은 그대로 사용해야 합니다. "
     )
     public Map<String, Object> getConsumptionStats(String startDay, String endDay) {
         UUID userUid = currentUserUid();
@@ -153,7 +176,8 @@ public class FinanceTools {
 
     /** 증권 거래내역 조회 */
     @Tool(name = "get_stock_transactions",
-            description = "특정 계좌(uid)와 기간(start/end: YYYY-MM)으로 증권 거래내역을 조회한다.")
+            description = "특정 계좌(uid)와 기간(start/end: YYYY-MM)으로 증권 거래내역을 조회한다."+
+                    "데이터베이스에서 가져온 필드명은 그대로 사용해야 합니다. ")
     public List<Map<String, Object>> getStockTransactions(
             UUID accountUid,
             String startYm,
@@ -184,7 +208,8 @@ public class FinanceTools {
 
     /** 일반 거래내역 조회 */
     @Tool(name = "get_raw_transactions",
-            description = "특정 계좌(uid)와 기간(start/end: YYYY-MM)으로 일반 거래내역을 조회한다.")
+            description = "특정 계좌(uid)와 기간(start/end: YYYY-MM)으로 일반 거래내역을 조회한다." +
+                    "데이터베이스에서 가져온 필드명은 그대로 사용해야 합니다. ")
     public List<Map<String, Object>> getRawTransactions(
             UUID accountUid,
             String startYm,
