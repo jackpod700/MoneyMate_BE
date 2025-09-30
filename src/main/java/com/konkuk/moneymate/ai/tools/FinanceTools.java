@@ -13,6 +13,7 @@ import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.*;
@@ -71,7 +72,7 @@ public class FinanceTools {
         }).collect(Collectors.toList());
     }
 
-    /** 카테고리별 지출 합계 */
+    /** 카테고리별 지출 합계 (월 범위) */
     @Tool(name = "get_spending_by_category",
             description = "accountUids와 기간으로 카테고리별 지출 합계를 조회한다. start/end는 YYYY-MM 형식 허용.")
     public List<Map<String, Object>> getSpendingByCategory(
@@ -95,6 +96,59 @@ public class FinanceTools {
             m.put("outcomeSum", r[1]);
             return m;
         }).collect(Collectors.toList());
+    }
+
+    /** 소비 통계 (일자 범위) */
+    @Tool(
+            name = "get_consumption_stats",
+            description = "startDay/endDay(YYYY-MM-DD) 기간 동안 현재 로그인 사용자의 전체 계좌에 대한 카테고리별 지출 합계를 조회한다. OUTCOME/BOTH 카테고리만 포함하며 키는 displayName을 사용한다."
+    )
+    public Map<String, Object> getConsumptionStats(String startDay, String endDay) {
+        UUID userUid = currentUserUid();
+
+        // 날짜 파싱 및 [start, end) 구간 설정 (endDay 다음날 00:00까지)
+        LocalDate startDate = LocalDate.parse(startDay);
+        LocalDate endDate   = LocalDate.parse(endDay);
+        LocalDateTime start = startDate.atStartOfDay();
+        LocalDateTime end   = endDate.plusDays(1).atStartOfDay();
+
+        // 사용자 전체 계좌 UID 목록
+        List<UUID> accountUids = bankAccountRepository.findByUser_Uid(userUid).stream()
+                .map(BankAccount::getUid)
+                .collect(Collectors.toList());
+
+        // 카테고리 합계 맵 (OUTCOME/BOTH만 0으로 초기화)
+        Map<String, Long> categoryTotals = new LinkedHashMap<>();
+        for (TransactionCategory category : TransactionCategory.values()) {
+            if (category.getFlow() == TransactionCategory.FlowType.OUTCOME
+                    || category.getFlow() == TransactionCategory.FlowType.BOTH) {
+                categoryTotals.put(category.getDisplayName(), 0L);
+            }
+        }
+
+        if (!accountUids.isEmpty()) {
+            List<Object[]> rows = transactionRepository.consumptionAmountsByCategory(accountUids, start, end);
+            for (Object[] row : rows) {
+                TransactionCategory category = (TransactionCategory) row[0];
+                Long sum = ((Number) row[1]).longValue();
+
+                if (category != null) {
+                    if (category.getFlow() == TransactionCategory.FlowType.OUTCOME
+                            || category.getFlow() == TransactionCategory.FlowType.BOTH) {
+                        categoryTotals.put(category.getDisplayName(), sum);
+                    }
+                } else {
+                    // 카테고리 null인 경우 (DB 이상치): "기타"로 기록
+                    categoryTotals.merge("기타", sum, Long::sum);
+                }
+            }
+        }
+
+        Map<String, Object> resp = new LinkedHashMap<>();
+        resp.put("startDate", startDate);
+        resp.put("endDate", endDate);
+        resp.put("categoryTotals", categoryTotals);
+        return resp;
     }
 
     /** 증권 거래내역 조회 */
