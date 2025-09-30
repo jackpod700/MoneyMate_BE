@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class FinancialAdvisorService {
-    private final ChatClient chatClient;
+    // private final ChatClient chatClient;
 
 
 }
