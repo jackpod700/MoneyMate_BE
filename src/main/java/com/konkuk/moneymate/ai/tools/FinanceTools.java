@@ -64,7 +64,7 @@ public class FinanceTools {
                 .map(a -> {
                     Map<String, Object> m = new LinkedHashMap<>();
                     m.put("assetUid", a.getUid());
-                    m.put("assetName", a.getName());  // 더 명확한 키명
+                    m.put("assetName", a.getName());
                     m.put("assetPrice", a.getPrice());
                     return m;
                 })
@@ -129,18 +129,15 @@ public class FinanceTools {
     public Map<String, Object> getConsumptionStats(String startDay, String endDay) {
         UUID userUid = currentUserUid();
 
-        // 날짜 파싱 및 [start, end) 구간 설정 (endDay 다음날 00:00까지)
         LocalDate startDate = LocalDate.parse(startDay);
         LocalDate endDate   = LocalDate.parse(endDay);
         LocalDateTime start = startDate.atStartOfDay();
         LocalDateTime end   = endDate.plusDays(1).atStartOfDay();
 
-        // 사용자 전체 계좌 UID 목록
         List<UUID> accountUids = bankAccountRepository.findByUser_Uid(userUid).stream()
                 .map(BankAccount::getUid)
                 .collect(Collectors.toList());
 
-        // 카테고리 합계 맵 (OUTCOME/BOTH만 0으로 초기화)
         Map<String, Long> categoryTotals = new LinkedHashMap<>();
         for (TransactionCategory category : TransactionCategory.values()) {
             if (category.getFlow() == TransactionCategory.FlowType.OUTCOME
@@ -161,7 +158,6 @@ public class FinanceTools {
                         categoryTotals.put(category.getDisplayName(), sum);
                     }
                 } else {
-                    // 카테고리 null인 경우 (DB 이상치): "기타"로 기록
                     categoryTotals.merge("기타", sum, Long::sum);
                 }
             }
