@@ -22,7 +22,6 @@
     display: inline-block;
 }
 
-/* Markdown 렌더링 최적화 */
 .response-text h1 {
     font-size: 1.4rem;
     margin-top: 1rem;
@@ -30,12 +29,14 @@
 }
 
 .response-text h2 {
+    font-weight: 700;
     font-size: 1.2rem;
     margin-top: 0.8rem;
     margin-bottom: 0.4rem;
 }
 
 .response-text h3 {
+    font-weight: 600;
     font-size: 1rem;
     margin-top: 0.6rem;
     margin-bottom: 0.3rem;

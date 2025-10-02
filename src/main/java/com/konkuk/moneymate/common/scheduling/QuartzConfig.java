@@ -20,7 +20,7 @@ public class QuartzConfig {
         return TriggerBuilder.newTrigger()
                 .forJob(stockFetchJobDetail)
                 .withIdentity("stockLastdayFetchTrigger")
-                .startAt(DateBuilder.futureDate(1, DateBuilder.IntervalUnit.MINUTE))
+                .startAt(DateBuilder.futureDate(1, DateBuilder.IntervalUnit.HOUR))
                 .withSchedule(SimpleScheduleBuilder.simpleSchedule()
                         .withIntervalInHours(3)
                         .repeatForever())

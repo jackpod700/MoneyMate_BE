@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.ai.$page$template.service;
+package com.konkuk.moneymate.auth.templates.$page$ai.service;
 
 import java.util.Map;
 

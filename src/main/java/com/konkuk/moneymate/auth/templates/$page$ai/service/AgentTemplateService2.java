@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.ai.$page$template.service;
+package com.konkuk.moneymate.auth.templates.$page$ai.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;

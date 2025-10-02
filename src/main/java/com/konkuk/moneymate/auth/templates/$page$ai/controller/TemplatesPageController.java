@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.ai.$page$template.controller;
+package com.konkuk.moneymate.auth.templates.$page$ai.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
