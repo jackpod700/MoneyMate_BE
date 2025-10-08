@@ -78,6 +78,9 @@ dependencies {
 	implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 	implementation 'com.google.code.gson:gson:2.11.0'
 
+	//뉴스 요약
+	implementation 'com.google.genai:google-genai:1.0.0'
+
 	// 사용하지 않는것, 복사 용도
 	// runtimeOnly 'com.mysql:mysql-connector-j'
 	// implementation 'com.h2database:h2' // 임시용입니다. MySQL 연결하면 나중에 삭제
