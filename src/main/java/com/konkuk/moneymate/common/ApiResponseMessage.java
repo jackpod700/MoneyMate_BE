@@ -18,6 +18,7 @@ public enum ApiResponseMessage {
     READ_FINANCIAL_PRODUCT_MORTGAGE_LOAN_SUCCESS("은행상품(주택담보대출) 조회 완료"),
     READ_FINANCIAL_PRODUCT_RENT_HOUSE_LOAN_SUCCESS("은행상품(전세자금대출) 조회 완료"),
     READ_FINANCIAL_PRODUCT_CREDIT_LOAN_SUCCESS("은행상품(개인신용대출) 조회 완료"),
+    NEWS_SUMMARY_GET_SUCCESS("뉴스 요약 조회 성공"),
 
     //실패시
     USER_NOT_FOUND("사용자를 찾을 수 없습니다"),
