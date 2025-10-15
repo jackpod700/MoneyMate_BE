@@ -60,7 +60,10 @@ public enum ApiResponseMessage {
     STATS_ASSET_DATA_LOAD_SUCCESS("자산 통계 데이터 조회 성공"),
     STATS_INCOME_DATA_LOAD_SUCCESS("소득 통계 데이터 조회 성공"),
     STATS_CONSUMPTION_DATA_LOAD_SUCCESS("소비 통계 데이터 조회 성공"),
-    STATS_DATA_LOAD_FAIL("통계 조회 실패");
+    STATS_DATA_LOAD_FAIL("통계 조회 실패"),
+
+    AI_SUMMARY_LOAD_SUCCESS("ai분석 제공 완료"),
+    AI_SUMMARY_LOAD_FAIL("ai분석 제공 실패");
 
 
 
