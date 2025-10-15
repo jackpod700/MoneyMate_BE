@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class FinanceTools {
+public class BasicTools {
 
     private final AccountStockRepository accountStockRepository;
     private final AssetRepository assetRepository;

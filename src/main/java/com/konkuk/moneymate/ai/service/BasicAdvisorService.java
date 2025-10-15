@@ -5,12 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 
-import com.konkuk.moneymate.ai.tools.FinanceTools;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.stereotype.Service;
+import com.konkuk.moneymate.ai.tools.BasicTools;
 import reactor.core.publisher.Flux;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -18,10 +13,10 @@ import java.time.format.DateTimeFormatter;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class FinancialAdvisorService {
+public class BasicAdvisorService {
 
     private final ChatClient chatClient;
-    private final FinanceTools financeTools;
+    private final BasicTools basicTools;
 
     private static String buildSystemPrompt() {
         ZonedDateTime nowKst = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
@@ -88,7 +83,7 @@ public class FinancialAdvisorService {
                 .prompt()
                 .system(buildSystemPrompt())
                 .user(userQuestion)
-                .tools(financeTools)
+                .tools(basicTools)
                 .stream()
                 .content();
     }
@@ -98,7 +93,7 @@ public class FinancialAdvisorService {
                 .prompt()
                 .system(buildSystemPrompt())
                 .user(userQuestion)
-                .tools(financeTools)
+                .tools(basicTools)
                 .call()
                 .content();
 
