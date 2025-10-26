@@ -132,6 +132,56 @@ public class UserService {
     }
 
 
+    /**
+     * <h3>changePassword</h3>
+     * @param userAuthRequest
+     * @param request
+     * @return
+     */
+    public ResponseEntity<?> changePassword(UserAuthRequest userAuthRequest, HttpServletRequest request){
+        String userId = userAuthRequest.getUserId();
+        String newPassword = userAuthRequest.getPassword();
+
+        if (newPassword == null || newPassword.isEmpty()) {
+            return ResponseEntity.badRequest().body(new ApiResponse<>(
+                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                    "Password cannot be empty.",
+                    "[400] "
+            ));
+        }
+
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(
+                    HttpStatus.NOT_FOUND.getReasonPhrase(),
+                    "해당하는 사용자를 찾을 수 없습니다.",
+                    null
+            ));
+        }
+
+
+        User user = userOptional.get();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (encoder.matches(newPassword, user.getPassword())) {
+            return ResponseEntity.badRequest().body(new ApiResponse<>(
+                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                    "이전 비밀번호와 동일합니다.",
+                    null
+            ));
+        }
+
+        user.setPassword(encoder.encode(newPassword));
+        userRepository.save(user);
+
+
+        return ResponseEntity.ok(new ApiResponse<>(
+                HttpStatus.OK.getReasonPhrase(),
+                "비밀번호가 성공적으로 변경되었습니다.",
+                null
+        ));
+
+    }
+
     public ResponseEntity<?> resetPasswordRequest(UserAuthRequest userAuthRequest, HttpServletRequest request) {
         String userId = userAuthRequest.getUserId();
         String ph = userAuthRequest.getPhoneNumber();

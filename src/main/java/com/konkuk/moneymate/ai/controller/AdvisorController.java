@@ -14,7 +14,7 @@ public class AdvisorController {
 
     private final BasicAdvisorService advisorService;
     private final AssetAdvisorService assetAdvisorService;
-    // private final FinancialAdvisorService financialAdvisorService;
+    private final FinancialAdvisorService financialAdvisorService;
     private final ConsumptionAdvisorService consumptionAdvisorService;
     private final InvestAdvisorService investAdvisorService;
     private final TransactionAdvisorService transactionAdvisorService;
@@ -35,17 +35,25 @@ public class AdvisorController {
 
 
 
-
     @GetMapping("/ai-summary/asset")
     public ResponseEntity<?> askAsset(@RequestParam Integer year) {
         return assetAdvisorService.askAsset(year);
     }
+
+    @GetMapping("/ai-summary/finance")
+    public ResponseEntity<?> askFinance(HttpServletRequest req) {
+        Integer year = 1;
+        return financialAdvisorService.askFinance(year);
+    }
+
+
 
     /*
     @GetMapping("/ai-summary/finance")
     public ResponseEntity<?> askFinance(HttpServletRequest req) {
         return AssetAdvisorService.askFinance(req);
     }
+
 
 
     @GetMapping("/ai-summary/transaction")
