@@ -18,12 +18,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * <h3>User Controller</h3>
- *
- * <li><b>DELETE /user/delete</b></li>
- * <li><b>POST /user/verify/pw </b></li>
- * <li><b>GET /user/info </b></li>
- * <li><b>PATCH /user/update </b></li>
+ * <h3>UserController</h3>
+ * <p>사용자 계정 관리를 처리하는 컨트롤러</p>
+ * <li><b>DELETE /user/delete:</b> 계정 삭제</li>
+ * <li><b>POST /user/verify/pw:</b> 비밀번호 확인</li>
+ * <li><b>GET /user/info:</b> 사용자 정보 조회</li>
+ * <li><b>PATCH /user/update:</b> 사용자 정보 수정</li>
+ * <li><b>POST /user/find-id:</b> 아이디 찾기 (SMS 인증)</li>
+ * <li><b>POST /user/reset-pw:</b> 비밀번호 재설정 (SMS 인증)</li>
  */
 
 @RequiredArgsConstructor

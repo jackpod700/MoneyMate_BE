@@ -25,6 +25,14 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * <h3>MessageAuthService</h3>
+ * <p>SMS 인증을 처리하는 서비스 (CoolSMS API 사용)</p>
+ * <li><b>SMS 발송:</b> 4자리 인증번호를 사용자에게 전송</li>
+ * <li><b>인증 확인:</b> 사용자가 입력한 인증번호 검증</li>
+ * <li><b>Redis 저장:</b> 인증번호 및 userVerifyCode를 Redis에 TTL과 함께 저장</li>
+ * <li><b>유효시간:</b> 인증번호 3분, userVerifyCode 5분</li>
+ */
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -49,6 +57,15 @@ public class MessageAuthService     {
         return verifyNumber;
     }
 
+    /**
+     * <h3>SMS 인증번호 발송</h3>
+     * <p>4자리 랜덤 인증번호를 생성하여 사용자에게 SMS로 전송합니다</p>
+     * <li><b>1단계:</b> 4자리 랜덤 코드 생성 (1000-9999)</li>
+     * <li><b>2단계:</b> CoolSMS API를 통해 SMS 발송</li>
+     * <li><b>3단계:</b> 인증번호를 Redis에 저장 (3분 TTL)</li>
+     * @param receiver 수신자 전화번호
+     * @return ResponseEntity 200 OK (성공) 또는 500 (실패)
+     */
     public ResponseEntity<?> smsSend(String receiver){
         DefaultMessageService messageService = init();
         Integer verifyCode = verifyCodeGenerator();
@@ -92,6 +109,18 @@ public class MessageAuthService     {
     }
 
 
+    /**
+     * <h3>SMS 인증번호 검증</h3>
+     * <p>사용자가 입력한 인증번호를 검증하고 userVerifyCode를 발급합니다</p>
+     * <li><b>1단계:</b> Redis에서 저장된 인증번호 조회</li>
+     * <li><b>2단계:</b> 입력된 인증번호와 비교</li>
+     * <li><b>3단계:</b> 인증 성공 시 userVerifyCode 생성 (UUID 12자리)</li>
+     * <li><b>4단계:</b> userVerifyCode를 Redis에 저장 (5분 TTL)</li>
+     * <li><b>5단계:</b> 기존 인증번호 삭제</li>
+     * @param receiver 수신자 전화번호
+     * @param verifyCode 사용자가 입력한 인증번호
+     * @return ResponseEntity 200 OK (userVerifyCode 포함) 또는 400 (실패)
+     */
     public ResponseEntity<?> smsVerify(String receiver, Integer verifyCode) {
         String savedCode = redisTemplate.opsForValue().get(receiver);
 

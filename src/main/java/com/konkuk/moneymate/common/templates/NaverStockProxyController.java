@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.auth.templates;
+package com.konkuk.moneymate.common.templates;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,15 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+/**
+ * <h3>NaverStockProxyController</h3>
+ * <p>네이버 증권 API에 대한 프록시 컨트롤러 (CORS 우회)</p>
+ * <li><b>GET /api/proxy/naver-stock/realtime:</b> 실시간 주식 시세</li>
+ * <li><b>GET /api/proxy/naver-stock/index:</b> 시장 지수 (국장/미장/세계)</li>
+ * <li><b>GET /api/proxy/naver-stock/domestic:</b> 국내 주식 목록</li>
+ * <li><b>GET /api/proxy/naver-stock/ex:</b> 해외 주식 목록</li>
+ * <li><b>GET /api/proxy/naver-stock/exchange:</b> 환율 정보</li>
+ */
 @Slf4j
 @RestController
 public class NaverStockProxyController {

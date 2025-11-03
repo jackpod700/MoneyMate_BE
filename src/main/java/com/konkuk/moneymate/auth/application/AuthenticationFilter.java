@@ -20,6 +20,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
+/**
+ * <h3>AuthenticationFilter</h3>
+ * <p>JWT 토큰 검증을 수행하는 Spring Security Filter</p>
+ * <li><b>토큰 추출:</b> Authorization 헤더에서 Bearer 토큰 추출</li>
+ * <li><b>블랙리스트 검증:</b> 로그아웃된 토큰인지 확인</li>
+ * <li><b>토큰 parsing:</b> JWT 서명 검증 및 사용자 정보 추출</li>
+ * <li><b>인증 설정:</b> SecurityContext에 Authentication 객체 저장</li>
+ * <li><b>예외 처리:</b> 토큰 검증 실패 시 401 응답 반환</li>
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -27,6 +36,20 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final JwtBlackListService jwtBlackListService;
 
+    /**
+     * <h3>JWT 토큰 검증 필터 로직</h3>
+     * <p>모든 HTTP 요청에 대해 JWT 토큰을 검증합니다</p>
+     * <li><b>1단계:</b> Authorization 헤더에서 토큰 추출</li>
+     * <li><b>2단계:</b> 토큰이 블랙리스트에 있는지 확인</li>
+     * <li><b>3단계:</b> JWT 파싱 및 사용자 정보 추출</li>
+     * <li><b>4단계:</b> Authentication 객체 생성 및 SecurityContext 저장</li>
+     * <li><b>5단계:</b> 다음 필터로 요청 전달</li>
+     * @param request HTTP 요청
+     * @param response HTTP 응답
+     * @param filterChain 필터 체인
+     * @throws ServletException 서블릿 예외
+     * @throws IOException IO 예외
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {

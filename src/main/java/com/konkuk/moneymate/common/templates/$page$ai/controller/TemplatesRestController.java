@@ -1,6 +1,6 @@
-package com.konkuk.moneymate.auth.templates.$page$ai.controller;
+package com.konkuk.moneymate.common.templates.$page$ai.controller;
 
-import com.konkuk.moneymate.auth.templates.$page$ai.service.AgentTemplateService1;
+import com.konkuk.moneymate.common.templates.$page$ai.service.AgentTemplateService1;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;

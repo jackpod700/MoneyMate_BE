@@ -16,6 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * <h3>RegisterService</h3>
+ * <p>사용자 회원가입 및 아이디 중복 확인을 처리하는 서비스</p>
+ * <li><b>회원가입:</b> 사용자 정보를 데이터베이스에 저장</li>
+ * <li><b>비밀번호 암호화:</b> BCrypt를 사용한 패스워드 해싱</li>
+ * <li><b>중복 검사:</b> 아이디 중복 여부 확인</li>
+ */
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -25,6 +32,15 @@ public class RegisterService {
     private final UserRepository userRepository;
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    /**
+     * <h3>회원가입</h3>
+     * <p>신규 사용자를 등록합니다</p>
+     * <li><b>1단계:</b> 비밀번호 BCrypt 암호화</li>
+     * <li><b>2단계:</b> 아이디 중복 검사</li>
+     * <li><b>3단계:</b> 사용자 정보 데이터베이스 저장</li>
+     * @param user 회원가입 정보 (userId, userName, password, phoneNumber, birthday)
+     * @return ResponseEntity 200 OK (성공) 또는 400/409 (실패)
+     */
     public ResponseEntity<?> register(User user) {
         user.encodeBCryptPassword();
 

@@ -17,11 +17,20 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * <h3>JwtService</h3>
+ * <p>JWT 토큰 생성, 파싱, 검증을 담당하는 핵심 서비스</p>
+ * <li><b>토큰 생성:</b> Access Token (5분), Refresh Token (1일)</li>
+ * <li><b>토큰 파싱:</b> JWT에서 사용자 정보 추출</li>
+ * <li><b>토큰 검증:</b> 서명 검증 및 만료 확인</li>
+ * <li><b>블랙리스트:</b> 로그아웃된 토큰 관리 (메모리 기반)</li>
+ * <li><b>암호화:</b> HS256 알고리즘 사용</li>
+ */
 @Data
 @Component
 public class JwtService {
-    static final long ACCESS_TOKEN_EXPIRE_TIME = 5 * 60 * 1000L; // 1 hr
-    static final long REFRESH_TOKEN_EXPIRE_TIME = 1 * 24 * 60 * 60 * 1000L; // 1 days
+    static final long ACCESS_TOKEN_EXPIRE_TIME = 5 * 60 * 1000L; // 5 minutes
+    static final long REFRESH_TOKEN_EXPIRE_TIME = 1 * 24 * 60 * 60 * 1000L; // 1 day
 
     static final String AUTHORIZATION_HEADER = "Authorization";
     static final String BEARER_TYPE = "Bearer";

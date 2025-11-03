@@ -18,10 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 /**
- * <h3>Login Controller</h3>
- *
- * <li><b> /logout :</b> 로그아웃 요청을 받아서 토큰 만료 및 로그아웃 처리 </li>
- * <li><b> /jwt :</b> jwt payload 정보 출력 요청 api (실제 서비스에서 사용하지 않음) </li>
+ * <h3>LogoutController</h3>
+ * <p>사용자 로그아웃 및 토큰 무효화를 처리하는 컨트롤러</p>
+ * <li><b>POST /logout:</b> 로그아웃 처리 및 토큰 블랙리스트 등록</li>
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -34,9 +33,16 @@ public class LogoutController {
 
 
     /**
-     * <h3>Post : /logout</h3>
-     * @param request
-     * @return ResponseEntity.status(HttpStatus. )
+     * <h3>POST /logout</h3>
+     * <p>사용자를 로그아웃하고 Access Token 및 Refresh Token을 블랙리스트에 등록합니다</p>
+     * <li><b>step 1:</b> Authorization 헤더에서 Access Token 추출</li>
+     * <li><b>step 2:</b> Request Body에서 Refresh Token 추출</li>
+     * <li><b>step 3:</b> Refresh Token 검증</li>
+     * <li><b>step 4:</b> 두 토큰을 Redis 블랙리스트에 등록</li>
+     * @param refreshTokenBody Refresh Token을 포함한 요청 본문
+     * @param request HTTP 요청 (Authorization 헤더 포함)
+     * @return ResponseEntity 200 OK (로그아웃 성공) 또는 400/401/500 (실패)
+     * @throws IOException IO 예외
      */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestBody RefreshTokenBody refreshTokenBody, HttpServletRequest request) throws IOException {

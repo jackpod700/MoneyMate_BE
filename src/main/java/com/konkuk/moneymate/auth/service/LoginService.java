@@ -17,6 +17,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <h3>LoginService</h3>
+ * <p>사용자 로그인 인증 및 JWT 토큰 발급을 처리하는 서비스</p>
+ * <li><b>인증:</b> Spring Security AuthenticationManager를 통한 사용자 인증</li>
+ * <li><b>토큰 발급:</b> 인증 성공 시 Access Token 및 Refresh Token 생성</li>
+ * <li><b>응답 형식:</b> AuthTokensResponse DTO로 토큰 반환</li>
+ */
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -26,6 +33,16 @@ public class LoginService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    /**
+     * <h3>사용자 로그인</h3>
+     * <p>사용자 인증을 수행하고 JWT 토큰을 발급합니다</p>
+     * <li><b>1단계:</b> UsernamePasswordAuthenticationToken 생성</li>
+     * <li><b>2단계:</b> AuthenticationManager로 인증 수행</li>
+     * <li><b>3단계:</b> Access Token 및 Refresh Token 생성</li>
+     * <li><b>4단계:</b> AuthTokensResponse로 토큰 반환</li>
+     * @param credentials 사용자 인증 정보 (userid, password)
+     * @return ResponseEntity 200 OK (토큰 포함) 또는 401 Unauthorized
+     */
     public ResponseEntity<?> login(UserCredentials credentials) {
         UsernamePasswordAuthenticationToken creds = new UsernamePasswordAuthenticationToken(
                 credentials.userid(), credentials.password()

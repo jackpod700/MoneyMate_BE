@@ -10,6 +10,13 @@ import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * <h3>RefreshTokenValidator</h3>
+ * <p>Refresh 토큰에 대한 단계 별 검증을 수행하는 컴포넌트</p>
+ * <li><b>검증 1:</b> 토큰 유효성 검사 (서명, 만료)</li>
+ * <li><b>검증 2:</b> 토큰 소유자 일치 여부</li>
+ * <li><b>검증 3:</b> 블랙리스트 등록 여부</li>
+ */
 @RequiredArgsConstructor
 @Component
 public class RefreshTokenValidator {

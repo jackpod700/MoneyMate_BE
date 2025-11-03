@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.auth.templates;
+package com.konkuk.moneymate.common.templates;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

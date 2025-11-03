@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.auth.templates;
+package com.konkuk.moneymate.common.templates;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +15,13 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+/**
+ * <h3>EodhdProxyController</h3>
+ * <p>EODHD (End of Day Historical Data) API 프록시 컨트롤러</p>
+ * <li><b>GET /api/proxy/eodhd/realtime/15min:</b> 15분 지연 실시간 시세</li>
+ * <li><b>GET /api/proxy/eodhd/bulk:</b> 전종목 종가 데이터 (전일)</li>
+ * <li><b>API 토큰:</b> 687f9cc717eea0.26361602</li>
+ */
 @RestController
 @RequestMapping("/api/proxy/eodhd")
 @RequiredArgsConstructor
