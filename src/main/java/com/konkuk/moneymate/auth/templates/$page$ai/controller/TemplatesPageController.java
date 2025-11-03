@@ -23,4 +23,10 @@ public class TemplatesPageController {
         log.info("Loading agent template page v2");
         return "ai/agent-template-page-ver2";
     }
+
+    @GetMapping("/agent/v3")
+    public String aiAgentPromptTemplate3(){
+        log.info("Loading agent template page v3");
+        return "ai/agent-template-page-ver3";
+    }
 }

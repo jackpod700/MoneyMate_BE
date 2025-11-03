@@ -30,17 +30,25 @@
 
 .response-text h2 {
     font-weight: 700;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     margin-top: 0.8rem;
     margin-bottom: 0.4rem;
 }
 
 .response-text h3 {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-top: 0.6rem;
+    margin-bottom: 0.3rem;
+}
+
+.response-text h4 {
     font-weight: 600;
     font-size: 1rem;
     margin-top: 0.6rem;
     margin-bottom: 0.3rem;
 }
+
 
 .response-text p {
     margin: 0.4rem 0;
@@ -48,6 +56,7 @@
 
 .response-text ul,
 .response-text ol {
+    font-size: 1rem;
     margin-left: 1.2rem;
     margin-bottom: 0.5rem;
 }
