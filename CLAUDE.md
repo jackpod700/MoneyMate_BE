@@ -53,12 +53,13 @@ src/main/java/com/konkuk/moneymate/
 │   ├── api/                 # Auth API controllers
 │   ├── application/         # Auth filters and JWT
 │   ├── service/             # Auth services
-│   ├── templates/           # Test pages & proxies
+│   ├── exception/           # Custom auth exceptions
 │   ├── SecurityConfig.java  # Spring Security configuration
 │   └── OpenAiConfig.java    # OpenAI configuration
 ├── common/                  # Shared components
-│   ├── ApiResponse.java     # Standard API response wrapper
+│   ├── templates/           # Test pages & API proxies
 │   ├── scheduling/          # Quartz job scheduling
+│   ├── ApiResponse.java     # Standard API response wrapper
 │   └── StockPriceApiClient.java
 ├── config/                  # Application configurations
 └── MoneymateBeApplication.java  # Main application entry point
