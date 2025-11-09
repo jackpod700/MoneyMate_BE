@@ -34,34 +34,115 @@ A comprehensive financial management platform backend built with Spring Boot, pr
 
 ```
 src/main/java/com/konkuk/moneymate/
-├── activities/              # Core business logic
-│   ├── controller/          # REST API controllers
-│   ├── dto/                 # Data transfer objects
-│   ├── entity/              # JPA entities
-│   ├── repository/          # Data access layer
-│   ├── service/             # Business logic services
-│   ├── enums/               # Enumerations (AccountType, BankCode, etc.)
-│   ├── util/                # Utility classes
-│   └── validator/           # Input validation
+├── activities/              # Domain-driven business modules
+│   ├── assets/              # Asset management
+│   │   ├── controller/      # Asset API endpoints
+│   │   ├── dto/             # Asset DTOs
+│   │   ├── entity/          # Asset entity
+│   │   ├── repository/      # Asset data access
+│   │   └── service/         # Asset business logic
+│   ├── bankaccount/         # Bank account & transactions
+│   │   ├── controller/      # Bank account API endpoints
+│   │   ├── dto/             # Bank account DTOs
+│   │   ├── entity/          # BankAccount, Transaction, AccountStock
+│   │   ├── enums/           # AccountType, BankCode, TransactionCategory
+│   │   ├── repository/      # Data access layer
+│   │   └── service/         # Business logic
+│   ├── financial/           # Financial products (deposits, loans)
+│   │   ├── controller/      # Financial product APIs
+│   │   ├── dto/             # Product DTOs
+│   │   ├── entity/          # Product entities (13 types)
+│   │   ├── enums/           # Financial product enums (9 types)
+│   │   ├── repository/      # Product repositories (13)
+│   │   ├── service/         # Product service
+│   │   └── util/            # Finlife API integration
+│   ├── news/                # Financial news
+│   │   ├── controller/      # News API endpoints
+│   │   ├── dto/             # News DTOs
+│   │   ├── entity/          # NewsSummarize entity
+│   │   ├── enums/           # NewsCategoryCode, NewsPublisher
+│   │   ├── repository/      # News data access
+│   │   └── service/         # News collection, extraction, summarization
+│   ├── stats/               # Statistical data & analytics
+│   │   ├── controller/      # Statistics APIs (3 controllers)
+│   │   ├── dto/             # Stats DTOs
+│   │   ├── entity/          # AssetStats, ConsumptionStats, IncomeStats
+│   │   ├── repository/      # Stats data access
+│   │   └── service/         # Stats business logic
+│   ├── stock/               # Stock market data
+│   │   ├── dto/             # Stock DTOs
+│   │   ├── entity/          # Stock, StockPriceHistory, ExchangeHistory
+│   │   ├── repository/      # Stock data access
+│   │   ├── service/         # Stock price update service
+│   │   └── StockPriceApiClient.java  # EODHD API client
+│   ├── user/                # User management
+│   │   ├── dto/             # User DTOs
+│   │   ├── entity/          # User entity
+│   │   └── repository/      # User data access
+│   ├── retirements/         # Retirement simulation
+│   │   ├── dto/             # Retirement DTOs
+│   │   └── RetirementSimulController.java
+│   └── common/              # Shared activity components
+│       └── dto/             # Common DTOs (DateRequestDto)
 ├── ai/                      # AI Advisory Module
-│   ├── controller/          # AI advisor endpoints
+│   ├── controller/
+│   │   └── AdvisorController.java    # AI advisor endpoints
 │   ├── service/             # AI service implementations
+│   │   ├── AnalyzerAdvisorService.java
+│   │   ├── AssetAdvisorService.java
+│   │   ├── BasicAdvisorService.java
+│   │   ├── ConsumptionAdvisorService.java
+│   │   ├── FinancialAdvisorService.java
+│   │   ├── InvestAdvisorService.java
+│   │   ├── PromptTemplateService.java
+│   │   └── TransactionAdvisorService.java
 │   ├── tools/               # AI function calling tools
+│   │   ├── AnalyzerTools.java
+│   │   ├── AssetTools.java
+│   │   ├── BasicTools.java
+│   │   ├── ConsumptionTools.java
+│   │   ├── FinancialTools.java
+│   │   ├── InvestTools.java
+│   │   └── TransactionTools.java
 │   ├── SpringAiConfig.java  # Spring AI configuration
 │   └── MethodConfig.java    # Method registration config
 ├── auth/                    # Authentication & Authorization
-│   ├── api/                 # Auth API controllers
-│   ├── application/         # Auth filters and JWT
-│   ├── service/             # Auth services
+│   ├── api/                 # Auth API layer
+│   │   ├── controller/      # Login, Register, Logout, etc. (7 controllers)
+│   │   ├── request/         # Request DTOs
+│   │   ├── response/        # Response DTOs
+│   │   ├── service/         # Service layer (business logic)
+│   │   │   ├── JwtService.java              # JWT generation/parsing
+│   │   │   ├── JwtBlackListService.java     # Token blacklist (Redis)
+│   │   │   ├── LoginService.java            # Login logic
+│   │   │   ├── LogoutService.java           # Logout logic
+│   │   │   ├── RegisterService.java         # Registration logic
+│   │   │   ├── ReissueTokenManageService.java # Token refresh
+│   │   │   ├── MessageAuthService.java      # SMS verification
+│   │   │   ├── UserService.java             # User management
+│   │   │   └── UserDetailsServiceImpl.java  # Spring Security integration
+│   │   └── RedisConfig.java # Redis configuration
+│   ├── application/         # Application layer
+│   │   ├── AuthenticationFilter.java  # JWT validation filter
+│   │   ├── AuthEntryPoint.java        # 401 handler
+│   │   ├── RefreshTokenValidator.java # Token validation
+│   │   ├── UserCredentials.java       # Credentials record
+│   │   └── JwtProvider.java           # (Placeholder)
 │   ├── exception/           # Custom auth exceptions
 │   ├── SecurityConfig.java  # Spring Security configuration
-│   └── OpenAiConfig.java    # OpenAI configuration
+│   └── OpenAiConfig.java    # Swagger/OpenAPI configuration
 ├── common/                  # Shared components
 │   ├── templates/           # Test pages & API proxies
+│   │   ├── $page$ai/        # AI agent test pages
+│   │   ├── TestStockPage.java
+│   │   ├── NaverStockProxyController.java
+│   │   ├── EodhdProxyController.java
+│   │   └── MarketValueRankingRefresher.java
 │   ├── scheduling/          # Quartz job scheduling
+│   │   ├── QuartzConfig.java
+│   │   └── StockLastdayFetchJob.java
 │   ├── ApiResponse.java     # Standard API response wrapper
-│   └── StockPriceApiClient.java
-├── config/                  # Application configurations
+│   └── ApiResponseMessage.java
 └── MoneymateBeApplication.java  # Main application entry point
 
 src/main/resources/
@@ -82,7 +163,7 @@ src/main/resources/
 - **Multiple AI Advisors**: Asset, Transaction, Consumption, Investment, and Portfolio Analysis
 - **OpenAI Integration**: GPT-4o powered financial advice with function calling
 - **Streaming Responses**: Real-time AI response streaming using Server-Sent Events (SSE)
-- **Specialized Tools**: Custom tools for each advisor domain (AssetTools, TransactionTools, etc.)
+- **Specialized Tools**: Custom tools for each advisor domain (AssetTools, TransactionTools, ConsumptionTools, InvestTools, PortfolioTools, etc.)
 
 ### 2. Asset Management
 - Track multiple asset types: bank accounts, stocks, crypto, real estate

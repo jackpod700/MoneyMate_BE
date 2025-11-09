@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface DepositProductRepository extends JpaRepository<DepositProduct, UUID> {
 
     @Query("""
-    SELECT new com.konkuk.moneymate.activities.dto.financialProduct.DepositProductDto(
+    SELECT new com.konkuk.moneymate.activities.financial.dto.DepositProductDto(
         dp.financialCompany.name,
         dp.productName,
         dp.joinWay,

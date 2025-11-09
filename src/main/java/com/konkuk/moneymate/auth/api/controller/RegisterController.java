@@ -2,7 +2,7 @@ package com.konkuk.moneymate.auth.api.controller;
 
 import com.konkuk.moneymate.activities.user.entity.User;
 import com.konkuk.moneymate.activities.user.repository.UserRepository;
-import com.konkuk.moneymate.auth.service.RegisterService;
+import com.konkuk.moneymate.auth.api.service.RegisterService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

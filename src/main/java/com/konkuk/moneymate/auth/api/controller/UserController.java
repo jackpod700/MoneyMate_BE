@@ -5,10 +5,10 @@ import com.konkuk.moneymate.activities.user.entity.User;
 import com.konkuk.moneymate.activities.user.repository.UserRepository;
 import com.konkuk.moneymate.auth.api.request.RefreshTokenBody;
 import com.konkuk.moneymate.auth.api.request.UserAuthRequest;
-import com.konkuk.moneymate.auth.service.JwtService;
-import com.konkuk.moneymate.auth.service.LogoutService;
-import com.konkuk.moneymate.auth.service.MessageAuthService;
-import com.konkuk.moneymate.auth.service.UserService;
+import com.konkuk.moneymate.auth.api.service.JwtService;
+import com.konkuk.moneymate.auth.api.service.LogoutService;
+import com.konkuk.moneymate.auth.api.service.MessageAuthService;
+import com.konkuk.moneymate.auth.api.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -93,6 +93,10 @@ public class UserController {
     // @PatchMapping
 
 
+    @PatchMapping("/user/change-pw")
+    public ResponseEntity<?> changePassword(@RequestBody UserAuthRequest userAuthRequest, HttpServletRequest request) {
+        return userService.changePassword(userAuthRequest, request);
+    }
 
 
 

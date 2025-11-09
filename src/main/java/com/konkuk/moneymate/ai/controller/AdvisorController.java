@@ -2,7 +2,6 @@ package com.konkuk.moneymate.ai.controller;
 
 
 import com.konkuk.moneymate.ai.service.*;
-import com.konkuk.moneymate.auth.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

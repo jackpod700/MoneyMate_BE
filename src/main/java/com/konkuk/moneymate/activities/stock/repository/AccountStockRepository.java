@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public interface AccountStockRepository extends JpaRepository<AccountStock, AccountStockId> {
     @Query("""
-        SELECT new com.konkuk.moneymate.activities.dto.StockHoldingDto(
+        SELECT new com.konkuk.moneymate.activities.stock.dto.StockHoldingDto(
             ba.uid,
             ba.name, 
             s.ISIN, 

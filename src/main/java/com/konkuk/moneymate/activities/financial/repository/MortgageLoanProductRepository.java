@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MortgageLoanProductRepository extends JpaRepository<MortgageLoanProduct, UUID> {
     @Query("""
-    SELECT new com.konkuk.moneymate.activities.dto.financialProduct.MortgageLoanProductDto(
+    SELECT new com.konkuk.moneymate.activities.financial.dto.MortgageLoanProductDto(
         mp.financialCompany.name,
         mp.productName,
         mp.joinWay,

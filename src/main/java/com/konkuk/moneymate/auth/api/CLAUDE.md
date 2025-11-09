@@ -24,8 +24,20 @@ api/
 ├── response/                # Response DTOs
 │   ├── AuthTokensResponse.java
 │   └── SmsMessageResponse.java
+├── service/                 # Service Layer (Business Logic)
+│   ├── JwtService.java
+│   ├── JwtBlackListService.java
+│   ├── LoginService.java
+│   ├── LogoutService.java
+│   ├── RegisterService.java
+│   ├── ReissueTokenManageService.java
+│   ├── MessageAuthService.java
+│   ├── UserService.java
+│   └── UserDetailsServiceImpl.java
 └── RedisConfig.java         # Redis Configuration
 ```
+
+**Note**: Service layer has been refactored and moved into the `api` package as `auth.api.service`.
 
 ## Controllers
 
@@ -72,8 +84,8 @@ api/
 ```
 
 **Dependencies**:
-- `LoginService` - Business logic
-- `JwtService` - Token operations
+- `auth.api.service.LoginService` - Business logic
+- `auth.api.service.JwtService` - Token operations
 
 ---
 
@@ -113,8 +125,8 @@ api/
 **Response**: `200 OK` (available) or `409 Conflict` (already exists)
 
 **Dependencies**:
-- `RegisterService` - Registration logic
-- `UserRepository` - Database operations
+- `auth.api.service.RegisterService` - Registration logic
+- `activities.user.repository.UserRepository` - Database operations
 
 **Security**:
 - Password is BCrypt hashed before storage
@@ -153,8 +165,8 @@ api/
 4. Tokens remain blacklisted until natural expiration
 
 **Dependencies**:
-- `LogoutService` - Logout logic
-- `JwtBlackListService` - Token blacklisting
+- `auth.api.service.LogoutService` - Logout logic
+- `auth.api.service.JwtBlackListService` - Token blacklisting
 
 ---
 
@@ -196,7 +208,7 @@ api/
 5. Return new tokens
 
 **Dependencies**:
-- `ReissueTokenManageService` - Token refresh logic
+- `auth.api.service.ReissueTokenManageService` - Token refresh logic
 
 ---
 
@@ -279,9 +291,9 @@ api/
 **Response**: `200 OK`
 
 **Dependencies**:
-- `UserService` - User management logic
-- `JwtService` - Extract user from token
-- `UserRepository` - Database operations
+- `auth.api.service.UserService` - User management logic
+- `auth.api.service.JwtService` - Extract user from token
+- `activities.user.repository.UserRepository` - Database operations
 
 ---
 
@@ -354,7 +366,7 @@ api/
 5. Delete original verification code
 
 **Dependencies**:
-- `MessageAuthService` - SMS logic
+- `auth.api.service.MessageAuthService` - SMS logic
 - CoolSMS SDK (Nurigo)
 - Redis for code storage
 
@@ -616,7 +628,7 @@ See `src/main/resources/sql/insert_users.sql` for test data
 ### Internal Packages
 - `com.konkuk.moneymate.activities.user.entity.User`
 - `com.konkuk.moneymate.activities.user.repository.UserRepository`
-- `com.konkuk.moneymate.auth.service.*`
+- `com.konkuk.moneymate.auth.api.service.*` (Service layer)
 - `com.konkuk.moneymate.common.ApiResponse`
 
 ---
@@ -650,6 +662,6 @@ See `src/main/resources/sql/insert_users.sql` for test data
 **Last Updated**: November 2024  
 **Related Documentation**: 
 - [Parent: auth/CLAUDE.md](../CLAUDE.md)
-- [Service Layer: service/CLAUDE.md](../service/CLAUDE.md)
+- [Service Layer: service/CLAUDE.md](service/CLAUDE.md)
 - [Application Layer: application/CLAUDE.md](../application/CLAUDE.md)
 

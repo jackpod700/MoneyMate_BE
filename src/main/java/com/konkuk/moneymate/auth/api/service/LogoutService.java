@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.auth.service;
+package com.konkuk.moneymate.auth.api.service;
 
 import com.konkuk.moneymate.auth.api.request.RefreshTokenBody;
 import com.konkuk.moneymate.auth.application.RefreshTokenValidator;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
 import java.util.Map;

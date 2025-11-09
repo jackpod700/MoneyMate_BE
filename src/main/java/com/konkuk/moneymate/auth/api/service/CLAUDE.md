@@ -1,8 +1,10 @@
-# Service Layer (`com.konkuk.moneymate.auth.service`)
+# Service Layer (`com.konkuk.moneymate.auth.api.service`)
 
 ## Overview
 
 The `service` package contains all business logic for authentication, token management, user account operations, and SMS verification. Services are called by controllers and interact with repositories, external APIs (SMS), and Redis for caching.
+
+**Note**: This service layer has been refactored and moved from `auth.service` to `auth.api.service` package.
 
 ## Package Structure
 
@@ -788,7 +790,7 @@ class UserServiceIntegrationTest {
 **Package Owner**: Service Team  
 **Last Updated**: November 2024  
 **Related Documentation**:
-- [Parent: auth/CLAUDE.md](../CLAUDE.md)
-- [API Layer: api/CLAUDE.md](../api/CLAUDE.md)
-- [Application Layer: application/CLAUDE.md](../application/CLAUDE.md)
+- [Parent: auth/CLAUDE.md](../../CLAUDE.md)
+- [API Layer: api/CLAUDE.md](../CLAUDE.md)
+- [Application Layer: application/CLAUDE.md](../../application/CLAUDE.md)
 

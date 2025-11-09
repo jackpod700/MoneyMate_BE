@@ -1,15 +1,14 @@
-package com.konkuk.moneymate.activities.service.stats;
+package com.konkuk.moneymate.activities.stats.service;
 
 import com.konkuk.moneymate.activities.stats.dto.KosisStatsDataRequest;
 import com.konkuk.moneymate.activities.stats.dto.KosisStatsDataResponse;
-import com.konkuk.moneymate.activities.stats.service.KosisStatsService;
 import com.konkuk.moneymate.activities.stats.entity.KosisStatsAssetData;
 import com.konkuk.moneymate.activities.stats.entity.KosisStatsIncomeData;
 import com.konkuk.moneymate.activities.user.repository.UserRepository;
 import com.konkuk.moneymate.activities.stats.repository.KosisStatsAssetDataRepository;
 import com.konkuk.moneymate.activities.stats.repository.KosisStatsConsumptionDataRepository;
 import com.konkuk.moneymate.activities.stats.repository.KosisStatsIncomeDataRepository;
-import com.konkuk.moneymate.auth.service.JwtService;
+import com.konkuk.moneymate.auth.api.service.JwtService;
 import com.konkuk.moneymate.common.ApiResponse;
 import com.konkuk.moneymate.common.ApiResponseMessage;
 import jakarta.servlet.http.HttpServletRequest;

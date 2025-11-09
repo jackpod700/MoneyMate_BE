@@ -10,7 +10,7 @@ import com.konkuk.moneymate.activities.bankaccount.entity.BankAccount;
 import com.konkuk.moneymate.activities.stock.entity.StockTransaction;
 import com.konkuk.moneymate.activities.bankaccount.entity.Transaction;
 import com.konkuk.moneymate.activities.bankaccount.enums.TransactionCategory;
-import com.konkuk.moneymate.auth.service.JwtService;
+import com.konkuk.moneymate.auth.api.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Service;

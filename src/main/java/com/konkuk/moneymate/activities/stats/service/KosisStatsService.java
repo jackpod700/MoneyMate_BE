@@ -9,7 +9,7 @@ import com.konkuk.moneymate.activities.user.repository.UserRepository;
 import com.konkuk.moneymate.activities.stats.repository.KosisStatsAssetDataRepository;
 import com.konkuk.moneymate.activities.stats.repository.KosisStatsConsumptionDataRepository;
 import com.konkuk.moneymate.activities.stats.repository.KosisStatsIncomeDataRepository;
-import com.konkuk.moneymate.auth.service.JwtService;
+import com.konkuk.moneymate.auth.api.service.JwtService;
 import com.konkuk.moneymate.common.ApiResponse;
 import com.konkuk.moneymate.common.ApiResponseMessage;
 import jakarta.servlet.http.HttpServletRequest;

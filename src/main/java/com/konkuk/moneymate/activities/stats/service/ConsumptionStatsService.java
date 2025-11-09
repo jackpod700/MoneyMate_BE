@@ -5,7 +5,7 @@ import com.konkuk.moneymate.activities.bankaccount.service.BankAccountService;
 import com.konkuk.moneymate.activities.stats.dto.ConsumptionStatsResponse;
 import com.konkuk.moneymate.activities.bankaccount.enums.TransactionCategory;
 import com.konkuk.moneymate.activities.bankaccount.repository.TransactionRepository;
-import com.konkuk.moneymate.auth.service.JwtService;
+import com.konkuk.moneymate.auth.api.service.JwtService;
 import com.konkuk.moneymate.common.ApiResponse;
 import com.konkuk.moneymate.common.ApiResponseMessage;
 import jakarta.servlet.http.HttpServletRequest;

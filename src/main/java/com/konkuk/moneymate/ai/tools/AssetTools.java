@@ -11,7 +11,7 @@ import com.konkuk.moneymate.activities.assets.repository.AssetRepository;
 import com.konkuk.moneymate.activities.bankaccount.repository.BankAccountRepository;
 import com.konkuk.moneymate.activities.bankaccount.repository.TransactionRepository;
 import com.konkuk.moneymate.activities.stats.service.StatisticService;
-import com.konkuk.moneymate.auth.service.JwtService;
+import com.konkuk.moneymate.auth.api.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.tool.annotation.Tool;

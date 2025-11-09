@@ -8,16 +8,24 @@ The `auth` package is the core authentication and security module for the Moneym
 
 ```
 auth/
-├── api/                    # API Layer - Controllers and DTOs
+├── api/                    # API Layer - Controllers, DTOs, and Services
+│   ├── controller/         # REST API controllers (7 controllers)
+│   ├── request/            # Request DTOs
+│   ├── response/           # Response DTOs
+│   ├── service/            # Service Layer - Business Logic (9 services)
+│   └── RedisConfig.java    # Redis configuration
 ├── application/            # Application Layer - Filters and Security Components
-├── service/                # Service Layer - Business Logic
+│   ├── AuthenticationFilter.java
+│   ├── AuthEntryPoint.java
+│   ├── RefreshTokenValidator.java
+│   ├── UserCredentials.java
+│   └── JwtProvider.java
 ├── exception/              # Custom Exceptions
-├── entity/                 # (Empty - Uses entities from activities package)
-├── repository/             # (Empty - Uses repositories from activities package)
-├── templates/              # Test Pages and Proxy Controllers
 ├── SecurityConfig.java     # Spring Security Configuration
 └── OpenAiConfig.java       # Swagger/OpenAPI Configuration
 ```
+
+**Note**: Service layer has been refactored and moved to `auth.api.service` package.
 
 ## Core Components
 
@@ -62,7 +70,7 @@ auth/
 ## Sub-Packages
 
 ### 1. API Layer (`auth.api`)
-Contains REST controllers, request/response DTOs, and Redis configuration.
+Contains REST controllers, request/response DTOs, services, and Redis configuration.
 
 **Controllers**:
 - `LoginController` - User login
@@ -72,6 +80,17 @@ Contains REST controllers, request/response DTOs, and Redis configuration.
 - `UserController` - User management (find ID, reset password)
 - `MessageAuthController` - SMS authentication
 - `HealthController` - Health check endpoint
+
+**Services** (in `auth.api.service`):
+- `JwtService` - JWT token generation and parsing
+- `JwtBlackListService` - Token blacklist management (Redis)
+- `LoginService` - Login business logic
+- `RegisterService` - Registration business logic
+- `LogoutService` - Logout business logic
+- `ReissueTokenManageService` - Token refresh logic
+- `MessageAuthService` - SMS verification service
+- `UserService` - User management service
+- `UserDetailsServiceImpl` - Spring Security UserDetailsService
 
 **See**: [api/CLAUDE.md](api/CLAUDE.md) for details
 
@@ -87,8 +106,10 @@ Contains Spring Security filters and authentication components.
 
 **See**: [application/CLAUDE.md](application/CLAUDE.md) for details
 
-### 3. Service Layer (`auth.service`)
+### 3. Service Layer (`auth.api.service`)
 Contains business logic for authentication and token management.
+
+**Location**: Services have been moved to `auth.api.service` package (refactored)
 
 **Services**:
 - `JwtService` - JWT token generation and parsing
@@ -101,7 +122,7 @@ Contains business logic for authentication and token management.
 - `UserService` - User management service
 - `UserDetailsServiceImpl` - Spring Security UserDetailsService
 
-**See**: [service/CLAUDE.md](service/CLAUDE.md) for details
+**See**: [api/service/CLAUDE.md](api/service/CLAUDE.md) for details
 
 ### 4. Exception Package (`auth.exception`)
 Custom authentication exceptions.

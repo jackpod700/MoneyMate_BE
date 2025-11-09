@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.auth.service;
+package com.konkuk.moneymate.auth.api.service;
 
 import com.konkuk.moneymate.activities.user.dto.UserDto;
 import com.konkuk.moneymate.activities.user.entity.User;
@@ -139,7 +139,8 @@ public class UserService {
      * @return
      */
     public ResponseEntity<?> changePassword(UserAuthRequest userAuthRequest, HttpServletRequest request){
-        String userId = userAuthRequest.getUserId();
+        // String userId = userAuthRequest.getUserId();
+        String userId = jwtService.getAuthUser(request);
         String newPassword = userAuthRequest.getPassword();
 
         if (newPassword == null || newPassword.isEmpty()) {

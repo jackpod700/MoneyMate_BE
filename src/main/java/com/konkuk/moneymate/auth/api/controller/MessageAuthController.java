@@ -1,17 +1,12 @@
 package com.konkuk.moneymate.auth.api.controller;
 
 import com.konkuk.moneymate.auth.api.request.SmsMessageRequest;
-import com.konkuk.moneymate.auth.service.MessageAuthService;
-import com.konkuk.moneymate.common.ApiResponse;
-import com.konkuk.moneymate.common.ApiResponseMessage;
+import com.konkuk.moneymate.auth.api.service.MessageAuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 
 /**
  * <h3>MessageAuthController</h3>

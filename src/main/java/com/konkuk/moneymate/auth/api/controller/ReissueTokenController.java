@@ -1,17 +1,10 @@
 package com.konkuk.moneymate.auth.api.controller;
 
-import
-        static org.springframework.boot.web.server.Cookie.SameSite.NONE;
-import static org.springframework.http.HttpHeaders.SET_COOKIE;
-
 import com.konkuk.moneymate.auth.api.request.RefreshTokenBody;
-import com.konkuk.moneymate.auth.api.response.AuthTokensResponse;
-import com.konkuk.moneymate.auth.service.ReissueTokenManageService;
+import com.konkuk.moneymate.auth.api.service.ReissueTokenManageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

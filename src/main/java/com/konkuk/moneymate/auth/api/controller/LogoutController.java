@@ -2,10 +2,9 @@ package com.konkuk.moneymate.auth.api.controller;
 
 
 import com.konkuk.moneymate.auth.api.request.RefreshTokenBody;
-import com.konkuk.moneymate.auth.service.JwtService;
-import com.konkuk.moneymate.auth.service.LogoutService;
+import com.konkuk.moneymate.auth.api.service.JwtService;
+import com.konkuk.moneymate.auth.api.service.LogoutService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;

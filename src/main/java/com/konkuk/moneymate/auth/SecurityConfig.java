@@ -3,7 +3,7 @@ package com.konkuk.moneymate.auth;
 
 import com.konkuk.moneymate.auth.application.AuthEntryPoint;
 import com.konkuk.moneymate.auth.application.AuthenticationFilter;
-import com.konkuk.moneymate.auth.service.UserDetailsServiceImpl;
+import com.konkuk.moneymate.auth.api.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -2,8 +2,8 @@ package com.konkuk.moneymate.auth.application;
 
 
 import com.konkuk.moneymate.auth.exception.InvalidTokenException;
-import com.konkuk.moneymate.auth.service.JwtBlackListService;
-import com.konkuk.moneymate.auth.service.JwtService;
+import com.konkuk.moneymate.auth.api.service.JwtBlackListService;
+import com.konkuk.moneymate.auth.api.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

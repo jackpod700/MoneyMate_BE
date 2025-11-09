@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SavingProductRepository extends JpaRepository<SavingProduct, UUID> {
     @Query("""
-    SELECT new com.konkuk.moneymate.activities.dto.financialProduct.SavingProductDto(
+    SELECT new com.konkuk.moneymate.activities.financial.dto.SavingProductDto(
         sp.financialCompany.name,
         sp.productName,
         sp.joinWay,

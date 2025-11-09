@@ -2,6 +2,7 @@ package com.konkuk.moneymate.auth.service;
 
 import com.konkuk.moneymate.activities.user.entity.User;
 import com.konkuk.moneymate.activities.user.repository.UserRepository;
+import com.konkuk.moneymate.auth.api.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Test;

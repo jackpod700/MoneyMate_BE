@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.auth.service;
+package com.konkuk.moneymate.auth.api.service;
 
 import com.konkuk.moneymate.auth.api.request.RefreshTokenBody;
 import com.konkuk.moneymate.auth.api.response.AuthTokensResponse;

@@ -2,7 +2,7 @@ package com.konkuk.moneymate.activities.stats.controller;
 
 import com.konkuk.moneymate.activities.assets.dto.AssetHistoryDto;
 import com.konkuk.moneymate.activities.stats.service.StatisticService;
-import com.konkuk.moneymate.auth.service.JwtService;
+import com.konkuk.moneymate.auth.api.service.JwtService;
 import com.konkuk.moneymate.common.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;

@@ -92,8 +92,8 @@ catch (Exception e) {
 ```
 
 **Dependencies**:
-- `JwtService` - Token parsing and user extraction
-- `JwtBlackListService` - Blacklist validation
+- `auth.api.service.JwtService` - Token parsing and user extraction
+- `auth.api.service.JwtBlackListService` - Blacklist validation
 
 **Configuration**:
 Registered in `SecurityConfig.java`:
@@ -213,8 +213,8 @@ refreshTokenValidator.validateBlacklistedToken(refreshToken);
 ```
 
 **Dependencies**:
-- `JwtService` - Token parsing
-- `JwtBlackListService` - Blacklist checking
+- `auth.api.service.JwtService` - Token parsing
+- `auth.api.service.JwtBlackListService` - Blacklist checking
 
 ---
 
@@ -535,8 +535,8 @@ logging.level.com.konkuk.moneymate.auth.application=DEBUG
 - JJWT Library
 
 ### Internal
-- `auth.service.JwtService`
-- `auth.service.JwtBlackListService`
+- `auth.api.service.JwtService`
+- `auth.api.service.JwtBlackListService`
 - `auth.exception.*`
 
 ---
@@ -556,6 +556,6 @@ logging.level.com.konkuk.moneymate.auth.application=DEBUG
 **Last Updated**: November 2024  
 **Related Documentation**:
 - [Parent: auth/CLAUDE.md](../CLAUDE.md)
-- [Service Layer: service/CLAUDE.md](../service/CLAUDE.md)
+- [Service Layer: service/CLAUDE.md](../api/service/CLAUDE.md)
 - [API Layer: api/CLAUDE.md](../api/CLAUDE.md)
 
