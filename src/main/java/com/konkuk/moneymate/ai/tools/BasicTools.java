@@ -1,12 +1,15 @@
 package com.konkuk.moneymate.ai.tools;
 
-import com.konkuk.moneymate.activities.dto.StockHoldingDto;
-import com.konkuk.moneymate.activities.entity.Asset;
-import com.konkuk.moneymate.activities.entity.BankAccount;
-import com.konkuk.moneymate.activities.entity.StockTransaction;
-import com.konkuk.moneymate.activities.entity.Transaction;
-import com.konkuk.moneymate.activities.enums.TransactionCategory;
-import com.konkuk.moneymate.activities.repository.*;
+import com.konkuk.moneymate.activities.assets.repository.AssetRepository;
+import com.konkuk.moneymate.activities.bankaccount.repository.BankAccountRepository;
+import com.konkuk.moneymate.activities.bankaccount.repository.TransactionRepository;
+import com.konkuk.moneymate.activities.stock.repository.AccountStockRepository;
+import com.konkuk.moneymate.activities.stock.dto.StockHoldingDto;
+import com.konkuk.moneymate.activities.assets.entity.Asset;
+import com.konkuk.moneymate.activities.bankaccount.entity.BankAccount;
+import com.konkuk.moneymate.activities.stock.entity.StockTransaction;
+import com.konkuk.moneymate.activities.bankaccount.entity.Transaction;
+import com.konkuk.moneymate.activities.bankaccount.enums.TransactionCategory;
 import com.konkuk.moneymate.auth.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.tool.annotation.Tool;

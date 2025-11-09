@@ -1,6 +1,8 @@
 package com.konkuk.moneymate.activities.service.news;
 
-import com.konkuk.moneymate.activities.service.NewsService;
+import com.konkuk.moneymate.activities.news.service.NewsCollector;
+import com.konkuk.moneymate.activities.news.service.NewsExtractor;
+import com.konkuk.moneymate.activities.news.service.NewsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

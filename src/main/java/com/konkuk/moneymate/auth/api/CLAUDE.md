@@ -614,8 +614,8 @@ See `src/main/resources/sql/insert_users.sql` for test data
 - CoolSMS SDK (Nurigo)
 
 ### Internal Packages
-- `com.konkuk.moneymate.activities.entity.User`
-- `com.konkuk.moneymate.activities.repository.UserRepository`
+- `com.konkuk.moneymate.activities.user.entity.User`
+- `com.konkuk.moneymate.activities.user.repository.UserRepository`
 - `com.konkuk.moneymate.auth.service.*`
 - `com.konkuk.moneymate.common.ApiResponse`
 

@@ -1,8 +1,8 @@
 package com.konkuk.moneymate.auth.service;
 
-import com.konkuk.moneymate.activities.dto.UserDto;
-import com.konkuk.moneymate.activities.entity.User;
-import com.konkuk.moneymate.activities.repository.UserRepository;
+import com.konkuk.moneymate.activities.user.dto.UserDto;
+import com.konkuk.moneymate.activities.user.entity.User;
+import com.konkuk.moneymate.activities.user.repository.UserRepository;
 import com.konkuk.moneymate.auth.api.request.RefreshTokenBody;
 import com.konkuk.moneymate.auth.api.request.UserAuthRequest;
 import com.konkuk.moneymate.common.ApiResponse;

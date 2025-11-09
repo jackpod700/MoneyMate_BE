@@ -1,8 +1,8 @@
 package com.konkuk.moneymate.auth.api.controller;
 
-import com.konkuk.moneymate.activities.dto.UserDto;
-import com.konkuk.moneymate.activities.entity.User;
-import com.konkuk.moneymate.activities.repository.UserRepository;
+import com.konkuk.moneymate.activities.user.dto.UserDto;
+import com.konkuk.moneymate.activities.user.entity.User;
+import com.konkuk.moneymate.activities.user.repository.UserRepository;
 import com.konkuk.moneymate.auth.api.request.RefreshTokenBody;
 import com.konkuk.moneymate.auth.api.request.UserAuthRequest;
 import com.konkuk.moneymate.auth.service.JwtService;
@@ -10,11 +10,8 @@ import com.konkuk.moneymate.auth.service.LogoutService;
 import com.konkuk.moneymate.auth.service.MessageAuthService;
 import com.konkuk.moneymate.auth.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import net.nurigo.sdk.message.service.MessageService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 /**

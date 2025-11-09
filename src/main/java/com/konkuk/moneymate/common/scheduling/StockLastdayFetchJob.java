@@ -1,7 +1,7 @@
 package com.konkuk.moneymate.common.scheduling;
 
 
-import com.konkuk.moneymate.activities.service.StockLastdayFetchService;
+import com.konkuk.moneymate.activities.stock.service.StockLastdayFetchService;
 import lombok.RequiredArgsConstructor;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

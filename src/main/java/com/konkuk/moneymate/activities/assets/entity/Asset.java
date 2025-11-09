@@ -1,0 +1,59 @@
+package com.konkuk.moneymate.activities.assets.entity;
+
+import com.konkuk.moneymate.activities.assets.dto.AssetDto;
+import com.konkuk.moneymate.activities.user.entity.User;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+
+import java.util.UUID;
+
+/**
+ * <h3>asset Entity 클래스</h3>
+ * <b>PK : asset_uid UUID <br></b>
+ * <b>FK : user_uid ref from user.uid</b>
+ */
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Getter
+@Entity
+@Table(name="asset")
+public class Asset {
+
+    @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "asset_uid", columnDefinition = "BINARY(16)", nullable = false)
+    private UUID uid;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="user_uid", nullable = false)
+    private User user;
+
+    @Column(name="price", nullable = false)
+    private Long price;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    public Asset(User user, Long price, String name) {
+        this.user = user;
+        this.price = price;
+        this.name = name;
+    }
+
+    public AssetDto toDto(){
+        return new AssetDto(
+                this.uid,
+                this.name,
+                this.price
+        );
+    }
+}
