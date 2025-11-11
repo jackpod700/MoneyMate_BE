@@ -16,7 +16,7 @@ async function handleSubmit() {
 
         document.getElementById("spinner").classList.add('active');
 
-        const response = await fetch('/ai-summary/portfolio', {
+        const response = await fetch('/portfolio/ai-summary', {
             method: "GET",
             headers: {
                 'Accept': 'application/json',

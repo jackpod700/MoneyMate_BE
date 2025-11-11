@@ -32,7 +32,7 @@ public class AdvisorController {
         return ResponseEntity.ok(new AskResponse(answer));
     }
 
-    @GetMapping("/ai-summary/portfolio")
+    @GetMapping("/portfolio/ai-summary")
     public ResponseEntity<?> portfolioAnalyze(HttpServletRequest req) {
         return portfolioService.portfolioAnalyze(req);
     }
