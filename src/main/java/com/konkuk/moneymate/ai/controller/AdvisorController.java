@@ -14,7 +14,7 @@ public class AdvisorController {
     private final BasicAdvisorService advisorService;
     private final AssetAdvisorService assetAdvisorService;
     private final FinancialAdvisorService financialAdvisorService;
-    private final AnalyzerAdvisorService analyzerAdvisorService;
+    private final PortfolioService portfolioService;
     private final ConsumptionAdvisorService consumptionAdvisorService;
     private final InvestAdvisorService investAdvisorService;
     private final TransactionAdvisorService transactionAdvisorService;
@@ -34,7 +34,7 @@ public class AdvisorController {
 
     @GetMapping("/ai-summary/portfolio")
     public ResponseEntity<?> portfolioAnalyze(HttpServletRequest req) {
-        return analyzerAdvisorService.portfolioAnalyze(req);
+        return portfolioService.portfolioAnalyze(req);
     }
 
 

@@ -1,6 +1,6 @@
 package com.konkuk.moneymate.ai.service;
 
-import com.konkuk.moneymate.ai.tools.AnalyzerTools;
+import com.konkuk.moneymate.ai.tools.PortfolioTools;
 import com.konkuk.moneymate.common.ApiResponse;
 import com.konkuk.moneymate.common.ApiResponseMessage;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,10 +24,10 @@ import java.time.format.DateTimeFormatter;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AnalyzerAdvisorService {
+public class PortfolioService {
 
     private final ChatClient chatClient;
-    private final AnalyzerTools analyzerTools;
+    private final PortfolioTools portfolioTools;
 
     private static String buildSystemPrompt() {
         ZonedDateTime nowKst = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
@@ -40,7 +40,7 @@ public class AnalyzerAdvisorService {
         - 데이터가 없거나 인증/권한 문제로 조회 불가하면 그 사실을 명확히 알리고, 가능한 범위에서 일반적 조언만 제공합니다.
         - 출력은 항상 Markdown이며, 아래 **고정 섹션 2개**만 제공합니다.
 
-        # 출력 섹션 (고정, markdown에서 h3으로 출력, 하위 항목은 적절하게 h5나 li 등 사용하세요.)
+        # 출력 섹션 (고정, markdown 출력결과에서 최상위 분류는 h1으로 출력, 하위 항목은 적절하게 h2나 li 등 사용하세요.)
         1) 포트폴리오 분석 결과
         2) 뉴스 요약 및 포트폴리오 영향
 
@@ -169,7 +169,7 @@ public class AnalyzerAdvisorService {
             - 고객 성향(1~5) ↔ 보유 상품 위험등급(1~6) 적합성 점검 및 개선 제안
             - 자산 배분, 섹터별 집중도, 통화 노출, 유동성, 리스크 지표 등 심화 분석
             - 보유 주식의 섹터별로 **저장된 최신 뉴스 요약** 기반 상황 분석 및 구체적 대응 방안 제시
-            - 출력은 아래 2개 섹션만: (고정, markdown에서 h3으로 출력, 하위 항목은 적절하게 h5나 li 등 사용하세요.)
+            - 출력은 아래 2개 섹션만: (고정, markdown에서 최상위 카테고리는 h1으로 출력, 하위 항목은 적절하게 h2, h3 또는 li 등 사용하세요.)
               1) 포트폴리오 분석 결과
               2) 뉴스 요약 및 포트폴리오 영향
 
@@ -235,7 +235,7 @@ public class AnalyzerAdvisorService {
                 .prompt()
                 .system(buildSystemPrompt())
                 .user(question)
-                .tools(analyzerTools)
+                .tools(portfolioTools)
                 .call()
                 .content();
 
@@ -250,7 +250,7 @@ public class AnalyzerAdvisorService {
                 .prompt()
                 .system(buildSystemPrompt())
                 .user(userQuestion)
-                .tools(analyzerTools)
+                .tools(portfolioTools)
                 .stream()
                 .content();
     }
@@ -261,7 +261,7 @@ public class AnalyzerAdvisorService {
                 .prompt()
                 .system(buildSystemPrompt())
                 .user(userQuestion)
-                .tools(analyzerTools)
+                .tools(portfolioTools)
                 .call()
                 .content();
 
