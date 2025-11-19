@@ -1,24 +1,21 @@
-package com.konkuk.moneymate.ai.tools;
+package com.konkuk.moneymate.activities.portfoilo.tools;
 
+import com.konkuk.moneymate.activities.assets.repository.AssetRepository;
+import com.konkuk.moneymate.activities.bankaccount.repository.BankAccountRepository;
+import com.konkuk.moneymate.activities.bankaccount.repository.TransactionRepository;
+import com.konkuk.moneymate.activities.stock.repository.AccountStockRepository;
 import com.konkuk.moneymate.activities.stock.dto.StockHoldingDto;
 import com.konkuk.moneymate.activities.assets.entity.Asset;
 import com.konkuk.moneymate.activities.bankaccount.entity.BankAccount;
 import com.konkuk.moneymate.activities.stock.entity.StockTransaction;
 import com.konkuk.moneymate.activities.bankaccount.entity.Transaction;
 import com.konkuk.moneymate.activities.bankaccount.enums.TransactionCategory;
-import com.konkuk.moneymate.activities.stock.repository.AccountStockRepository;
-import com.konkuk.moneymate.activities.assets.repository.AssetRepository;
-import com.konkuk.moneymate.activities.bankaccount.repository.BankAccountRepository;
-import com.konkuk.moneymate.activities.bankaccount.repository.TransactionRepository;
-import com.konkuk.moneymate.activities.stats.service.StatisticService;
 import com.konkuk.moneymate.auth.api.service.JwtService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -27,14 +24,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AssetTools {
+public class BasicTools {
+
     private final AccountStockRepository accountStockRepository;
     private final AssetRepository assetRepository;
     private final BankAccountRepository bankAccountRepository;
     private final TransactionRepository transactionRepository;
     private final JwtService jwtService;
     private final HttpServletRequest request;
-    private final StatisticService statisticService;
 
     private UUID currentUserUid() {
         String uidStr = jwtService.getUserUid(request);
@@ -235,172 +232,4 @@ public class AssetTools {
             return m;
         }).collect(Collectors.toList());
     }
-
-
-
-
-
-
-
-
-    /** 자산 변동추이 조회 **/
-    @Tool(
-            name = "get_asset_change_trend",
-            description = """
-    현재 로그인한 사용자의 자산 변동 추이를 월별로 조회합니다.
-    
-    Parameters:
-    - category: 조회할 자산 카테고리 (필수)
-      * "total": 전체 자산 (입출금 + 예적금 + 증권 + 기타자산)
-      * "withdrawal": 입출금 계좌
-      * "deposit": 예적금 계좌
-      * "stock": 증권 계좌 (현금 + 보유주식 평가금액)
-      * "asset": 기타 자산 (부동산, 차량 등)
-    
-    반환 형식:
-    [
-      {
-        "date": "2025-01",
-        "assetValue": 12750000,
-        "profitRate": 3.25
-      },
-      ...
-    ]
-    
-    반환 데이터 설명:
-    - date: 연월 (YYYY-MM 형식)
-    - assetValue: 해당 월 말일 기준 자산 평가금액 (원 단위)
-    - profitRate: 전월 대비 수익률 (%, 소수점 둘째 자리)
-    
-    주의사항:
-    - 최대 120개월(10년)의 데이터가 반환됩니다.
-    - 데이터는 오래된 순서(오름차순)로 정렬됩니다.
-    - 첫 번째 월의 profitRate는 항상 0.0입니다.
-    - category 값이 유효하지 않으면 빈 리스트를 반환합니다.
-    """
-    )
-    public List<Map<String, Object>> getAssetChangeTrend(String category) {
-        UUID userUid = currentUserUid();
-        HashMap<YearMonth, BigDecimal> assetHistory;
-
-        switch (category) {
-            case "total":
-                assetHistory = statisticService.getTotalAssetHistory(userUid.toString());
-                break;
-            case "withdrawal":
-                assetHistory = statisticService.getBankAccountHistory(userUid.toString(), "입출금");
-                break;
-            case "deposit":
-                assetHistory = statisticService.getBankAccountHistory(userUid.toString(), "예적금");
-                break;
-            case "stock":
-                assetHistory = statisticService.getBankAccountHistory(userUid.toString(), "증권");
-                break;
-            case "asset":
-                assetHistory = statisticService.getAssetHistory(userUid.toString());
-                break;
-            default:
-                return Collections.emptyList();
-        }
-
-        // YearMonth 오름차순 정렬 (오래된 날짜부터)
-        List<Map.Entry<YearMonth, BigDecimal>> sortedEntries = assetHistory.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .toList();
-
-        List<Map<String, Object>> result = new ArrayList<>();
-        BigDecimal prevValue = null;
-
-        for (Map.Entry<YearMonth, BigDecimal> entry : sortedEntries) {
-            YearMonth ym = entry.getKey();
-            BigDecimal currentValue = entry.getValue();
-            double profitRate = 0.0;
-
-            // 전월 대비 수익률 계산
-            if (prevValue != null && prevValue.compareTo(BigDecimal.ZERO) > 0) {
-                profitRate = currentValue.subtract(prevValue)
-                        .divide(prevValue, 4, RoundingMode.HALF_UP)
-                        .multiply(BigDecimal.valueOf(100))
-                        .doubleValue();
-            }
-
-            Map<String, Object> record = new LinkedHashMap<>();
-            record.put("date", ym.toString()); // YYYY-MM 형식
-            record.put("assetValue", currentValue.longValue()); // 원 단위 정수
-            record.put("profitRate", Math.round(profitRate * 100.0) / 100.0); // 소수점 둘째 자리
-            result.add(record);
-
-            prevValue = currentValue;
-        }
-
-        return result;
-    }
-
-    @Tool(
-            name = "get_all_assets_history",
-            description = """
-    현재 로그인한 사용자의 모든 자산을 조회합니다.
-    
-    반환 형식:
-    {
-      "totalAsset": 125000000,
-      "categories": {
-        "withdrawal": 15000000,
-        "deposit": 30000000,
-        "stock": 75000000,
-        "asset": 5000000
-      },
-      "details": [
-        {
-          "category": "withdrawal",
-          "accountName": "KB국민은행 입출금통장",
-          "balance": 15000000
-        },
-        ...
-      ]
-    }
-    
-    반환 데이터 설명:
-    - totalAsset: 전체 자산 합계
-    - categories: 카테고리별 자산 합계
-    - details: 계좌/자산별 상세 내역
-    
-    주의사항:
-    - 증권 계좌는 현금 잔액 + 보유 주식 평가금액을 포함합니다.
-    - 기타 자산(asset)은 부동산, 차량 등 비금융 자산을 의미합니다.
-    """
-    )
-
-    public Map<String, Object> getAllAssetsHistory() {
-        UUID userUid = currentUserUid();
-
-        HashMap<YearMonth, BigDecimal> totalHistory = statisticService.getTotalAssetHistory(userUid.toString());
-        HashMap<YearMonth, BigDecimal> withdrawalHistory = statisticService.getBankAccountHistory(userUid.toString(), "입출금");
-        HashMap<YearMonth, BigDecimal> depositHistory = statisticService.getBankAccountHistory(userUid.toString(), "예적금");
-        HashMap<YearMonth, BigDecimal> stockHistory = statisticService.getBankAccountHistory(userUid.toString(), "증권");
-        HashMap<YearMonth, BigDecimal> assetHistory = statisticService.getAssetHistory(userUid.toString());
-
-        YearMonth currentMonth = YearMonth.now();
-
-        Map<String, Object> result = new LinkedHashMap<>();
-        result.put("totalAsset", totalHistory.get(currentMonth).longValue());
-
-        Map<String, Object> categories = new LinkedHashMap<>();
-        categories.put("withdrawal", withdrawalHistory.get(currentMonth).longValue());
-        categories.put("deposit", depositHistory.get(currentMonth).longValue());
-        categories.put("stock", stockHistory.get(currentMonth).longValue());
-        categories.put("asset", assetHistory.get(currentMonth).longValue());
-        result.put("categories", categories);
-
-        return result;
-    }
-
-
-
-
-
-
-
-
 }

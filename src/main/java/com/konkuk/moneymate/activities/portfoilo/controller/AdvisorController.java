@@ -1,7 +1,7 @@
-package com.konkuk.moneymate.ai.controller;
+package com.konkuk.moneymate.activities.portfoilo.controller;
 
 
-import com.konkuk.moneymate.ai.service.*;
+import com.konkuk.moneymate.activities.portfoilo.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

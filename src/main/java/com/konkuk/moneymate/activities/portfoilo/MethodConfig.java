@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.ai;
+package com.konkuk.moneymate.activities.portfoilo;
 
 import org.springframework.context.annotation.Configuration;
 

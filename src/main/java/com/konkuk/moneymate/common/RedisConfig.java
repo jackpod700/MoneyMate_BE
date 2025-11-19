@@ -1,4 +1,4 @@
-package com.konkuk.moneymate.auth.api;
+package com.konkuk.moneymate.common;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

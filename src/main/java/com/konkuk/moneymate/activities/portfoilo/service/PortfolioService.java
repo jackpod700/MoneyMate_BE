@@ -1,20 +1,26 @@
-package com.konkuk.moneymate.ai.service;
+package com.konkuk.moneymate.activities.portfoilo.service;
 
-import com.konkuk.moneymate.ai.tools.PortfolioTools;
+import com.konkuk.moneymate.activities.portfoilo.dto.AiResponse;
+import com.konkuk.moneymate.activities.portfoilo.tools.PortfolioTools;
+import com.konkuk.moneymate.auth.api.service.JwtService;
 import com.konkuk.moneymate.common.ApiResponse;
 import com.konkuk.moneymate.common.ApiResponseMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.concurrent.TimeUnit;
 
 // com.konkuk.moneymate.ai.service.AnalyzerAdvisorService, com.konkuk.moneymate.ai.service.AnalyzerTools
 
@@ -28,6 +34,29 @@ public class PortfolioService {
 
     private final ChatClient chatClient;
     private final PortfolioTools portfolioTools;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final JwtService jwtService;
+
+    private static final String USER_PORTFOLIO_REQUEST_COUNT_PREFIX = "user:count:portfolio:";
+    private static final int DAILY_REQUEST_LIMIT = 3;
+    private static final long EXPIRATION_HOURS = 24;
+    private static final ZoneId KST_ZONE = ZoneId.of("Asia/Seoul");
+
+    private long calculateSecondsUntilKst0900Reset() {
+        ZonedDateTime nowKst = ZonedDateTime.now(KST_ZONE);
+
+        ZonedDateTime resetTime = nowKst
+                .withHour(9)
+                .withMinute(0)
+                .withSecond(0)
+                .withNano(0);
+
+        if (nowKst.isAfter(resetTime)) {
+            resetTime = resetTime.plusDays(1);
+        }
+
+        return ChronoUnit.SECONDS.between(nowKst, resetTime);
+    }
 
     private static String buildSystemPrompt() {
         ZonedDateTime nowKst = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
@@ -159,6 +188,43 @@ public class PortfolioService {
 
     /** GET /ai-summary/portfolio : 서버 내부 질의로 실행(뉴스 포함) */
     public ResponseEntity<?> portfolioAnalyze(HttpServletRequest req){
+        String userUid = jwtService.getUserUid(req);
+        String redisKey = USER_PORTFOLIO_REQUEST_COUNT_PREFIX + userUid;
+        // AiResponse aiResponse = new AiResponse();
+
+
+        Long currentCount = redisTemplate.opsForValue().increment(redisKey);
+
+        if (currentCount == null) {
+            log.error("Redis increment operation returned null for user: {}", userUid);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(
+                            HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                            "Error:",
+                            AiResponse.of(0, "Internal Server Error.", LocalDateTime.now())
+                    ));
+        }
+
+        if (currentCount == 1) {
+            long secondsUntilReset = calculateSecondsUntilKst0900Reset();
+            redisTemplate.expire(redisKey, secondsUntilReset, TimeUnit.SECONDS);
+            log.info("Redis key {} set with {}-hour expiration.", redisKey, EXPIRATION_HOURS);
+        }
+
+        if (currentCount > DAILY_REQUEST_LIMIT) {
+            String errorMessage = String.format("하루에 3회만 요청할 수 있습니다. 24시간 후에 다시 시도해주세요.", DAILY_REQUEST_LIMIT);
+            log.warn("User {} exceeded daily limit ({} requests). Terminating analysis.", userUid, currentCount);
+
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS) // 429
+                    .body(new ApiResponse<>(
+                            HttpStatus.TOO_MANY_REQUESTS.getReasonPhrase(), // "Too Many Requests"
+                            "일일 요청 한도 초과",
+                            AiResponse.of(DAILY_REQUEST_LIMIT, errorMessage, LocalDateTime.now())
+                    ));
+        }
+
+        log.info("User {} request count: {}. Proceeding with AI analysis.", userUid, currentCount);
+
 
         String question = """
             [요청] AI 포트폴리오 분석(뉴스 요약 포함, 적합성 점검 포함)
@@ -239,9 +305,11 @@ public class PortfolioService {
                 .call()
                 .content();
 
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
+        return ResponseEntity.ok(new ApiResponse<>(
+                HttpStatus.OK.getReasonPhrase(),
                 ApiResponseMessage.AI_SUMMARY_LOAD_SUCCESS.getMessage(),
-                text));
+                AiResponse.of(currentCount.intValue(), text, LocalDateTime.now())
+        ));
     }
 
     /** 스트리밍 응답(선택) */

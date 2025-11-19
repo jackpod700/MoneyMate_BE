@@ -1,9 +1,8 @@
-package com.konkuk.moneymate.ai.service;
+package com.konkuk.moneymate.activities.portfoilo.service;
 
-import com.konkuk.moneymate.ai.tools.AssetTools;
+import com.konkuk.moneymate.activities.portfoilo.tools.AssetTools;
 import com.konkuk.moneymate.common.ApiResponse;
 import com.konkuk.moneymate.common.ApiResponseMessage;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;

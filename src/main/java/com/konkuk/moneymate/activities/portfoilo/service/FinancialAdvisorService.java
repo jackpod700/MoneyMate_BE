@@ -1,22 +1,26 @@
-package com.konkuk.moneymate.ai.service;
+package com.konkuk.moneymate.activities.portfoilo.service;
 
+import com.konkuk.moneymate.activities.portfoilo.tools.FinancialTools;
+import com.konkuk.moneymate.common.ApiResponse;
+import com.konkuk.moneymate.common.ApiResponseMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import com.konkuk.moneymate.ai.tools.BasicTools;
 import reactor.core.publisher.Flux;
-import java.time.*;
+
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class BasicAdvisorService {
-
+public class FinancialAdvisorService {
     private final ChatClient chatClient;
-    private final BasicTools basicTools;
+    private final FinancialTools financialTools;
 
     private static String buildSystemPrompt() {
         ZonedDateTime nowKst = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
@@ -32,10 +36,11 @@ public class BasicAdvisorService {
         ## 출력 형식
         1) 요약
         2) 보유자산/현금성자산 개요 (통화/평가 관점 포함)
-        3) 소비 패턴/현금흐름 시사점 (기간이 있으면 해당   기간 기준)
-        4) 주식/ETF 보유 현황과 리스크 (집중도, 통화/시장 분산, 수수료/세금 고려)
-        5) 리밸런싱/액션 아이템 (우선순위/근거/예상효과)
-        6) 주의사항 (세금/수수료/환율/데이터 한계)
+        3) 최근 1년간 자산 변동 추이
+        4) 소비 패턴/현금흐름 시사점 (기간이 있으면 해당   기간 기준)
+        5) 주식/ETF 보유 현황과 리스크 (집중도, 통화/시장 분산, 수수료/세금 고려)
+        6) 리밸런싱/액션 아이템 (우선순위/근거/예상효과)
+        7) 주의사항 (세금/수수료/환율/데이터 한계)
         
         ## 문자열/고유명사 출력 규칙 (매우 중요)
         - 툴(@Tool)로부터 받은 모든 문자열(자산명, 계좌명, 카테고리, 티커 등)은 **원형 그대로** 출력한다.
@@ -83,7 +88,7 @@ public class BasicAdvisorService {
                 .prompt()
                 .system(buildSystemPrompt())
                 .user(userQuestion)
-                .tools(basicTools)
+                .tools(financialTools)
                 .stream()
                 .content();
     }
@@ -93,11 +98,29 @@ public class BasicAdvisorService {
                 .prompt()
                 .system(buildSystemPrompt())
                 .user(userQuestion)
-                .tools(basicTools)
+                .tools(financialTools)
                 .call()
                 .content();
 
         return response;
+    }
+
+    public ResponseEntity<?> askFinance(Integer year){
+
+        String question = "최근 " + year + "년 간 나의 자산 현황과 최근 " + year + "년 간 소비를 바탕으로 자산 관리와 투자 방향을 제사허새요";
+
+
+        String text = chatClient
+                .prompt()
+                .system(buildSystemPrompt())
+                .user(question)
+                .tools(financialTools)
+                .call()
+                .content();
+
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.getReasonPhrase(),
+                ApiResponseMessage.AI_SUMMARY_LOAD_SUCCESS.getMessage(),
+                text));
     }
 }
 
