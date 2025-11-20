@@ -33,8 +33,8 @@ public class DepositProductDto extends FinancialProductDto{
                              String etcNote,
                              Long maxLimit) {
         super(bankName, productName, joinWay, dclsStrtDay, dclsEndDay, url, callNum);
-        this.intrRate = intrRate.toString();
-        this.maxIntrRate = maxIntrRate.toString();
+        this.intrRate = intrRate!=null?intrRate.toString():null;
+        this.maxIntrRate = maxIntrRate!=null?maxIntrRate.toString():null;
         this.intrType = intrType;
         this.mtrtInt = mtrtInt;
         this.spclCnd = spclCnd;
