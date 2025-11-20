@@ -34,7 +34,7 @@ public class PortfolioService {
 
     private final ChatClient chatClient;
     private final PortfolioTools portfolioTools;
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, Long> redisTemplate;
     private final JwtService jwtService;
 
     private static final String USER_PORTFOLIO_REQUEST_COUNT_PREFIX = "user:count:portfolio:";
@@ -56,6 +56,32 @@ public class PortfolioService {
         }
 
         return ChronoUnit.SECONDS.between(nowKst, resetTime);
+    }
+
+    public ResponseEntity<?> portfolioUserCountRequest(HttpServletRequest req) {
+        String userUid = jwtService.getUserUid(req);
+        String redisKey = USER_PORTFOLIO_REQUEST_COUNT_PREFIX + userUid;
+        Long currentCount = redisTemplate.opsForValue().get(redisKey);
+
+        // Integer count = (currentCount != null) ? currentCount.intValue() : 0;
+
+        if (currentCount == null) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse<>(
+                            HttpStatus.OK.getReasonPhrase(),
+                            "user count 조회 완료",
+                            AiResponse.of(0, "user count 조회 완료", LocalDateTime.now())
+                    ));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(
+                        HttpStatus.OK.getReasonPhrase(),
+                        "user count 조회 완료",
+                        AiResponse.of(currentCount.intValue(), "user count 조회 완료", LocalDateTime.now())
+                ));
+
+
     }
 
     private static String buildSystemPrompt() {

@@ -37,6 +37,11 @@ public class AdvisorController {
         return portfolioService.portfolioAnalyze(req);
     }
 
+    @GetMapping("/portfolio/user-count")
+    public ResponseEntity<?> portfolioUserCountRequest(HttpServletRequest req) {
+        return portfolioService.portfolioUserCountRequest(req);
+    }
+
 
 
 

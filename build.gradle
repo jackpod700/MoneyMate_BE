@@ -45,8 +45,9 @@ dependencies {
 	implementation("io.codef.api:easycodef-java-v2:2.0.0-beta-005")
 	// openai
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-	compileOnly 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
     // Spring AI
