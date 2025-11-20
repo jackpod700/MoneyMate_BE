@@ -47,8 +47,8 @@ public class MortgageLoanProductDto extends FinancialProductDto {
     ) {
         super(bankName, productName, joinWay, dclsStrtDay, dclsEndDay, url, callNum);
         this.lendRateType = lendRateType;
-        this.lendRateMin = lendRateMin.toString();
-        this.lendRateMax = lendRateMax.toString();
+        this.lendRateMin = lendRateMin!=null?lendRateMin.toString():null;
+        this.lendRateMax = lendRateMax!=null?lendRateMax.toString():null;
         this.lendRateAvg = lendRateAvg!=null?lendRateAvg.toString():null;
         this.loanInciExpn = loanInciExpn;
         this.erlyRpayFee = erlyRpayFee;
